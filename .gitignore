@@ -9,3 +9,5 @@ build/
 # SwiftPM working dirs (keep resolved file tracked)
 .swiftpm/
 Packages/
+# Supabase credentials — never commit
+KafeCam/Configuration/SupabaseConfig.swift
