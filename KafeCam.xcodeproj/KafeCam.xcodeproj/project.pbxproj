@@ -1,0 +1,703 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E5A010A92E8A782F00A93A15 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010A82E8A782F00A93A15 /* Auth */; };
+		E5A010AB2E8A782F00A93A15 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010AA2E8A782F00A93A15 /* Functions */; };
+		E5A010AD2E8A782F00A93A15 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010AC2E8A782F00A93A15 /* PostgREST */; };
+		E5A010AF2E8A782F00A93A15 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010AE2E8A782F00A93A15 /* Realtime */; };
+		E5A010B12E8A782F00A93A15 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010B02E8A782F00A93A15 /* Storage */; };
+		E5A010B32E8A782F00A93A15 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010B22E8A782F00A93A15 /* Supabase */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		144DD9242E6CDF5A00CCE4F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 144DD90D2E6CDF5700CCE4F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 144DD9142E6CDF5700CCE4F4;
+			remoteInfo = KafeCam;
+		};
+		144DD92E2E6CDF5A00CCE4F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 144DD90D2E6CDF5700CCE4F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 144DD9142E6CDF5700CCE4F4;
+			remoteInfo = KafeCam;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		144DD9152E6CDF5700CCE4F4 /* KafeCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KafeCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		144DD9232E6CDF5A00CCE4F4 /* KafeCamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KafeCamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		144DD92D2E6CDF5A00CCE4F4 /* KafeCamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KafeCamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		14922EF42E6FB7C8005E3413 /* KafeCam.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KafeCam.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		144DD9172E6CDF5700CCE4F4 /* KafeCam */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = KafeCam;
+			sourceTree = "<group>";
+		};
+		144DD9262E6CDF5A00CCE4F4 /* KafeCamTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = KafeCamTests;
+			sourceTree = "<group>";
+		};
+		144DD9302E6CDF5A00CCE4F4 /* KafeCamUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = KafeCamUITests;
+			sourceTree = "<group>";
+		};
+		4E3C27F62EA947D40057D44B /* es.lproj */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = es.lproj;
+			sourceTree = "<group>";
+		};
+		4E3C27FA2EA947E50057D44B /* en.lproj */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = en.lproj;
+			sourceTree = "<group>";
+		};
+		4E3C27FE2EA947FF0057D44B /* tzo.lproj */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = tzo.lproj;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		144DD9122E6CDF5700CCE4F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5A010AD2E8A782F00A93A15 /* PostgREST in Frameworks */,
+				E5A010AB2E8A782F00A93A15 /* Functions in Frameworks */,
+				E5A010B32E8A782F00A93A15 /* Supabase in Frameworks */,
+				E5A010A92E8A782F00A93A15 /* Auth in Frameworks */,
+				E5A010B12E8A782F00A93A15 /* Storage in Frameworks */,
+				E5A010AF2E8A782F00A93A15 /* Realtime in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		144DD9202E6CDF5A00CCE4F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		144DD92A2E6CDF5A00CCE4F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		144DD90C2E6CDF5700CCE4F4 = {
+			isa = PBXGroup;
+			children = (
+				144DD9172E6CDF5700CCE4F4 /* KafeCam */,
+				14922EF42E6FB7C8005E3413 /* KafeCam.entitlements */,
+				144DD9262E6CDF5A00CCE4F4 /* KafeCamTests */,
+				144DD9302E6CDF5A00CCE4F4 /* KafeCamUITests */,
+				7F65EAF62E8B0A9800D2A2E9 /* Frameworks */,
+				144DD9162E6CDF5700CCE4F4 /* Products */,
+				4E3C27F62EA947D40057D44B /* es.lproj */,
+				4E3C27FA2EA947E50057D44B /* en.lproj */,
+				4E3C27FE2EA947FF0057D44B /* tzo.lproj */,
+			);
+			sourceTree = "<group>";
+		};
+		144DD9162E6CDF5700CCE4F4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				144DD9152E6CDF5700CCE4F4 /* KafeCam.app */,
+				144DD9232E6CDF5A00CCE4F4 /* KafeCamTests.xctest */,
+				144DD92D2E6CDF5A00CCE4F4 /* KafeCamUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7F65EAF62E8B0A9800D2A2E9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		144DD9142E6CDF5700CCE4F4 /* KafeCam */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 144DD9372E6CDF5A00CCE4F4 /* Build configuration list for PBXNativeTarget "KafeCam" */;
+			buildPhases = (
+				144DD9112E6CDF5700CCE4F4 /* Sources */,
+				144DD9122E6CDF5700CCE4F4 /* Frameworks */,
+				144DD9132E6CDF5700CCE4F4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				144DD9172E6CDF5700CCE4F4 /* KafeCam */,
+				4E3C27F62EA947D40057D44B /* es.lproj */,
+				4E3C27FA2EA947E50057D44B /* en.lproj */,
+				4E3C27FE2EA947FF0057D44B /* tzo.lproj */,
+			);
+			name = KafeCam;
+			packageProductDependencies = (
+				E5A010A82E8A782F00A93A15 /* Auth */,
+				E5A010AA2E8A782F00A93A15 /* Functions */,
+				E5A010AC2E8A782F00A93A15 /* PostgREST */,
+				E5A010AE2E8A782F00A93A15 /* Realtime */,
+				E5A010B02E8A782F00A93A15 /* Storage */,
+				E5A010B22E8A782F00A93A15 /* Supabase */,
+			);
+			productName = KafeCam;
+			productReference = 144DD9152E6CDF5700CCE4F4 /* KafeCam.app */;
+			productType = "com.apple.product-type.application";
+		};
+		144DD9222E6CDF5A00CCE4F4 /* KafeCamTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 144DD93A2E6CDF5A00CCE4F4 /* Build configuration list for PBXNativeTarget "KafeCamTests" */;
+			buildPhases = (
+				144DD91F2E6CDF5A00CCE4F4 /* Sources */,
+				144DD9202E6CDF5A00CCE4F4 /* Frameworks */,
+				144DD9212E6CDF5A00CCE4F4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				144DD9252E6CDF5A00CCE4F4 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				144DD9262E6CDF5A00CCE4F4 /* KafeCamTests */,
+			);
+			name = KafeCamTests;
+			packageProductDependencies = (
+			);
+			productName = KafeCamTests;
+			productReference = 144DD9232E6CDF5A00CCE4F4 /* KafeCamTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		144DD92C2E6CDF5A00CCE4F4 /* KafeCamUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 144DD93D2E6CDF5A00CCE4F4 /* Build configuration list for PBXNativeTarget "KafeCamUITests" */;
+			buildPhases = (
+				144DD9292E6CDF5A00CCE4F4 /* Sources */,
+				144DD92A2E6CDF5A00CCE4F4 /* Frameworks */,
+				144DD92B2E6CDF5A00CCE4F4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				144DD92F2E6CDF5A00CCE4F4 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				144DD9302E6CDF5A00CCE4F4 /* KafeCamUITests */,
+			);
+			name = KafeCamUITests;
+			packageProductDependencies = (
+			);
+			productName = KafeCamUITests;
+			productReference = 144DD92D2E6CDF5A00CCE4F4 /* KafeCamUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		144DD90D2E6CDF5700CCE4F4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					144DD9142E6CDF5700CCE4F4 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					144DD9222E6CDF5A00CCE4F4 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 144DD9142E6CDF5700CCE4F4;
+					};
+					144DD92C2E6CDF5A00CCE4F4 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 144DD9142E6CDF5700CCE4F4;
+					};
+				};
+			};
+			buildConfigurationList = 144DD9102E6CDF5700CCE4F4 /* Build configuration list for PBXProject "KafeCam" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				es,
+				tzo,
+			);
+			mainGroup = 144DD90C2E6CDF5700CCE4F4;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 144DD9162E6CDF5700CCE4F4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				144DD9142E6CDF5700CCE4F4 /* KafeCam */,
+				144DD9222E6CDF5A00CCE4F4 /* KafeCamTests */,
+				144DD92C2E6CDF5A00CCE4F4 /* KafeCamUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		144DD9132E6CDF5700CCE4F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		144DD9212E6CDF5A00CCE4F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		144DD92B2E6CDF5A00CCE4F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		144DD9112E6CDF5700CCE4F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		144DD91F2E6CDF5A00CCE4F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		144DD9292E6CDF5A00CCE4F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		144DD9252E6CDF5A00CCE4F4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 144DD9142E6CDF5700CCE4F4 /* KafeCam */;
+			targetProxy = 144DD9242E6CDF5A00CCE4F4 /* PBXContainerItemProxy */;
+		};
+		144DD92F2E6CDF5A00CCE4F4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 144DD9142E6CDF5700CCE4F4 /* KafeCam */;
+			targetProxy = 144DD92E2E6CDF5A00CCE4F4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		144DD9352E6CDF5A00CCE4F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5QU7DX383G;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		144DD9362E6CDF5A00CCE4F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5QU7DX383G;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		144DD9382E6CDF5A00CCE4F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KafeCam/KafeCam.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BGQW8L536L;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow camara";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow loc";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = map;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bruno.KafeCam;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Debug;
+		};
+		144DD9392E6CDF5A00CCE4F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KafeCam/KafeCam.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5QU7DX383G;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow camara";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow loc";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = map;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.memo.KafeCam;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Release;
+		};
+		144DD93B2E6CDF5A00CCE4F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VWUWR4BNBX;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lira.KafeCamTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KafeCam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/KafeCam";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Debug;
+		};
+		144DD93C2E6CDF5A00CCE4F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VWUWR4BNBX;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lira.KafeCamTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KafeCam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/KafeCam";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Release;
+		};
+		144DD93E2E6CDF5A00CCE4F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VWUWR4BNBX;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.grace.KafeCamUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = KafeCam;
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Debug;
+		};
+		144DD93F2E6CDF5A00CCE4F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VWUWR4BNBX;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.grace.KafeCamUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = KafeCam;
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		144DD9102E6CDF5700CCE4F4 /* Build configuration list for PBXProject "KafeCam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				144DD9352E6CDF5A00CCE4F4 /* Debug */,
+				144DD9362E6CDF5A00CCE4F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		144DD9372E6CDF5A00CCE4F4 /* Build configuration list for PBXNativeTarget "KafeCam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				144DD9382E6CDF5A00CCE4F4 /* Debug */,
+				144DD9392E6CDF5A00CCE4F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		144DD93A2E6CDF5A00CCE4F4 /* Build configuration list for PBXNativeTarget "KafeCamTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				144DD93B2E6CDF5A00CCE4F4 /* Debug */,
+				144DD93C2E6CDF5A00CCE4F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		144DD93D2E6CDF5A00CCE4F4 /* Build configuration list for PBXNativeTarget "KafeCamUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				144DD93E2E6CDF5A00CCE4F4 /* Debug */,
+				144DD93F2E6CDF5A00CCE4F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E5A010A82E8A782F00A93A15 /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		E5A010AA2E8A782F00A93A15 /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		E5A010AC2E8A782F00A93A15 /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		E5A010AE2E8A782F00A93A15 /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		E5A010B02E8A782F00A93A15 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		E5A010B22E8A782F00A93A15 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 144DD90D2E6CDF5700CCE4F4 /* Project object */;
+}

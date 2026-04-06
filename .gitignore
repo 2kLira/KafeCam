@@ -1,0 +1,13 @@
+# Xcode build artifacts
+DerivedData/
+build/
+
+# User data
+*.xcuserstate
+*.xcuserdata/
+
+# SwiftPM working dirs (keep resolved file tracked)
+.swiftpm/
+Packages/
+# Supabase credentials — never commit
+KafeCam/Configuration/SupabaseConfig.swift
