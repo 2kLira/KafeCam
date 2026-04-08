@@ -24,7 +24,6 @@ final class PlotsViewModel: ObservableObject {
 		isLoading = true
 		defer { isLoading = false }
 		do {
-			try await SupaAuthService.signInDev()
 			try await loadPlots()
 		} catch {
 			self.errorMessage = shortMessage(from: error)

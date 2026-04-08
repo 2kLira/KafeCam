@@ -37,11 +37,26 @@
 		144DD9232E6CDF5A00CCE4F4 /* KafeCamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KafeCamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		144DD92D2E6CDF5A00CCE4F4 /* KafeCamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KafeCamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		14922EF42E6FB7C8005E3413 /* KafeCam.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KafeCam.entitlements; sourceTree = "<group>"; };
+		E531F7742F85E00800C88941 /* KafeCamSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = KafeCamSecrets.xcconfig; sourceTree = "<group>"; };
+		E531F7762F85E25500C88941 /* KafeCam.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = KafeCam.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E531F7792F85E56C00C88941 /* Exceptions for "KafeCam" folder in "KafeCam" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 144DD9142E6CDF5700CCE4F4 /* KafeCam */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		144DD9172E6CDF5700CCE4F4 /* KafeCam */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E531F7792F85E56C00C88941 /* Exceptions for "KafeCam" folder in "KafeCam" target */,
+			);
 			path = KafeCam;
 			sourceTree = "<group>";
 		};
@@ -106,6 +121,7 @@
 		144DD90C2E6CDF5700CCE4F4 = {
 			isa = PBXGroup;
 			children = (
+				E531F7762F85E25500C88941 /* KafeCam.xctestplan */,
 				144DD9172E6CDF5700CCE4F4 /* KafeCam */,
 				14922EF42E6FB7C8005E3413 /* KafeCam.entitlements */,
 				144DD9262E6CDF5A00CCE4F4 /* KafeCamTests */,
@@ -115,6 +131,7 @@
 				4E3C27F62EA947D40057D44B /* es.lproj */,
 				4E3C27FA2EA947E50057D44B /* en.lproj */,
 				4E3C27FE2EA947FF0057D44B /* tzo.lproj */,
+				E531F7742F85E00800C88941 /* KafeCamSecrets.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -328,6 +345,7 @@
 /* Begin XCBuildConfiguration section */
 		144DD9352E6CDF5A00CCE4F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E531F7742F85E00800C88941 /* KafeCamSecrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -393,6 +411,7 @@
 		};
 		144DD9362E6CDF5A00CCE4F4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E531F7742F85E00800C88941 /* KafeCamSecrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -457,7 +476,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = VWUWR4BNBX;
+				DEVELOPMENT_TEAM = CLE629MGG8;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -480,7 +499,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kafecam.KafeCam;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chochesanchez.KafeCam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -501,7 +520,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = VWUWR4BNBX;
+				DEVELOPMENT_TEAM = CLE629MGG8;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -524,7 +543,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kafecam.KafeCam;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chochesanchez.KafeCam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;

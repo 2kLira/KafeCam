@@ -24,17 +24,6 @@ enum SupaClient {
 
 enum SupaAuthService {
 	#if canImport(Supabase)
-	static func signInDev() async throws {
-		#if DEBUG
-		_ = try await SupaClient.shared.auth.signIn(
-			email: SupabaseConfig.devEmail,
-			password: SupabaseConfig.devPassword
-		)
-		#else
-		fatalError("signInDev is not available in production builds")
-		#endif
-	}
-	
 	@discardableResult
 	static func signInOrSignUp(code: String, password: String) async throws -> UUID {
 		let emailAddr = "\(code)@kafe.local"
@@ -102,7 +91,6 @@ enum SupaAuthService {
 			_ = try await SupaClient.shared.auth.update(user: attrs)
 		}
 	#else
-	static func signInDev() async throws { }
 	@discardableResult
 	static func signInOrSignUp(code: String, password: String) async throws -> UUID { UUID() }
 	@discardableResult

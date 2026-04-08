@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "5D51F5F2-5554-478C-B8A6-85B83CC2B587",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:KafeCam.xcodeproj",
+      "identifier" : "144DD9142E6CDF5700CCE4F4",
+      "name" : "KafeCam"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:KafeCam.xcodeproj",
+        "identifier" : "144DD9222E6CDF5A00CCE4F4",
+        "name" : "KafeCamTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:KafeCam.xcodeproj",
+        "identifier" : "144DD92C2E6CDF5A00CCE4F4",
+        "name" : "KafeCamUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
