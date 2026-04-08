@@ -9,5 +9,11 @@ build/
 # SwiftPM working dirs (keep resolved file tracked)
 .swiftpm/
 Packages/
-# Supabase credentials — never commit
-KafeCam/Configuration/SupabaseConfig.swift
+
+# macOS
+.DS_Store
+
+# Supabase secrets — never commit
+# KafeCamSecrets.xcconfig contains real API keys — never commit it
+KafeCamSecrets.xcconfig
+KafeCam/Networking/SupabaseConfig.swift
