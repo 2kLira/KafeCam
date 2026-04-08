@@ -2,9 +2,10 @@
 DerivedData/
 build/
 
-# User data
+# User data — personal Xcode IDE files, never commit
 *.xcuserstate
-*.xcuserdata/
+xcuserdata/
+*.xcuserdatad/
 
 # SwiftPM working dirs (keep resolved file tracked)
 .swiftpm/
@@ -14,6 +15,4 @@ Packages/
 .DS_Store
 
 # Supabase secrets — never commit
-# KafeCamSecrets.xcconfig contains real API keys — never commit it
 KafeCamSecrets.xcconfig
-KafeCam/Networking/SupabaseConfig.swift
