@@ -482,7 +482,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "KafeCam/Info.plist";
+				INFOPLIST_FILE = KafeCam/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "KafeCam necesita acceso a la cámara para fotografiar hojas de plantas de café y detectar enfermedades.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "KafeCam usa tu ubicación para registrar observaciones en el mapa y ofrecer pronósticos climáticos locales.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "KafeCam necesita acceso a tu galería para seleccionar una foto de perfil.";
@@ -527,7 +527,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "KafeCam/Info.plist";
+				INFOPLIST_FILE = KafeCam/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "KafeCam necesita acceso a la cámara para fotografiar hojas de plantas de café y detectar enfermedades.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "KafeCam usa tu ubicación para registrar observaciones en el mapa y ofrecer pronósticos climáticos locales.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "KafeCam necesita acceso a tu galería para seleccionar una foto de perfil.";

@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 final class SessionViewModel: ObservableObject {
     @Published var isLoggedIn = false
 
@@ -15,9 +16,10 @@ final class SessionViewModel: ObservableObject {
     init(auth: AuthService) { self.auth = auth }
 
     func logout() {
-        auth.logout()
-        isLoggedIn = false
-        // Broadcast so views/app can react (e.g., clear AvatarStore)
-        NotificationCenter.default.post(name: .init("kafe.session.logout"), object: nil)
+        Task {
+            await auth.logout()
+            isLoggedIn = false
+            NotificationCenter.default.post(name: .init("kafe.session.logout"), object: nil)
+        }
     }
 }
