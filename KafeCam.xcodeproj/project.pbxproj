@@ -38,7 +38,7 @@
 		144DD92D2E6CDF5A00CCE4F4 /* KafeCamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KafeCamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		14922EF42E6FB7C8005E3413 /* KafeCam.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KafeCam.entitlements; sourceTree = "<group>"; };
 		E531F7742F85E00800C88941 /* KafeCamSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = KafeCamSecrets.xcconfig; sourceTree = "<group>"; };
-		E531F7762F85E25500C88941 /* KafeCam.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = KafeCam.xctestplan; sourceTree = "<group>"; };
+		E531F7762F85E25500C88941 /* KafeCam.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = KafeCam.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
