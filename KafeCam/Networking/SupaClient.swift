@@ -40,8 +40,9 @@ enum SupaAuthService {
 		if let metaOrg { metadata["organization"] = .string(metaOrg) }
 		if let metaPhone { metadata["phone"] = .string(metaPhone) }
 		if let metaEmail, !metaEmail.isEmpty { metadata["email"] = .string(metaEmail) }
+		let signUpResponse: AuthResponse
 		do {
-			_ = try await SupaClient.shared.auth.signUp(
+			signUpResponse = try await SupaClient.shared.auth.signUp(
 				email: emailAddr,
 				password: password,
 				data: metadata.isEmpty ? nil : metadata
@@ -53,8 +54,25 @@ enum SupaAuthService {
 			}
 			throw error
 		}
-		let session = try await SupaClient.shared.auth.signIn(email: emailAddr, password: password)
-		return session.user.id
+		// If Supabase auto-confirmed the user (Confirm email disabled in dashboard),
+		// the session is already active — use it directly.
+		if let sessionUserId = signUpResponse.session?.user.id {
+			return sessionUserId
+		}
+		// Autoconfirm is disabled: try explicit sign-in.
+		// This will fail with "Email not confirmed" until you disable Confirm email
+		// in Supabase Dashboard → Authentication → Providers → Email.
+		do {
+			let session = try await SupaClient.shared.auth.signIn(email: emailAddr, password: password)
+			return session.user.id
+		} catch {
+			let msg = String(describing: error).lowercased()
+			if msg.contains("email not confirmed") || msg.contains("not confirmed") {
+				throw NSError(domain: "KafeCam", code: 401,
+					userInfo: [NSLocalizedDescriptionKey: "Activa la cuenta primero. En el panel de Supabase ve a Authentication → Providers → Email y desactiva \"Confirm email\"."])
+			}
+			throw error
+		}
 	}
 	
 	static func currentUserId() async throws -> UUID {

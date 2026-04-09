@@ -47,7 +47,7 @@ struct RegisterView: View {
                     ktextfild(title: "Organización", text: $vm.organization, isSecure: false, keyboard: .default, contentType: .organizationName, isDisabled: true)
 
                     Button("Crear cuenta") {
-                        if vm.submit() { dismiss() }
+                        vm.submit()
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(accentColor)

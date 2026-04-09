@@ -17,7 +17,7 @@ final class LocalAuthService: AuthService {
 
     // New protocol requirement (personal fields). Locally we ignore them and reuse existing flow.
     func register(name: String, email: String?, phone: String, password: String, organization: String,
-                  gender: String, dateOfBirth: Date, age: Int, country: String, state: String) throws {
+                  gender: String, dateOfBirth: Date, age: Int, country: String, state: String) async throws {
         try register(name: name, email: email, phone: phone, password: password, organization: organization)
     }
 
@@ -45,7 +45,7 @@ final class LocalAuthService: AuthService {
         currentPhone = phone
     }
 
-    func login(phone: String, password: String) throws {
+    func login(phone: String, password: String) async throws {
         guard Self.validatePhone(phone) else { throw AuthError.userNotFoundOrBadPassword }
         guard let stored = store.get(phone: phone),
               let salt = Data(base64Encoded: stored.saltBase64) else {

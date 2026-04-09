@@ -11,8 +11,8 @@ import Foundation
 protocol AuthService {
     // registration now includes name, optional email, fixed organization and personal info
     func register(name: String, email: String?, phone: String, password: String, organization: String,
-                  gender: String, dateOfBirth: Date, age: Int, country: String, state: String) throws
-    func login(phone: String, password: String) throws
+                  gender: String, dateOfBirth: Date, age: Int, country: String, state: String) async throws
+    func login(phone: String, password: String) async throws
     func logout()
     func isLoggedIn() -> Bool
     var currentPhone: String? { get }

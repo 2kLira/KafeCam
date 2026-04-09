@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 final class LoginViewModel: ObservableObject {
     @Published var phone: String = ""
     @Published var password: String = ""
@@ -32,31 +33,23 @@ final class LoginViewModel: ObservableObject {
     func submit() {
         phoneError = nil
         passwordError = nil
-        isLoading = true
-        defer { isLoading = false }
 
-        // Validaciones específicas antes de intentar login
         let trimmedPhone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmedPhone.isEmpty {
-            phoneError = "Ingresa tu teléfono."
-            return
+        guard !trimmedPhone.isEmpty else { phoneError = "Ingresa tu teléfono."; return }
+        guard LocalAuthService.validatePhone(trimmedPhone) else {
+            phoneError = "Ingresa un teléfono válido de 10 dígitos."; return
         }
-        if !LocalAuthService.validatePhone(trimmedPhone) {
-            phoneError = "Ingresa un teléfono válido de 10 dígitos."
-            return
-        }
-        if password.isEmpty {
-            passwordError = "Ingresa tu contraseña."
-            return
-        }
+        guard !password.isEmpty else { passwordError = "Ingresa tu contraseña."; return }
 
-        // Try login
-        do {
-            try auth.login(phone: phone, password: password)
-            session.isLoggedIn = true
-        } catch {
-            // Mensaje genérico en español si credenciales no coinciden
-            passwordError = "Teléfono o contraseña incorrectos."
+        isLoading = true
+        Task {
+            do {
+                try await auth.login(phone: phone, password: password)
+                session.isLoggedIn = true
+            } catch {
+                passwordError = "Teléfono o contraseña incorrectos."
+            }
+            isLoading = false
         }
     }
 }
