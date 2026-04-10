@@ -30,7 +30,13 @@ final class SupabaseCodeAuthService: AuthService {
             metaPhone: phone, metaEmail: email?.isEmpty == true ? nil : email
         )
         debugLog("[SupabaseAuth] User created with ID: \(userId)")
+        #endif
 
+        // Mark logged-in right after auth — profile sync below is best-effort
+        currentPhone = phone
+        await MainActor.run { UserDefaults.standard.set(true, forKey: "kafe.isLoggedIn") }
+
+        #if canImport(Supabase)
         do {
             let profiles = ProfilesRepository()
             let profile = try await profiles.upsertCurrentUserProfile(
@@ -45,7 +51,6 @@ final class SupabaseCodeAuthService: AuthService {
                 state: state
             )
             debugLog("[SupabaseAuth] Profile synced - Name: \(profile.name ?? "nil")")
-
             if let full = profile.name?.trimmingCharacters(in: .whitespacesAndNewlines), !full.isEmpty {
                 let first = full.split(whereSeparator: { $0.isWhitespace }).first.map(String.init) ?? full
                 await MainActor.run { UserDefaults.standard.set(first, forKey: "displayName") }
@@ -59,10 +64,6 @@ final class SupabaseCodeAuthService: AuthService {
             debugLog("[SupabaseAuth] Profile sync after signup failed: \(error)")
         }
         #endif
-
-        // Only mark logged-in after everything succeeded
-        currentPhone = phone
-        await MainActor.run { UserDefaults.standard.set(true, forKey: "kafe.isLoggedIn") }
     }
 
     // MARK: - Login
@@ -74,28 +75,32 @@ final class SupabaseCodeAuthService: AuthService {
         #if canImport(Supabase)
         let userId = try await SupaAuthService.signInOrSignUp(code: phone, password: password)
         debugLog("[SupabaseAuth] Logged in with User ID: \(userId)")
-
-        do {
-            let profiles = ProfilesRepository()
-            let me = try await profiles.getOrCreateCurrent()
-            debugLog("[SupabaseAuth] Profile fetched - Name: \(me.name ?? "nil")")
-
-            if let full = me.name?.trimmingCharacters(in: .whitespacesAndNewlines), !full.isEmpty {
-                let first = full.split(whereSeparator: { $0.isWhitespace }).first.map(String.init) ?? full
-                await MainActor.run { UserDefaults.standard.set(first, forKey: "displayName") }
-            }
-            try? await SupaAuthService.updateAuthMetadata(
-                name: me.name, phone: me.phone, email: me.email,
-                organization: me.organization, locale: me.locale ?? "es"
-            )
-        } catch {
-            debugLog("[SupabaseAuth] Profile sync after login failed: \(error)")
-        }
         #endif
 
-        // Only mark logged-in after Supabase confirmed the session
+        // Mark logged-in immediately — don't wait for profile sync
         currentPhone = phone
         await MainActor.run { UserDefaults.standard.set(true, forKey: "kafe.isLoggedIn") }
+
+        // Profile sync is non-critical — runs in background after navigation
+        #if canImport(Supabase)
+        Task {
+            do {
+                let profiles = ProfilesRepository()
+                let me = try await profiles.getOrCreateCurrent()
+                debugLog("[SupabaseAuth] Profile fetched - Name: \(me.name ?? "nil")")
+                if let full = me.name?.trimmingCharacters(in: .whitespacesAndNewlines), !full.isEmpty {
+                    let first = full.split(whereSeparator: { $0.isWhitespace }).first.map(String.init) ?? full
+                    await MainActor.run { UserDefaults.standard.set(first, forKey: "displayName") }
+                }
+                try? await SupaAuthService.updateAuthMetadata(
+                    name: me.name, phone: me.phone, email: me.email,
+                    organization: me.organization, locale: me.locale ?? "es"
+                )
+            } catch {
+                debugLog("[SupabaseAuth] Profile sync after login failed: \(error)")
+            }
+        }
+        #endif
     }
 
     // MARK: - Logout

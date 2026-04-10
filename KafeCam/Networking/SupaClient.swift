@@ -39,7 +39,7 @@ enum SupaAuthService {
 		if let metaName { metadata["name"] = .string(metaName) }
 		if let metaOrg { metadata["organization"] = .string(metaOrg) }
 		if let metaPhone { metadata["phone"] = .string(metaPhone) }
-		if let metaEmail, !metaEmail.isEmpty { metadata["email"] = .string(metaEmail) }
+		if let metaEmail, !metaEmail.isEmpty { metadata["personal_email"] = .string(metaEmail) }
 		let signUpResponse: AuthResponse
 		do {
 			signUpResponse = try await SupaClient.shared.auth.signUp(
@@ -97,7 +97,7 @@ enum SupaAuthService {
 			if let phone, !phone.isEmpty { metadata["phone"] = .string(phone) }
 			if let organization, !organization.isEmpty { metadata["organization"] = .string(organization) }
 			if let locale, !locale.isEmpty { metadata["locale"] = .string(locale) }
-			if let email, !email.isEmpty { metadata["email"] = .string(email) }
+			if let email, !email.isEmpty { metadata["personal_email"] = .string(email) }
 
 			let attrs = UserAttributes(data: metadata.isEmpty ? nil : metadata)
 			_ = try await SupaClient.shared.auth.update(user: attrs)
@@ -108,6 +108,12 @@ enum SupaAuthService {
 			let attrs = UserAttributes(data: ["avatar_key": .string(avatarKey)])
 			_ = try await SupaClient.shared.auth.update(user: attrs)
 		}
+
+		/// Deletes the current auth user from auth.users via a SECURITY DEFINER SQL function.
+		/// Requires the `delete_current_user()` function to exist in Supabase (see docs).
+		static func deleteCurrentUser() async throws {
+			try await SupaClient.shared.rpc("delete_current_user").execute()
+		}
 	#else
 	@discardableResult
 	static func signInOrSignUp(code: String, password: String) async throws -> UUID { UUID() }
@@ -115,6 +121,7 @@ enum SupaAuthService {
 	static func signUpThenSignIn(code: String, password: String, metaName: String?, metaOrg: String?, metaPhone: String?, metaEmail: String?) async throws -> UUID { UUID() }
 	static func currentUserId() async throws -> UUID { UUID() }
 	static func signOut() async throws { }
-		static func currentLoginCode() async throws -> String? { nil }
+	static func currentLoginCode() async throws -> String? { nil }
+	static func deleteCurrentUser() async throws { }
 	#endif
 }

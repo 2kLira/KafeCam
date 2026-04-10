@@ -68,8 +68,6 @@ struct ProfilesRepository {
                                  showGender: Bool? = nil, showDateOfBirth: Bool? = nil, showAge: Bool? = nil,
                                  showCountry: Bool? = nil, showState: Bool? = nil, showAbout: Bool? = nil) async throws -> ProfileDTO {
 		let userId = try await SupaAuthService.currentUserId()
-        // Ensure row exists so we don't violate NOT NULL on insert; if missing, create minimal row first
-        _ = try? await getOrCreateCurrent()
 		let dobString: String?
 		if let dob = dateOfBirth {
 			let f = ISO8601DateFormatter()
@@ -99,8 +97,7 @@ struct ProfilesRepository {
 		)
         let updated: ProfileDTO = try await SupaClient.shared
             .from("profiles")
-            .update(payload)
-            .eq("id", value: userId.uuidString)
+            .upsert(payload, onConflict: "id")
             .select()
             .single()
             .execute()
@@ -147,14 +144,14 @@ struct ProfilesRepository {
                 
                 // Extract metadata values
                 let metaName = userMetadata["name"]?.stringValue
-                let metaEmail = userMetadata["email"]?.stringValue  
+                let metaEmail = userMetadata["personal_email"]?.stringValue ?? userMetadata["email"]?.stringValue
                 let metaPhone = userMetadata["phone"]?.stringValue ?? loginCode
                 let metaOrg = userMetadata["organization"]?.stringValue
-                
+
                 // Update profile with any missing critical fields
                 let updatedProfile = try await upsertCurrentUserProfile(
                     name: profile.name ?? metaName,
-                    email: profile.email ?? metaEmail ?? session.user.email,
+                    email: profile.email ?? metaEmail,
                     phone: profile.phone ?? metaPhone,
                     organization: profile.organization ?? metaOrg
                 )
@@ -171,15 +168,15 @@ struct ProfilesRepository {
             
             // Extract metadata from session
             let metaName = userMetadata["name"]?.stringValue
-            let metaEmail = userMetadata["email"]?.stringValue
+            let metaEmail = userMetadata["personal_email"]?.stringValue ?? userMetadata["email"]?.stringValue
             let metaPhone = userMetadata["phone"]?.stringValue ?? loginCode
             let metaOrg = userMetadata["organization"]?.stringValue
-            
+
             // Create profile with all available metadata
 			let payload = UpsertProfilePayload(
                 id: userId.uuidString,
                 name: metaName ?? (metaPhone ?? "Usuario"),
-                email: metaEmail ?? session.user.email,
+                email: metaEmail,
                 phone: metaPhone,
 				organization: metaOrg,
 				locale: "es",

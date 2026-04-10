@@ -104,27 +104,28 @@ struct DeleteAccountView: View {
         do {
             let userId = try await SupaAuthService.currentUserId()
 
-            // 1. Delete captures for this user
+            // 1. Delete captures for this user (best-effort)
             try? await SupaClient.shared
                 .from("captures")
                 .delete()
                 .eq("uploaded_by_user_id", value: userId.uuidString)
                 .execute()
 
-            // 2. Delete profile
+            // 2. Delete profile row (best-effort — also deleted by cascade if configured)
             try? await SupaClient.shared
                 .from("profiles")
                 .delete()
                 .eq("id", value: userId.uuidString)
                 .execute()
 
-            // 3. Delete avatar from storage
+            // 3. Delete avatar from storage (best-effort)
             let storage = StorageRepository()
             let avatarKey = "\(userId.uuidString.lowercased()).jpg"
             try? await storage.delete(bucket: "avatars", objectKey: avatarKey)
 
-            // 4. Sign out
-            try? await SupaAuthService.signOut()
+            // 4. Delete auth user via server-side RPC (REQUIRED — this is what actually prevents re-login)
+            //    Requires: CREATE FUNCTION delete_current_user() SECURITY DEFINER in Supabase SQL Editor
+            try await SupaAuthService.deleteCurrentUser()
 
             // 5. Clear all local data
             clearLocalData()
