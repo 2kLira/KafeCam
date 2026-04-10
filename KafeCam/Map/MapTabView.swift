@@ -148,10 +148,12 @@ struct MapTabView: View {
 
     // MARK: - Binding real al pin dentro del array del VM
     private func binding(for pin: MapPlotPin) -> Binding<MapPlotPin> {
-        guard let idx = vm.pins.firstIndex(where: { $0.id == pin.id }) else {
-            fatalError("Pin no encontrado")
+        if let idx = vm.pins.firstIndex(where: { $0.id == pin.id }) {
+            return $vm.pins[idx]
         }
-        return $vm.pins[idx]
+        // Pin was removed while the sheet was open — dismiss gracefully
+        DispatchQueue.main.async { vm.selectedPin = nil }
+        return .constant(pin)
     }
 
     // MARK: - Helpers UI / Coord

@@ -19,8 +19,7 @@ struct StorageRepository {
     /// Returns a signed download URL for an object in the `captures` bucket by default.
     func signedDownloadURL(objectKey: String, bucket: String = "captures", expiresIn: Int = 3600) async throws -> URL {
         let session = try await SupaClient.shared.auth.session
-        let tokenMirror = Mirror(reflecting: session)
-        let accessToken = (tokenMirror.children.first { $0.label == "accessToken" }?.value as? String) ?? ""
+        let accessToken = session.accessToken
 
         var base = SupabaseConfig.url.absoluteString
         if base.hasSuffix("/") { base.removeLast() }
@@ -65,8 +64,7 @@ struct StorageRepository {
         let endpoint = URL(string: base + "/storage/v1/object/list/\(bucket)")!
 
         let session = try await SupaClient.shared.auth.session
-        let tokenMirror = Mirror(reflecting: session)
-        let accessToken = (tokenMirror.children.first { $0.label == "accessToken" }?.value as? String) ?? ""
+        let accessToken = session.accessToken
 
         var req = URLRequest(url: endpoint)
         req.httpMethod = "POST"
@@ -88,8 +86,7 @@ struct StorageRepository {
     /// Deletes an object from Supabase Storage.
     func delete(bucket: String, objectKey: String) async throws {
         let session = try await SupaClient.shared.auth.session
-        let tokenMirror = Mirror(reflecting: session)
-        let accessToken = (tokenMirror.children.first { $0.label == "accessToken" }?.value as? String) ?? ""
+        let accessToken = session.accessToken
 
         var base = SupabaseConfig.url.absoluteString
         if base.hasSuffix("/") { base.removeLast() }
@@ -110,9 +107,7 @@ struct StorageRepository {
     /// If `upsert` is true, existing object will be overwritten.
     func upload(bucket: String, objectKey: String, data: Data, contentType: String, upsert: Bool = true) async throws {
         let session = try await SupaClient.shared.auth.session
-        let tokenMirror = Mirror(reflecting: session)
-        // Try common property names for access token
-        let accessToken = (tokenMirror.children.first { $0.label == "accessToken" }?.value as? String) ?? ""
+        let accessToken = session.accessToken
 
         var base = SupabaseConfig.url.absoluteString
         if base.hasSuffix("/") { base.removeLast() }
