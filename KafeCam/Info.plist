@@ -25,6 +25,8 @@
 	<string>KafeCam necesita acceso a la cámara para fotografiar hojas de plantas de café y detectar enfermedades.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>KafeCam usa tu ubicación para registrar observaciones en el mapa y ofrecer pronósticos climáticos locales.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>KafeCam necesita acceso al micrófono para grabar notas de voz en las capturas.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>KafeCam necesita acceso a tu galería para seleccionar una foto de perfil.</string>
 
@@ -49,6 +51,10 @@
 	</array>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleDefault</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

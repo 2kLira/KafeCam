@@ -106,6 +106,16 @@ struct EditProfileView: View {
 
     private func save() async {
         errorMessage = nil
+        if !phone.trimmingCharacters(in: .whitespaces).isEmpty,
+           !LocalAuthService.validatePhone(phone.trimmingCharacters(in: .whitespaces)) {
+            errorMessage = "Teléfono inválido (10 dígitos)"
+            return
+        }
+        if !email.trimmingCharacters(in: .whitespaces).isEmpty,
+           !LocalAuthService.validateEmail(email.trimmingCharacters(in: .whitespaces)) {
+            errorMessage = "Correo electrónico inválido"
+            return
+        }
         isSaving = true
         defer { isSaving = false }
         do {

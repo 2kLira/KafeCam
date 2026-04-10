@@ -26,6 +26,7 @@ struct StorageRepository {
         let endpoint = URL(string: base + "/storage/v1/object/sign/\(bucket)/" + objectKey)!
 
         var req = URLRequest(url: endpoint)
+        req.timeoutInterval = 20
         req.httpMethod = "POST"
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
         req.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -67,6 +68,7 @@ struct StorageRepository {
         let accessToken = session.accessToken
 
         var req = URLRequest(url: endpoint)
+        req.timeoutInterval = 20
         req.httpMethod = "POST"
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
         req.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -93,6 +95,7 @@ struct StorageRepository {
         let endpoint = URL(string: base + "/storage/v1/object/\(bucket)/" + objectKey)!
 
         var req = URLRequest(url: endpoint)
+        req.timeoutInterval = 20
         req.httpMethod = "DELETE"
         req.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         req.addValue(SupabaseConfig.anonKey, forHTTPHeaderField: "apikey")
@@ -114,6 +117,7 @@ struct StorageRepository {
         let endpoint = URL(string: base + "/storage/v1/object/\(bucket)/" + objectKey)!
 
         var req = URLRequest(url: endpoint)
+        req.timeoutInterval = 20
         req.httpMethod = "POST"               // Storage accepts POST with x-upsert for create/replace
         req.addValue(contentType, forHTTPHeaderField: "Content-Type")
         req.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")

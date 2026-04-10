@@ -35,7 +35,7 @@ struct ChangePasswordView: View {
 
     private func onSave() async {
         errorMessage = nil
-        guard newPassword.count >= 6 else { errorMessage = "Mínimo 6 caracteres"; return }
+        guard newPassword.count >= 8 else { errorMessage = "Mínimo 8 caracteres"; return }
         guard newPassword == confirmPassword else { errorMessage = "Las contraseñas no coinciden"; return }
         isSaving = true
         defer { isSaving = false }
