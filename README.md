@@ -1,12 +1,5 @@
 # KafeCam
 
-## Supabase Integration (Development)
-
-- Add package: `https://github.com/supabase-community/supabase-swift` (Xcode > Add Packages)
-- Create `KafeCam/Configuration/SupabaseConfig.swift` and set:
-  - `url`: https://dmctlhsjdwykywrjmpax.supabase.co
-  - `anonKey`: <anon key>
-- Build and run.
 
 ### Endpoints used
 - PostgREST
