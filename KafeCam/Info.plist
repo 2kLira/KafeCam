@@ -2,7 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- Bundle identity -->
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -19,8 +18,6 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-
-	<!-- Privacy usage descriptions -->
 	<key>NSCameraUsageDescription</key>
 	<string>KafeCam necesita acceso a la cámara para fotografiar hojas de plantas de café y detectar enfermedades.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -29,8 +26,10 @@
 	<string>KafeCam necesita acceso al micrófono para grabar notas de voz en las capturas.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>KafeCam necesita acceso a tu galería para seleccionar una foto de perfil.</string>
-
-	<!-- UI configuration -->
+	<key>SupabaseAnonKey</key>
+	<string>$(SUPABASE_ANON_KEY)</string>
+	<key>SupabaseURL</key>
+	<string>$(SUPABASE_URL)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -62,11 +61,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
-	<!-- Supabase configuration — injected from KafeCamSecrets.xcconfig at build time -->
-	<key>SupabaseURL</key>
-	<string>$(SUPABASE_URL)</string>
-	<key>SupabaseAnonKey</key>
-	<string>$(SUPABASE_ANON_KEY)</string>
 </dict>
 </plist>

@@ -167,7 +167,7 @@ struct DetectaView: View {
                 let coreML = try MLModel(contentsOf: compiledURL, configuration: config)
                 vnModel = try VNCoreMLModel(for: coreML)
             } else {
-                vnModel = try VNCoreMLModel(for: CoffeeDiseaseClassifier_v10(configuration: config).model)
+                vnModel = try VNCoreMLModel(for: CoffeeDiseaseClassifier_v100(configuration: config).model)
             }
         } catch {
             DispatchQueue.main.async {
