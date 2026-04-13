@@ -80,11 +80,6 @@
 			path = en.lproj;
 			sourceTree = "<group>";
 		};
-		4E3C27FE2EA947FF0057D44B /* tzo.lproj */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = tzo.lproj;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,7 +125,6 @@
 				144DD9162E6CDF5700CCE4F4 /* Products */,
 				4E3C27F62EA947D40057D44B /* es.lproj */,
 				4E3C27FA2EA947E50057D44B /* en.lproj */,
-				4E3C27FE2EA947FF0057D44B /* tzo.lproj */,
 				E531F7742F85E00800C88941 /* KafeCamSecrets.xcconfig */,
 			);
 			sourceTree = "<group>";
@@ -171,7 +165,6 @@
 				144DD9172E6CDF5700CCE4F4 /* KafeCam */,
 				4E3C27F62EA947D40057D44B /* es.lproj */,
 				4E3C27FA2EA947E50057D44B /* en.lproj */,
-				4E3C27FE2EA947FF0057D44B /* tzo.lproj */,
 			);
 			name = KafeCam;
 			packageProductDependencies = (
@@ -262,7 +255,6 @@
 				en,
 				Base,
 				es,
-				tzo,
 			);
 			mainGroup = 144DD90C2E6CDF5700CCE4F4;
 			minimizedProjectReferenceProxies = 1;
@@ -476,7 +468,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = VWUWR4BNBX;
+				DEVELOPMENT_TEAM = CLE629MGG8;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -521,7 +513,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = VWUWR4BNBX;
+				DEVELOPMENT_TEAM = CLE629MGG8;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
