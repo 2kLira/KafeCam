@@ -26,6 +26,6 @@ final class LanguageManager: ObservableObject {
     let supported: [(code: String, name: String)] = [
         ("es", "Español"),
         ("en", "English"),
-        ("tzo", "Tzotzil (beta)")
+        ("tzo", "Tzotzil")
     ]
 }

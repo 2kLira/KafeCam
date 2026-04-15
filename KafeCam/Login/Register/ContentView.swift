@@ -11,7 +11,7 @@ struct ContentView: View {
     @EnvironmentObject var session: SessionViewModel
 
     var body: some View {
-        if session.isLoggedIn {
+        if session.isLoggedIn || session.isGuest {
             HomeView() // <- tu pantalla existente
                 .environmentObject(session)
                 .onReceive(NotificationCenter.default.publisher(for: .init("kafe.session.logout"))) { _ in

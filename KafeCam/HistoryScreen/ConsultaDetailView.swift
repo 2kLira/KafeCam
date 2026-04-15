@@ -62,6 +62,7 @@ struct ConsultaDetailView: View {
                 InfoView(diseaseName: entry.diseaseName ?? "Desconocida")
             }
         }
+        .navigationViewStyle(.stack)
         .onAppear {
             notesText = entry.notes
         }

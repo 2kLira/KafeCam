@@ -79,6 +79,12 @@ struct LoginView: View {
                         }
                         .foregroundColor(accentColor)
                         .font(.footnote)
+
+                        Button("Continuar sin cuenta") {
+                            vm.session.continueAsGuest()
+                        }
+                        .foregroundColor(.secondary)
+                        .font(.footnote)
                     }
                 }
                 .frame(maxWidth: .infinity)

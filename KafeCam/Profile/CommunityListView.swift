@@ -16,6 +16,7 @@ struct CommunityListView: View {
     @State private var editingList: UserList? = nil
     
     @StateObject private var listsManager = UserListsManager()
+    @EnvironmentObject private var session: SessionViewModel
 
     // Palette matches app
     private let accentColor  = Color(red: 88/255, green: 129/255, blue: 87/255)
@@ -47,6 +48,9 @@ struct CommunityListView: View {
     }
 
     var body: some View {
+        if session.isGuest {
+            GuestLoginPromptView()
+        } else {
         VStack(spacing: 12) {
             HStack {
                 SearchBar(text: $query)
@@ -219,6 +223,7 @@ struct CommunityListView: View {
             })
             .presentationDetents([.large])
         }
+        } // end else (guest check)
     }
 
     // MARK: - Data

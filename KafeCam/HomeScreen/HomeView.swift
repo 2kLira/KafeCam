@@ -227,7 +227,7 @@ private struct Header: View {
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
-                Text("Hola, \((displayName.isEmpty ? greetingName : displayName)) 👋")
+                Text("Hola \((displayName.isEmpty ? greetingName : displayName)) 👋")
                     .font(.largeTitle.bold())
                     .foregroundColor(accent)
                     .lineLimit(1)

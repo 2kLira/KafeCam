@@ -38,8 +38,12 @@ struct ProfileTabView: View {
     let darkColor    = Color(red: 82/255,  green: 76/255,  blue: 41/255)
 
     @EnvironmentObject var avatarStore: AvatarStore
+    @EnvironmentObject var session: SessionViewModel
 
     var body: some View {
+        if session.isGuest {
+            GuestLoginPromptView()
+        } else {
         NavigationStack {
             Form {
                 // MARK: - CUENTA (header con avatar y nombre)
@@ -304,6 +308,7 @@ struct ProfileTabView: View {
             DispatchQueue.main.async { showAvatarEditor = true }
         }
         .task { await vm.load() }
+        } // end else (guest check)
     }
 }
 

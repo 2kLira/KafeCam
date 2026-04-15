@@ -27,5 +27,6 @@ struct InfoView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }

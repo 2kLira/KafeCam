@@ -14,6 +14,7 @@ struct KafeCamApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.horizontalSizeClass, .compact)
                 .environmentObject(historyStore)
                 .environmentObject(session)
                 .environmentObject(avatarStore)

@@ -19,7 +19,7 @@ struct LanguageSection: View {
             }
             .pickerStyle(.navigationLink)
 
-            Text("Tzotzil (beta) — puede contener errores")
+            Text("Tzotzil — traducción comunitaria")
                 .font(.footnote)
                 .foregroundColor(.secondary)
         }
