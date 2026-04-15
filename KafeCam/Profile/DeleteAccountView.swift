@@ -105,14 +105,14 @@ struct DeleteAccountView: View {
             let userId = try await SupaAuthService.currentUserId()
 
             // 1. Delete captures for this user (best-effort)
-            try? await SupaClient.shared
+            _ = try? await SupaClient.shared
                 .from("captures")
                 .delete()
                 .eq("uploaded_by_user_id", value: userId.uuidString)
                 .execute()
 
             // 2. Delete profile row (best-effort — also deleted by cascade if configured)
-            try? await SupaClient.shared
+            _ = try? await SupaClient.shared
                 .from("profiles")
                 .delete()
                 .eq("id", value: userId.uuidString)

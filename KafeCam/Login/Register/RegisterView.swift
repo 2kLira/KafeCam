@@ -109,7 +109,7 @@ struct RegisterView: View {
             if vm.dateOfBirth < minDate   { vm.dateOfBirth = minDate }
         }
         // Dismiss as soon as the VM signals success
-        .onChange(of: vm.registrationSucceeded) { succeeded in
+        .onChange(of: vm.registrationSucceeded) { _, succeeded in
             if succeeded { dismiss() }
         }
     }
