@@ -424,7 +424,7 @@ Open an issue on GitHub: [github.com/yourusername/KafeCam/issues](https://github
 
 <div align="center">
 
-[![Download on the App Store](https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg)](https://apps.apple.com/app/kafecam)
+[![Download on the App Store](https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg)](https://apps.apple.com/mx/app/kafecam/id6762103541?l=en-GB)
 
 **Version 1.0** — Available on iOS 16+ — Free
 
