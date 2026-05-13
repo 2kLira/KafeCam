@@ -435,10 +435,9 @@ Open an issue on GitHub: [github.com/yourusername/KafeCam/issues](https://github
 ## Credits
 
 ### Team
-- **Creator & Lead Developer:** José Manuel Sánchez Pérez
-- **Design & UX:** [Design Team]
-- **Agricultural Advisor:** [Agronomist Name]
-- **Translation Team:** Community contributors
+- Grecia Klarissa Saucedo Sandoval
+- Guillermo Lira Sánchez
+- José Manuel Sánchez Pérez
 
 ### Acknowledgments
 
