@@ -19,13 +19,15 @@ final class LanguageManager: ObservableObject {
 
     // Locale que inyectaremos en la app para que lea .strings del idioma elegido
     var currentLocale: Locale {
-        Locale(identifier: appLanguage) // "es", "en", "tzo"
+        Locale(identifier: appLanguage) // "es", "en", "tzo", "nah"
     }
 
-    // Opciones visibles en el selector
-    let supported: [(code: String, name: String)] = [
-        ("es", "Español"),
-        ("en", "English"),
-        ("tzo", "Tzotzil")
+    // Opciones visibles en el selector. Incluye nombre en idioma propio
+    // (lo que ven los hablantes) además del nombre en español.
+    let supported: [(code: String, name: String, native: String)] = [
+        ("es",  "Español",  "Español"),
+        ("en",  "English",  "English"),
+        ("tzo", "Tzotzil",  "Bats'i k'op"),
+        ("nah", "Náhuatl",  "Nāhuatl")
     ]
 }
