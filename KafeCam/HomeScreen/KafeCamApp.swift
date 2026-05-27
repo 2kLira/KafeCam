@@ -7,6 +7,8 @@ import SwiftUI
 
 @main
 struct KafeCamApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     @StateObject private var historyStore = HistoryStore()
     @StateObject private var session = SessionViewModel(auth: SupabaseCodeAuthService())
     @StateObject private var avatarStore = AvatarStore()
@@ -21,6 +23,7 @@ struct KafeCamApp: App {
                 .task { await avatarStore.warmStart() }
                 .task { await CaficultorBrain.shared.warmUp() }
                 .task { startOfflineServices() }
+                .task { await PushNotificationService.shared.requestAuthorization() }
                 .onReceive(NotificationCenter.default.publisher(for: .init("kafe.user.changed"))) { _ in
                     Task { await avatarStore.warmStart() }
                 }

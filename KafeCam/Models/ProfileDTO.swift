@@ -30,6 +30,8 @@ struct ProfileDTO: Codable, Identifiable, Hashable {
     let showCountry: Bool?
     let showState: Bool?
     let showAbout: Bool?
+    // Push notifications
+    let apnsToken: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -52,6 +54,7 @@ struct ProfileDTO: Codable, Identifiable, Hashable {
         case showCountry = "show_country"
         case showState = "show_state"
         case showAbout = "show_about"
+        case apnsToken = "apns_token"
     }
 
     init(from decoder: Decoder) throws {
@@ -89,6 +92,7 @@ struct ProfileDTO: Codable, Identifiable, Hashable {
         showCountry = try? c.decode(Bool.self, forKey: .showCountry)
         showState = try? c.decode(Bool.self, forKey: .showState)
         showAbout = try? c.decode(Bool.self, forKey: .showAbout)
+        apnsToken = try? c.decode(String.self, forKey: .apnsToken)
     }
 
     static func parseDate(_ s: String) -> Date? {
