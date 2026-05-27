@@ -18,6 +18,7 @@ struct HomeView: View {
     @AppStorage("profileInitials") private var profileInitials: String = ""
     @AppStorage("avatarKey") private var avatarKey: String = ""
     @StateObject private var vm = HomeViewModel()
+    @StateObject private var anticipaVM = AnticipaViewModel()
 
     // ✅ Instancia global del mapa: vive todo el tiempo y escucha notificaciones
     @StateObject private var plotsVM = PlotsMapViewModel()
@@ -117,7 +118,13 @@ struct HomeView: View {
                 .scrollDismissesKeyboard(.immediately)
                 .navigationTitle("")
                 .toolbar(.hidden, for: .navigationBar)
-                .onAppear { vm.refresh() }
+                .onAppear { anticipaVM.onAppear() }
+                .onChange(of: anticipaVM.risks) { _, risks in
+                    vm.updateAlerts(from: risks, isLoading: anticipaVM.isLoading)
+                }
+                .onChange(of: anticipaVM.isLoading) { _, loading in
+                    vm.updateAlerts(from: anticipaVM.risks, isLoading: loading)
+                }
                 .task { await syncProfileToAppStorage() }
                 .navigationDestination(isPresented: $openDiseaseDetail) {
                     if let d = selectedDisease {
@@ -125,6 +132,7 @@ struct HomeView: View {
                     }
                 }
             }
+            .environmentObject(anticipaVM)
             .tabItem { Label("Inicio", systemImage: "house.fill") }
             .tag(AppTab.home)
 
@@ -361,6 +369,21 @@ private struct ActionsGrid: View {
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                                 to: nil, from: nil, for: nil)
             })
+
+            // ASISTENTE
+            NavigationLink {
+                AsistenteView()
+            } label: {
+                ActionCardView(color: brown1,
+                               systemImage: "bubble.left.and.exclamationmark.bubble.right.fill",
+                               title: "Asistente",
+                               subtitle: "Pregunta lo que necesites")
+                    .contentShape(Rectangle())
+            }
+            .simultaneousGesture(TapGesture().onEnded {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                                to: nil, from: nil, for: nil)
+            })
         }
         .buttonStyle(.plain)
     }
@@ -385,6 +408,5 @@ private struct MapSectionView: View {
 
 #Preview {
     HomeView()
-        // Previews: provee stores/VMs mínimamente
         .environmentObject(HistoryStore())
 }

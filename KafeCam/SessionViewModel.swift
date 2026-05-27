@@ -25,6 +25,7 @@ final class SessionViewModel: ObservableObject {
             await auth.logout()
             isLoggedIn = false
             isGuest = false
+            CrashMonitor.clearUser()
             NotificationCenter.default.post(name: .init("kafe.session.logout"), object: nil)
         }
     }

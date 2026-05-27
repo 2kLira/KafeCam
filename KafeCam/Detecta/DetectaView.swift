@@ -19,11 +19,20 @@ struct DetectaView: View {
     @State private var takePhotoTrigger = false
     @State private var showSaveOptions = false
     @State private var isAnalyzing = false
+    @State private var showAsistente = false
 
     // Datos para el pin del mapa
     @State private var lastStatus: PlotStatus = .sano
     @State private var lastConfidencePct: Double = 0.0
     @State private var lastDiseaseName: String = ""
+    // true cuando el modelo detecta que la foto no contiene una planta de café
+    @State private var isNoPlantDetected: Bool = false
+
+    // Pregunta con la que se abre el asistente tras el diagnóstico.
+    private var assistantQuestion: String {
+        let name = lastDiseaseName.isEmpty ? "una posible enfermedad" : lastDiseaseName
+        return "Detecté \(name) en una foto de mi cafetal. ¿Qué me recomiendas?"
+    }
 
     var body: some View {
         ZStack {
@@ -46,12 +55,34 @@ struct DetectaView: View {
                         .padding()
 
                     if showSaveOptions && !isAnalyzing {
+                        if isNoPlantDetected {
+                            // ── No se detectó planta ──────────────────────────
+                            VStack(spacing: 12) {
+                                Text("Acerca la cámara directamente a una hoja de café e intenta de nuevo.")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
+
+                                Button("🔄 Volver a capturar") {
+                                    capturedImage = nil
+                                    prediction = ""
+                                    showSaveOptions = false
+                                    isNoPlantDetected = false
+                                    showCamera = true
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(.brown)
+                            }
+                        } else {
+                        // ── Diagnóstico válido ────────────────────────────────
                         HStack(spacing: 40) {
                             Button("❌ Rechazar") {
                                 capturedImage = nil
                                 prediction = ""
                                 showSaveOptions = false
                                 isAnalyzing = false
+                                isNoPlantDetected = false
                                 showCamera = true
                             }
                             .foregroundColor(.red)
@@ -59,40 +90,60 @@ struct DetectaView: View {
                             Button("✅ Aceptar") {
                                 guard let image = capturedImage else { return }
 
-                                // Guardar local para feedback inmediato
                                 historyStore.add(image: image, prediction: prediction)
                                 showSaveOptions = false
 
-                                // Subir a Supabase (si está disponible)
                                 Task {
+                                    let takenAt = Date()
+                                    let lat = locationManager.lastLocation?.coordinate.latitude
+                                    let lon = locationManager.lastLocation?.coordinate.longitude
+                                    let predText = prediction.isEmpty ? "Foto" : prediction
+                                    CrashMonitor.breadcrumb("Captura aceptada: \(predText)", category: "detecta")
+
+                                    // 1. Siempre persistir en disco primero (funciona sin red)
                                     #if canImport(Supabase)
+                                    guard let uid = try? await SupaAuthService.currentUserId() else { return }
+                                    #else
+                                    let uid = UUID()
+                                    #endif
+                                    let clientId = UUID()
+                                    let store = PendingCaptureStore.shared
+                                    let fileName = store.saveImage(image, userId: uid.uuidString) ?? ""
+                                    let pending = PendingCapture(
+                                        id: clientId,
+                                        userId: uid.uuidString,
+                                        clientUUID: clientId,
+                                        imageFileName: fileName,
+                                        prediction: predText,
+                                        diseaseName: lastDiseaseName,
+                                        statusRaw: lastStatus.rawValue,
+                                        confidencePct: lastConfidencePct,
+                                        lat: lat,
+                                        lon: lon,
+                                        takenAt: takenAt,
+                                        syncedAt: nil
+                                    )
+                                    store.queue(pending)
+
+                                    // 2. Intentar subir a Supabase; si falla, OfflineSyncService lo reintentará
+                                    #if canImport(Supabase)
+                                    guard let jpeg = image.jpegData(compressionQuality: 0.85) else { return }
                                     do {
-                                        if let uid = try? await SupaAuthService.currentUserId() {
-                                            _ = LocalCapturesStore.shared.save(image: image, for: uid.uuidString)
-                                        }
-
-                                        if let jpeg = image.jpegData(compressionQuality: 0.85) {
-                                            let svc = CapturesService()
-                                            let lat = locationManager.lastLocation?.coordinate.latitude
-                                            let lon = locationManager.lastLocation?.coordinate.longitude
-
-                                            let capture = try await svc.saveCaptureToDefaultPlot(
-                                                imageData: jpeg,
-                                                takenAt: Date(),
-                                                deviceModel: prediction.isEmpty ? "Foto" : prediction,
-                                                lat: lat,
-                                                lon: lon
-                                            )
-
-                                            debugLog("[Detecta] Capture saved: \(capture.photoKey)")
-                                            if let lat, let lon {
-                                                debugLog("[Detecta] Location: \(lat), \(lon)")
-                                            }
-
-                                            await historyStore.syncFromSupabase()
-                                        }
+                                        let svc = CapturesService()
+                                        _ = try await svc.saveCaptureToDefaultPlot(
+                                            imageData: jpeg,
+                                            takenAt: takenAt,
+                                            deviceModel: predText,
+                                            lat: lat,
+                                            lon: lon
+                                        )
+                                        store.markSynced(id: clientId)
+                                        debugLog("[Detecta] Capture synced immediately")
+                                        await historyStore.syncFromSupabase()
                                     } catch {
-                                        debugLog("[Detecta] Error saving capture: \(error)")
+                                        debugLog("[Detecta] Sin red – capture en cola: \(error)")
+                                        OfflineSyncService.shared.refreshPendingCount(for: uid.uuidString)
+                                        // Error de red esperado — no enviar a Sentry (se reintentará)
                                     }
                                     #endif
                                 }
@@ -113,9 +164,23 @@ struct DetectaView: View {
                             }
                             .foregroundColor(.green)
                         }
+
+                        Button {
+                            showAsistente = true
+                        } label: {
+                            Label("Preguntar al asistente", systemImage: "bubble.left.and.exclamationmark.bubble.right.fill")
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.brown)
+                        } // end else (diagnóstico válido)
                     }
                 }
                 .padding()
+            }
+        }
+        .sheet(isPresented: $showAsistente) {
+            NavigationStack {
+                AsistenteView(initialQuestion: assistantQuestion)
             }
         }
         .fullScreenCover(isPresented: $showCamera) {
@@ -126,6 +191,7 @@ struct DetectaView: View {
                     self.isAnalyzing = true
                     self.showCamera = false
                     self.showSaveOptions = false
+                    self.isNoPlantDetected = false
                     self.classify(image: image)
                 }
                 .ignoresSafeArea()
@@ -170,6 +236,10 @@ struct DetectaView: View {
                 vnModel = try VNCoreMLModel(for: CoffeeDiseaseClassifier_v100(configuration: config).model)
             }
         } catch {
+            CrashMonitor.capture(error, context: [
+                "model": "CoffeeDiseaseClassifier_v10",
+                "phase": "load"
+            ])
             DispatchQueue.main.async {
                 self.isAnalyzing = false
                 self.prediction = "⚠️ Error al cargar el modelo: \(error.localizedDescription)"
@@ -185,12 +255,22 @@ struct DetectaView: View {
                     .lowercased()
 
                 let confidence = Double(result.confidence * 100.0)
-                let parsed = parseStatus(from: label)
+                let isNoPlant = label == "no_planta" || label == "no planta" || label == "noplanta"
+                let parsed = self.parseStatus(from: label, confidence: confidence)
                 let status = parsed.status
                 let diseaseName = parsed.diseaseName
-                let shownName = displayName(for: diseaseName)
+                let shownName = self.displayName(for: diseaseName)
 
                 DispatchQueue.main.async {
+                    self.isNoPlantDetected = isNoPlant
+
+                    if isNoPlant {
+                        self.prediction = "📷 No se detectó una hoja de café"
+                        self.isAnalyzing = false
+                        self.showSaveOptions = true
+                        return
+                    }
+
                     self.lastStatus = status
                     self.lastConfidencePct = confidence
                     self.lastDiseaseName = diseaseName
@@ -201,8 +281,8 @@ struct DetectaView: View {
 
                     case .sospecha:
                         self.prediction = diseaseName.isEmpty
-                            ? "⚠️ Sospecha (\(Int(confidence))%)"
-                            : "⚠️ Sospecha de \(shownName) (\(Int(confidence))%)"
+                            ? "⚠️ Posible problema (\(Int(confidence))%)"
+                            : "⚠️ Posible \(shownName) (\(Int(confidence))%)"
 
                     case .enfermo:
                         self.prediction = diseaseName.isEmpty
@@ -237,6 +317,10 @@ struct DetectaView: View {
             do {
                 try handler.perform([request])
             } catch {
+                CrashMonitor.capture(error, context: [
+                    "model": "CoffeeDiseaseClassifier_v10",
+                    "phase": "inference"
+                ])
                 DispatchQueue.main.async {
                     self.isAnalyzing = false
                     self.prediction = "⚠️ Error al procesar la imagen"
@@ -247,21 +331,27 @@ struct DetectaView: View {
     }
 
     // MARK: - Parser del label del modelo
-    private func parseStatus(from raw: String) -> (status: PlotStatus, diseaseName: String) {
+    private func parseStatus(from raw: String, confidence: Double) -> (status: PlotStatus, diseaseName: String) {
         let label = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
         switch label {
         case "sana", "sano", "saludable", "healthy":
             return (.sano, "")
 
+        case "no_planta", "no planta", "noplanta":
+            return (.sospecha, "no_planta")
+
         case "roya":
-            return (.enfermo, "roya")
+            let status: PlotStatus = confidence >= 70 ? .enfermo : .sospecha
+            return (status, "roya")
 
         case "minador":
-            return (.enfermo, "minador")
+            let status: PlotStatus = confidence >= 70 ? .enfermo : .sospecha
+            return (status, "minador")
 
         case "phoma":
-            return (.enfermo, "phoma")
+            let status: PlotStatus = confidence >= 70 ? .enfermo : .sospecha
+            return (status, "phoma")
 
         default:
             return (.sospecha, label)
@@ -276,7 +366,9 @@ struct DetectaView: View {
         case "minador":
             return "Minador de la hoja"
         case "phoma":
-            return "Phoma"
+            return "Phoma (mancha de hierro)"
+        case "no_planta":
+            return "Sin planta detectada"
         default:
             return disease.capitalized
         }

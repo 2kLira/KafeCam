@@ -10,7 +10,7 @@ import SwiftUI
 // vista simple
 
 struct AnticipaView: View {
-    @StateObject private var vm = AnticipaViewModel()
+    @EnvironmentObject private var vm: AnticipaViewModel
 
     // colores verdes
     let accent1  = Color(red: 88/255, green: 129/255, blue: 87/255)
@@ -262,4 +262,5 @@ struct AnticipaAlertBadge: View {
 }
 #Preview {
     AnticipaView()
+        .environmentObject(AnticipaViewModel())
 }

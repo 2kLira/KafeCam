@@ -9,7 +9,9 @@ struct HistoryEntry: Identifiable, Hashable {
     var diseaseName: String? = nil
     var status: PlotStatus = .sano
     var notes: String = ""
-    var captureData: CaptureDTO? = nil  // Reference to the capture from database
+    var captureData: CaptureDTO? = nil
+    /// true mientras el diagnóstico espera sincronización con Supabase
+    var isPendingSync: Bool = false
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

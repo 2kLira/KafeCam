@@ -26,6 +26,10 @@
 	<string>KafeCam necesita acceso al micrófono para grabar notas de voz en las capturas.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>KafeCam necesita acceso a tu galería para seleccionar una foto de perfil.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>KafeCam usa el reconocimiento de voz para que puedas hablarle al asistente sin teclear.</string>
+	<key>SentryDSN</key>
+	<string>$(SENTRY_DSN)</string>
 	<key>SupabaseAnonKey</key>
 	<string>$(SUPABASE_ANON_KEY)</string>
 	<key>SupabaseURL</key>

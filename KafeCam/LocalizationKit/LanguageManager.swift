@@ -14,7 +14,16 @@ final class LanguageManager: ObservableObject {
 
     // Idioma elegido por el usuario; persiste en UserDefaults
     @AppStorage("appLanguage") var appLanguage: String = "es" {
-        didSet { objectWillChange.send() }
+        didSet {
+            objectWillChange.send()
+            // Sincroniza la lengua activa con el cerebro de IA.
+            let code = appLanguage
+            Task { @MainActor in
+                if let lang = CaficultorLanguage(rawValue: code) {
+                    await CaficultorBrain.shared.setLanguage(lang)
+                }
+            }
+        }
     }
 
     // Locale que inyectaremos en la app para que lea .strings del idioma elegido

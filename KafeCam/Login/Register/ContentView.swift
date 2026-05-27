@@ -9,16 +9,22 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var session: SessionViewModel
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
     var body: some View {
         if session.isLoggedIn || session.isGuest {
-            HomeView() // <- tu pantalla existente
-                .environmentObject(session)
-                .onReceive(NotificationCenter.default.publisher(for: .init("kafe.session.logout"))) { _ in
-                    session.logout()
+            if !hasSeenOnboarding {
+                OnboardingView {
+                    hasSeenOnboarding = true
                 }
+            } else {
+                HomeView()
+                    .environmentObject(session)
+                    .onReceive(NotificationCenter.default.publisher(for: .init("kafe.session.logout"))) { _ in
+                        session.logout()
+                    }
+            }
         } else {
-            // Inyectamos session en el VM del login
             LoginView(vm: LoginViewModel(auth: session.auth, session: session))
                 .environmentObject(session)
         }

@@ -360,14 +360,12 @@ struct ImageViewerView: View {
                 
                 VStack(spacing: 0) {
                     // Image container with proper aspect ratio
-                    GeometryReader { geometry in
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: geometry.size.width, height: geometry.size.height)
-                            .background(Color.black)
-                    }
-                    .frame(maxHeight: UIScreen.main.bounds.height * 0.55)
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.black)
+                        .frame(maxHeight: 380)
                     
                     // Details panel - EXACTLY like HistoryDetailView in Consulta
                     ScrollView {

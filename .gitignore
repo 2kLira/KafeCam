@@ -16,3 +16,6 @@ Packages/
 
 # Supabase secrets — never commit
 KafeCamSecrets.xcconfig
+
+# Claude Code guidance
+CLAUDE.md

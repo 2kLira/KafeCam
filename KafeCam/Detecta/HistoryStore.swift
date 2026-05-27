@@ -104,8 +104,8 @@ class HistoryStore: ObservableObject {
             await MainActor.run { self.entries = merged }
             debugLog("[HistoryStore] Sync complete with \(merged.count) total entries")
         } catch {
-            // Mantener historial local si falla
             debugLog("[HistoryStore] Sync from Supabase failed: \(error)")
+            CrashMonitor.capture(error, context: ["context": "history_sync"])
         }
         #endif
     }
@@ -139,5 +139,35 @@ class HistoryStore: ObservableObject {
             return HistoryEntry(image: img, prediction: "Foto", date: (try? url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? Date(), isFavorite: false)
         }
         entries = mapped
+    }
+
+    /// Carga diagnósticos guardados offline (pendientes y ya sincronizados)
+    /// y los mezcla con las entradas actuales sin duplicar.
+    func loadPendingEntries(for userId: String) {
+        let pendingCaptures = PendingCaptureStore.shared.all(for: userId)
+        let newEntries: [HistoryEntry] = pendingCaptures.compactMap { p in
+            let url = PendingCaptureStore.shared.imageURL(for: p)
+            guard let data = try? Data(contentsOf: url),
+                  let img = UIImage(data: data) else { return nil }
+            var entry = HistoryEntry(
+                image: img,
+                prediction: p.prediction,
+                date: p.takenAt,
+                isFavorite: false
+            )
+            entry.diseaseName = p.diseaseName.isEmpty ? nil : p.diseaseName
+            entry.status = p.status
+            entry.isPendingSync = p.isPending
+            return entry
+        }
+        // Merge: evitar duplicar entradas que ya están en memoria por fecha (~1 segundo de margen)
+        var merged = entries
+        for e in newEntries {
+            if !merged.contains(where: { abs($0.date.timeIntervalSince(e.date)) < 2 }) {
+                merged.append(e)
+            }
+        }
+        merged.sort { $0.date > $1.date }
+        entries = merged
     }
 }

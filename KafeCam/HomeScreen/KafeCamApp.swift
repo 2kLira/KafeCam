@@ -19,9 +19,24 @@ struct KafeCamApp: App {
                 .environmentObject(session)
                 .environmentObject(avatarStore)
                 .task { await avatarStore.warmStart() }
+                .task { await CaficultorBrain.shared.warmUp() }
+                .task { startOfflineServices() }
                 .onReceive(NotificationCenter.default.publisher(for: .init("kafe.user.changed"))) { _ in
                     Task { await avatarStore.warmStart() }
                 }
+        }
+    }
+
+    private func startOfflineServices() {
+        CrashMonitor.start()
+        OfflineSyncService.shared.startMonitoring()
+        Task {
+            #if canImport(Supabase)
+            if let uid = try? await SupaAuthService.currentUserId() {
+                CrashMonitor.identify(userId: uid.uuidString)
+                historyStore.loadPendingEntries(for: uid.uuidString)
+            }
+            #endif
         }
     }
 }
