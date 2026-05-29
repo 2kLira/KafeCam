@@ -53,7 +53,8 @@ final class ProfileTabViewModel: ObservableObject {
 			
 			displayName = p.name ?? ""
 			initials = Self.makeInitials(from: p.name)
-			email = p.email
+			// Never surface the synthetic login email (<phone>@kafe.local).
+			email = SupaAuthService.sanitizedPersonalEmail(p.email)
 			phone = p.phone
 			organization = p.organization
 			role = p.role
@@ -108,15 +109,18 @@ final class ProfileTabViewModel: ObservableObject {
 			
 			debugLog("[ProfileTabVM] Display values set - DisplayName: \(displayName), FirstName: \(firstName), Initials: \(initials)")
 
-            // Farmer: load incoming requests
-            if (p.role == "farmer") {
-                incomingRequests = try await AssignmentRequestsRepository().listIncoming()
+            // Farmer: load incoming requests + assigned technician.
+            // Gated: el backend de v1 no tiene `assignment_requests` ni la RPC
+            // `list_technicians_for_current_farmer`, así que estas llamadas
+            // fallarían (404/relación inexistente). Se reactiva en v2.
+            if FeatureFlags.assignmentsEnabled, p.role == "farmer" {
+                incomingRequests = (try? await AssignmentRequestsRepository().listIncoming()) ?? []
                 // Load assigned technician(s)
                 struct Row: Codable { let id: UUID; let name: String? }
                 #if canImport(Supabase)
-                let techs: [Row] = try await SupaClient.shared
+                let techs: [Row] = (try? await SupaClient.shared
                     .rpc("list_technicians_for_current_farmer")
-                    .execute().value
+                    .execute().value) ?? []
                 technicianName = techs.first?.name
                 #else
                 technicianName = nil
@@ -140,7 +144,7 @@ final class ProfileTabViewModel: ObservableObject {
 			// Reflect latest values locally
 			displayName = updated.name ?? ""
 			initials = Self.makeInitials(from: updated.name)
-			self.email = updated.email
+			self.email = SupaAuthService.sanitizedPersonalEmail(updated.email)
 			self.phone = updated.phone
 			self.organization = updated.organization
 			self.gender = updated.gender
@@ -172,35 +176,13 @@ final class ProfileTabViewModel: ObservableObject {
 			let userId = try await SupaAuthService.currentUserId()
 			let uid = userId.uuidString.lowercased()
 			let storage = StorageRepository()
-			
-			// Try multiple key formats to work with different RLS policy patterns
-			let candidates = [
-				"\(uid).jpg",           // lowercase UUID
-				"\(uid)-avatar.jpg",    // lowercase UUID with suffix
-				"\(userId.uuidString).jpg",  // original case UUID
-			]
-			
-			var uploadError: Error? = nil
-			var chosenKey: String? = nil
-			
-			for key in candidates {
-				do {
-					try await storage.upload(bucket: "avatars", objectKey: key, data: data, contentType: "image/jpeg", upsert: true)
-					chosenKey = key
-					debugLog("[ProfileTabVM] Avatar uploaded successfully with key: \(key)")
-					break
-				} catch {
-					debugLog("[ProfileTabVM] Failed to upload with key \(key): \(error)")
-					uploadError = error
-					continue
-				}
-			}
-			
-			guard let finalKey = chosenKey else {
-				debugLog("[ProfileTabVM] All upload attempts failed. Last error: \(uploadError?.localizedDescription ?? "unknown")")
-				throw uploadError ?? NSError(domain: "avatar", code: 400, userInfo: [NSLocalizedDescriptionKey: "All upload attempts failed"])
-			}
-			
+
+			// Single canonical key. Must match the avatars Storage RLS policy
+			// (owner = auth.uid()::text). Lowercased to match Postgres' uuid text.
+			let finalKey = "\(uid).jpg"
+			try await storage.upload(bucket: "avatars", objectKey: finalKey, data: data, contentType: "image/jpeg", upsert: true)
+			debugLog("[ProfileTabVM] Avatar uploaded with key: \(finalKey)")
+
 			// Update auth metadata
 			try await SupaAuthService.updateAuthAvatar(avatarKey: finalKey)
 			

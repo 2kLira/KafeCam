@@ -94,6 +94,10 @@ final class FarmersListViewModel: ObservableObject {
 
     // Search by exact names + phone and send a request
     func searchAndRequest(firstName: String, lastName: String, phone: String) async -> Bool {
+        guard FeatureFlags.assignmentsEnabled else {
+            self.errorMessage = "El flujo de asignación no está disponible."
+            return false
+        }
         let full = lastName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? firstName : "\(firstName) \(lastName)"
         do {
             #if canImport(Supabase)

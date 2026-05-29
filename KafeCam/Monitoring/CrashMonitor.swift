@@ -29,7 +29,10 @@ enum CrashMonitor {
             options.dsn = dsn
             options.environment = isDebug ? "debug" : "production"
             options.enableCrashHandler = true
-            options.enableSwiftAsyncStacktraces = true
+            // NOTE: `enableSwiftAsyncStacktraces` was removed in Sentry 9.x and
+            // broke the build (pre-existing, unrelated to the audit fixes).
+            // The equivalent flag is now `swiftAsyncStacktraces`.
+            options.swiftAsyncStacktraces = true
             options.enableMetricKit = true
             // 20% de transacciones en producción para controlar cuota
             options.tracesSampleRate = isDebug ? 1.0 : 0.2

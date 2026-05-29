@@ -135,29 +135,36 @@ struct ProfilesRepository {
             // Try to fetch existing profile
             let profile = try await getCurrent()
             
-            // If profile exists but critical fields are empty, populate them
-            if (profile.phone == nil || profile.phone?.isEmpty == true || profile.name == nil || profile.name?.isEmpty == true) {
+            // Repair when critical fields are empty OR when the stored email is the
+            // synthetic login identity (<phone>@kafe.local) leaked in by the
+            // `handle_new_user` trigger — we never want that shown as the user's email.
+            let storedEmailIsSynthetic = profile.email != nil
+                && SupaAuthService.sanitizedPersonalEmail(profile.email) == nil
+            let needsBasicRepair = (profile.phone ?? "").isEmpty || (profile.name ?? "").isEmpty
+            if needsBasicRepair || storedEmailIsSynthetic {
                 // Get session metadata
                 let session = try await SupaClient.shared.auth.session
                 let loginCode = try? await SupaAuthService.currentLoginCode()
                 let userMetadata = session.user.userMetadata
-                
-                // Extract metadata values
+
+                // Extract metadata values (email sanitized to drop synthetic identities)
                 let metaName = userMetadata["name"]?.stringValue
-                let metaEmail = userMetadata["personal_email"]?.stringValue ?? userMetadata["email"]?.stringValue
+                let metaEmail = SupaAuthService.sanitizedPersonalEmail(
+                    userMetadata["personal_email"]?.stringValue ?? userMetadata["email"]?.stringValue)
                 let metaPhone = userMetadata["phone"]?.stringValue ?? loginCode
                 let metaOrg = userMetadata["organization"]?.stringValue
+                let cleanExistingEmail = SupaAuthService.sanitizedPersonalEmail(profile.email)
 
                 // Update profile with any missing critical fields
                 let updatedProfile = try await upsertCurrentUserProfile(
                     name: profile.name ?? metaName,
-                    email: profile.email ?? metaEmail,
+                    email: cleanExistingEmail ?? metaEmail,
                     phone: profile.phone ?? metaPhone,
                     organization: profile.organization ?? metaOrg
                 )
                 return updatedProfile
             }
-            
+
             return profile
         } catch {
             // Profile doesn't exist, create one with session metadata
@@ -166,9 +173,10 @@ struct ProfilesRepository {
             let loginCode = try? await SupaAuthService.currentLoginCode()
             let userMetadata = session.user.userMetadata
             
-            // Extract metadata from session
+            // Extract metadata from session (email sanitized to drop synthetic identities)
             let metaName = userMetadata["name"]?.stringValue
-            let metaEmail = userMetadata["personal_email"]?.stringValue ?? userMetadata["email"]?.stringValue
+            let metaEmail = SupaAuthService.sanitizedPersonalEmail(
+                userMetadata["personal_email"]?.stringValue ?? userMetadata["email"]?.stringValue)
             let metaPhone = userMetadata["phone"]?.stringValue ?? loginCode
             let metaOrg = userMetadata["organization"]?.stringValue
 

@@ -90,29 +90,35 @@ struct PedirAyudaView: View {
             VStack(alignment: .leading, spacing: 20) {
                 Header(context: context)
 
-                LanguageFilter(selected: $filterLanguage,
-                               options: availableLanguages)
+                if FeatureFlags.assignmentsEnabled {
+                    LanguageFilter(selected: $filterLanguage,
+                                   options: availableLanguages)
 
-                Text("Personas que pueden acompañarte")
-                    .font(.headline)
-                    .padding(.top, 6)
+                    Text("Personas que pueden acompañarte")
+                        .font(.headline)
+                        .padding(.top, 6)
 
-                if filteredTecnicos.isEmpty {
-                    Text("No hay alguien disponible con ese idioma en este momento. Quita el filtro o intenta más tarde.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .fill(Color(.systemGray6))
-                        )
-                } else {
-                    LazyVStack(spacing: 12) {
-                        ForEach(filteredTecnicos) { t in
-                            TecnicoCard(tecnico: t, prefilledMessage: context.summary)
+                    if filteredTecnicos.isEmpty {
+                        Text("No hay alguien disponible con ese idioma en este momento. Quita el filtro o intenta más tarde.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(
+                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    .fill(Color(.systemGray6))
+                            )
+                    } else {
+                        LazyVStack(spacing: 12) {
+                            ForEach(filteredTecnicos) { t in
+                                TecnicoCard(tecnico: t, prefilledMessage: context.summary)
+                            }
                         }
                     }
+                } else {
+                    // Directorio de técnicos/cooperativas: pendiente para v2.
+                    // Se oculta el listado (datos de ejemplo) hasta tener backend real.
+                    ComingSoonCard()
                 }
 
                 Spacer(minLength: 20)
@@ -125,6 +131,7 @@ struct PedirAyudaView: View {
         .navigationTitle("Pedir ayuda")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            guard FeatureFlags.assignmentsEnabled else { return }
             tecnicos = TecnicosRepository.shared.fetch()
         }
     }
@@ -325,6 +332,26 @@ private struct ActionButton: View {
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .accessibilityLabel(label)
+    }
+}
+
+private struct ComingSoonCard: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("Directorio en camino", systemImage: "person.2.badge.gearshape")
+                .font(.headline)
+                .foregroundStyle(brown1)
+            Text("Estamos conectando a técnicos, cooperativas y caficultores con más experiencia para que puedas contactarlos directamente desde aquí. Pronto estará disponible.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Color(.systemGray6))
+        )
     }
 }
 

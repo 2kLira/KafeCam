@@ -140,10 +140,15 @@ struct DetectaView: View {
                                         store.markSynced(id: clientId)
                                         debugLog("[Detecta] Capture synced immediately")
                                         await historyStore.syncFromSupabase()
-                                        await PushNotificationService.shared.notifyTechnicianCaptureSaved(
-                                            captureId: clientId,
-                                            prediction: predText
-                                        )
+                                        // Notificación al técnico: gated (v2). La Edge Function
+                                        // `notify-technician` no está desplegada y no hay técnico
+                                        // asignado mientras el flujo de asignación esté apagado.
+                                        if FeatureFlags.assignmentsEnabled {
+                                            await PushNotificationService.shared.notifyTechnicianCaptureSaved(
+                                                captureId: clientId,
+                                                prediction: predText
+                                            )
+                                        }
                                     } catch {
                                         debugLog("[Detecta] Sin red – capture en cola: \(error)")
                                         OfflineSyncService.shared.refreshPendingCount(for: uid.uuidString)

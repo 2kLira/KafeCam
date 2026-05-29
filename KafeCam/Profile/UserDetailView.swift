@@ -56,8 +56,8 @@ struct UserDetailView: View {
                     }
                 }
 
-                if isTech {
-                    // Technician actions
+                if isTech && FeatureFlags.assignmentsEnabled {
+                    // Technician actions — flujo de asignación (v2), apagado por bandera.
                     HStack(spacing: 12) {
                         Button {
                             Task { await addToFirm() }

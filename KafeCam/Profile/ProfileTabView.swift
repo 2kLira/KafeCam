@@ -98,7 +98,13 @@ struct ProfileTabView: View {
                         }
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Teléfono").font(.subheadline).foregroundStyle(.secondary)
-                            TextField("Teléfono", text: $editPhone).keyboardType(.numberPad)
+                            // Read-only: el teléfono es el identificador de acceso
+                            // (login = <teléfono>@kafe.local). Cambiarlo aquí
+                            // desincronizaría el perfil del inicio de sesión.
+                            Text(vm.phone?.isEmpty == false ? (vm.phone ?? "—") : "—")
+                                .foregroundStyle(.secondary)
+                            Text("Tu teléfono es tu identificador de acceso y no puede cambiarse aquí.")
+                                .font(.caption).foregroundStyle(.secondary)
                         }
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Correo").font(.subheadline).foregroundStyle(.secondary)
@@ -168,23 +174,26 @@ struct ProfileTabView: View {
                         }
                     }
 
-                    if let tname = vm.technicianName, !tname.isEmpty {
-                        LabeledContent("Técnico", value: tname)
-                    }
-
-                    if !(vm.incomingRequests.isEmpty) {
-                        NavigationLink {
-                            RequestsInboxView(requests: vm.incomingRequests)
-                        } label: {
-                            Label("Peticiones", systemImage: "tray.full.fill").foregroundStyle(accentColor)
+                    // Flujo de asignación técnico↔caficultor — sólo si está habilitado (v2).
+                    if FeatureFlags.assignmentsEnabled {
+                        if let tname = vm.technicianName, !tname.isEmpty {
+                            LabeledContent("Técnico", value: tname)
                         }
-                    }
 
-                    if vm.canManageFarmers {
-                        NavigationLink {
-                            FarmersListView()
-                        } label: {
-                            Label("Farmers", systemImage: "person.3.fill").foregroundStyle(accentColor)
+                        if !(vm.incomingRequests.isEmpty) {
+                            NavigationLink {
+                                RequestsInboxView(requests: vm.incomingRequests)
+                            } label: {
+                                Label("Peticiones", systemImage: "tray.full.fill").foregroundStyle(accentColor)
+                            }
+                        }
+
+                        if vm.canManageFarmers {
+                            NavigationLink {
+                                FarmersListView()
+                            } label: {
+                                Label("Farmers", systemImage: "person.3.fill").foregroundStyle(accentColor)
+                            }
                         }
                     }
                 }

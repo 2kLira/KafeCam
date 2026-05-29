@@ -23,18 +23,34 @@ enum SupaClient {
 }
 
 enum SupaAuthService {
+	/// Dominio del correo SINTÉTICO usado únicamente como identidad de Auth.
+	/// El usuario inicia sesión con su teléfono → `<telefono>@kafe.local`.
+	/// El correo REAL del usuario vive en `profiles.email` / metadata
+	/// `personal_email`, nunca en este correo sintético.
+	static let syntheticEmailDomain = "kafe.local"
+
+	/// Devuelve el correo personal si es real; `nil` si está vacío o si es el
+	/// correo sintético `<telefono>@kafe.local` (que no es un correo de verdad).
+	/// Úsalo en TODA lectura/escritura de `profiles.email` para no mostrar ni
+	/// persistir la identidad de login como si fuera el correo del usuario.
+	static func sanitizedPersonalEmail(_ raw: String?) -> String? {
+		guard let e = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !e.isEmpty else { return nil }
+		if e.lowercased().hasSuffix("@\(syntheticEmailDomain)") { return nil }
+		return e
+	}
+
 	#if canImport(Supabase)
 	@discardableResult
 	static func signInOrSignUp(code: String, password: String) async throws -> UUID {
-		let emailAddr = "\(code)@kafe.local"
+		let emailAddr = "\(code)@\(syntheticEmailDomain)"
 		// Only allow login for existing users, don't auto-create
 		let session = try await SupaClient.shared.auth.signIn(email: emailAddr, password: password)
 		return session.user.id
 	}
-	
+
 	@discardableResult
 	static func signUpThenSignIn(code: String, password: String, metaName: String?, metaOrg: String?, metaPhone: String?, metaEmail: String?) async throws -> UUID {
-		let emailAddr = "\(code)@kafe.local"
+		let emailAddr = "\(code)@\(syntheticEmailDomain)"
 		var metadata: [String: AnyJSON] = [:]
 		if let metaName { metadata["name"] = .string(metaName) }
 		if let metaOrg { metadata["organization"] = .string(metaOrg) }

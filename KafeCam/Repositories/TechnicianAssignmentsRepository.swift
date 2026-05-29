@@ -20,6 +20,7 @@ struct TechnicianAssignmentsRepository {
 	}
 	
 	func listFarmersForCurrentTechnician() async throws -> [FarmerSummary] {
+		guard FeatureFlags.assignmentsEnabled else { return [] }
 		let techId = try await SupaAuthService.currentUserId()
 		// 1) Get farmer ids linked to this technician
 		struct Link: Codable { let farmer_id: UUID }
@@ -42,6 +43,7 @@ struct TechnicianAssignmentsRepository {
 	}
 	
 	func assign(farmerId: UUID) async throws {
+		guard FeatureFlags.assignmentsEnabled else { return }
 		let techId = try await SupaAuthService.currentUserId()
 		let payload: [String: String] = [
 			"technician_id": techId.uuidString,
@@ -55,6 +57,7 @@ struct TechnicianAssignmentsRepository {
 	}
 	
 	func unassign(farmerId: UUID) async throws {
+		guard FeatureFlags.assignmentsEnabled else { return }
 		let techId = try await SupaAuthService.currentUserId()
 		let _: Void = try await SupaClient.shared
 			.from("technician_farmers")

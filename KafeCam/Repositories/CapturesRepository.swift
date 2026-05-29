@@ -11,41 +11,9 @@ import Supabase
 #endif
 
 struct CapturesRepository {
-    /// Requests a short-lived signed upload URL from the Edge Function `upload_url`.
-    /// The function runs with service role on the backend and returns a pre-signed
-    /// PUT URL for direct upload to Supabase Storage, plus the object key used.
-    ///
-    /// Expected function response shape: { signedUrl: string, token?: string, objectKey?: string }
-    /// - bucket and objectKey are determined by the function. We pass a suggested key.
-    #if canImport(Supabase)
-    private struct UploadURLResponse: Decodable { let signedUrl: String?; let signedURL: String?; let objectKey: String? }
-    #endif
-
-    /// Returns (objectKey, url) to perform a single PUT upload.
-    func createSignedUploadURL(filename: String) async throws -> (objectKey: String, url: URL) {
-        #if canImport(Supabase)
-        let userId = try await SupaAuthService.currentUserId()
-        // Suggest path inside captures bucket: <user-id>/<filename>
-        let suggestedKey = "\(userId.uuidString)/\(filename)"
-
-        // Call edge function
-        let payload: [String: String] = [
-            "objectKey": suggestedKey
-        ]
-        let data: Data = try await SupaClient.shared.functions
-            .invoke("upload_url", options: .init(body: payload))
-        let resp = try JSONDecoder().decode(UploadURLResponse.self, from: data)
-
-        guard let urlStr = resp.signedUrl ?? resp.signedURL, let url = URL(string: urlStr) else {
-            throw NSError(domain: "upload", code: -2, userInfo: [NSLocalizedDescriptionKey: "signedUrl missing from upload_url response"])
-        }
-        let key = resp.objectKey ?? suggestedKey
-        return (objectKey: key, url: url)
-        #else
-        throw NSError(domain: "supabase", code: -1)
-        #endif
-    }
-	
+	// NOTE: The `upload_url` Edge Function path was removed — it had zero callers
+	// and the function is not deployed. Real uploads go through
+	// `StorageRepository.upload()` (see `CapturesService.saveCapture`).
 	#if canImport(Supabase)
 	private struct NewCapturePayload: Encodable {
 		let plotId: String

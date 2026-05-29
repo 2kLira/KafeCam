@@ -15,8 +15,10 @@ struct PlotDTO: Codable, Identifiable, Hashable {
 	let altitudeM: Int?
 	let region: String?
 	let createdAt: Date?
-	let ownerUserId: UUID
-	
+	/// Nullable in the DB (`plots.owner_user_id` is nullable). Optional here to
+	/// avoid a decode-crash on rows with no owner.
+	let ownerUserId: UUID?
+
 	enum CodingKeys: String, CodingKey {
 		case id
 		case name

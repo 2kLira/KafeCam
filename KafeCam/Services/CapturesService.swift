@@ -19,22 +19,14 @@ struct CapturesService {
 	/// Uploads image to Storage then inserts a row in `captures` with the object key.
 	func saveCapture(plotId: UUID, imageData: Data, takenAt: Date = Date(), deviceModel: String? = nil) async throws -> CaptureDTO {
 		let userId = try await SupaAuthService.currentUserId()
-		
-		// Get user's full name for folder structure
-		var folderName = userId.uuidString // fallback to UUID
-		do {
-			let profile = try await ProfilesRepository().get(byId: userId)
-			if let name = profile.name, !name.isEmpty {
-				// Clean the name for use as a folder name (remove special chars)
-				folderName = name.replacingOccurrences(of: "/", with: "-")
-					.replacingOccurrences(of: "\\", with: "-")
-					.replacingOccurrences(of: ":", with: "-")
-			}
-		} catch {
-			// If we can't get the profile, use UUID as fallback
-			debugLog("[CapturesService] Could not get user profile for folder name: \(error)")
-		}
-		
+
+		// The object key MUST be prefixed with the (lowercased) user id so it
+		// satisfies the Storage RLS policy on the `captures` bucket:
+		//   name LIKE auth.uid()::text || '/%'
+		// (Postgres renders auth.uid()::text in lowercase; UUID.uuidString is
+		// uppercase, so we must lowercase it or every upload is RLS-denied.)
+		let folderName = userId.uuidString.lowercased()
+
 		// Create object key with user folder and timestamp-based filename
 		let timestamp = Int(Date().timeIntervalSince1970)
 		let filename = "\(timestamp)_\(UUID().uuidString.prefix(8)).jpg"

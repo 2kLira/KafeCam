@@ -19,3 +19,8 @@ KafeCamSecrets.xcconfig
 
 # Claude Code guidance
 CLAUDE.md
+
+# Supabase CLI local state
+supabase/.temp/
+
+.mcp.json

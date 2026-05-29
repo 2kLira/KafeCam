@@ -19,6 +19,7 @@ struct AssignmentRequestsRepository {
     }
 
     func listOutgoing() async throws -> [AssignmentRequestDTO] {
+        guard FeatureFlags.assignmentsEnabled else { return [] }
         let tech = try await SupaAuthService.currentUserId()
         let rows: [AssignmentRequestDTO] = try await SupaClient.shared
             .from("assignment_requests")
@@ -30,6 +31,7 @@ struct AssignmentRequestsRepository {
     }
 
     func listIncoming() async throws -> [AssignmentRequestDTO] {
+        guard FeatureFlags.assignmentsEnabled else { return [] }
         let me = try await SupaAuthService.currentUserId()
         let rows: [AssignmentRequestDTO] = try await SupaClient.shared
             .from("assignment_requests")
@@ -42,6 +44,10 @@ struct AssignmentRequestsRepository {
     }
 
     func createRequest(farmerId: UUID) async throws -> AssignmentRequestDTO {
+        guard FeatureFlags.assignmentsEnabled else {
+            throw NSError(domain: "assignments", code: -1,
+                          userInfo: [NSLocalizedDescriptionKey: "El flujo de asignación no está disponible."])
+        }
         let tech = try await SupaAuthService.currentUserId()
         let payload = NewRequestPayload(technicianId: tech.uuidString, farmerId: farmerId.uuidString)
         // Upsert to treat duplicate pending as idempotent success
@@ -71,6 +77,7 @@ struct AssignmentRequestsRepository {
     }
 
     func respond(requestId: UUID, accept: Bool) async throws {
+        guard FeatureFlags.assignmentsEnabled else { return }
         let _: Void = try await SupaClient.shared
             .rpc("respond_assignment_request", params: [
                 "req_id": requestId.uuidString,
