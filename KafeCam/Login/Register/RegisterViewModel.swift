@@ -15,7 +15,7 @@ final class RegisterViewModel: ObservableObject {
     @Published var email:        String = ""
     @Published var phone:        String = ""
     @Published var password:     String = ""
-    @Published var organization: String = "Káapeh"
+    @Published var organization: String = ""
 
     // Personal info (collected, sent to DB, hidden in UI)
     @Published var gender:      String = ""

@@ -108,7 +108,7 @@ struct ProfileTabView: View {
                         }
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Organización").font(.subheadline).foregroundStyle(.secondary)
-                            TextField("Organización", text: $editOrganization).disabled(true)
+                            TextField("Organización", text: $editOrganization)
                         }
                         LabeledContent { Text(roleDisplayText(vm.role)) } label: {
                             Label { Text("Rol") } icon: { Image(systemName: "person.text.rectangle").foregroundStyle(accentColor) }

@@ -12,6 +12,7 @@
 		AA0000000000000000000021 /* MLXNN in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000011 /* MLXNN */; };
 		AA0000000000000000000022 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000012 /* MLXLLM */; };
 		AA0000000000000000000023 /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000013 /* MLXLMCommon */; };
+		E55B84272FC93C9B0071FB8C /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = E55B84262FC93C9B0071FB8C /* Sentry */; };
 		E5A010A92E8A782F00A93A15 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010A82E8A782F00A93A15 /* Auth */; };
 		E5A010AB2E8A782F00A93A15 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010AA2E8A782F00A93A15 /* Functions */; };
 		E5A010AD2E8A782F00A93A15 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = E5A010AC2E8A782F00A93A15 /* PostgREST */; };
@@ -98,6 +99,7 @@
 				E5A010B32E8A782F00A93A15 /* Supabase in Frameworks */,
 				E5A010A92E8A782F00A93A15 /* Auth in Frameworks */,
 				E5A010B12E8A782F00A93A15 /* Storage in Frameworks */,
+				E55B84272FC93C9B0071FB8C /* Sentry in Frameworks */,
 				E5A010AF2E8A782F00A93A15 /* Realtime in Frameworks */,
 				AA0000000000000000000020 /* MLX in Frameworks */,
 				AA0000000000000000000021 /* MLXNN in Frameworks */,
@@ -189,6 +191,7 @@
 				AA0000000000000000000011 /* MLXNN */,
 				AA0000000000000000000012 /* MLXLLM */,
 				AA0000000000000000000013 /* MLXLMCommon */,
+				E55B84262FC93C9B0071FB8C /* Sentry */,
 			);
 			productName = KafeCam;
 			productReference = 144DD9152E6CDF5700CCE4F4 /* KafeCam.app */;
@@ -277,6 +280,7 @@
 				E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				AA0000000000000000000001 /* XCRemoteSwiftPackageReference "mlx-swift" */,
 				AA0000000000000000000002 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */,
+				E55B84252FC93C9B0071FB8C /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 144DD9162E6CDF5700CCE4F4 /* Products */;
@@ -719,6 +723,14 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		E55B84252FC93C9B0071FB8C /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.15.0;
+			};
+		};
 		E5A010A72E8A782F00A93A15 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase-community/supabase-swift";
@@ -749,6 +761,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA0000000000000000000002 /* XCRemoteSwiftPackageReference "mlx-swift-lm" */;
 			productName = MLXLMCommon;
+		};
+		E55B84262FC93C9B0071FB8C /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E55B84252FC93C9B0071FB8C /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
 		};
 		E5A010A82E8A782F00A93A15 /* Auth */ = {
 			isa = XCSwiftPackageProductDependency;

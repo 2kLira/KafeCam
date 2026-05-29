@@ -76,12 +76,12 @@ struct RegisterView: View {
                         Text(e).font(.caption).foregroundColor(.red)
                     }
 
-                    ktextfild(title: "Organización",
+                    ktextfild(title: "Organización (opcional)",
                               text: $vm.organization,
                               isSecure: false,
                               keyboard: .default,
                               contentType: .organizationName,
-                              isDisabled: true)
+                              isDisabled: false)
 
                     Button("Crear cuenta") {
                         vm.submit()

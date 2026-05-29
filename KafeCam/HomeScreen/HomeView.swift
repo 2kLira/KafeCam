@@ -136,12 +136,14 @@ struct HomeView: View {
             .tabItem { Label("Inicio", systemImage: "house.fill") }
             .tag(AppTab.home)
 
-            // COMUNIDAD
-            NavigationStack {
-                CommunityListView()
+            // COMUNIDAD — oculta detrás de feature flag (ver FeatureFlags.swift)
+            if FeatureFlags.communityEnabled {
+                NavigationStack {
+                    CommunityListView()
+                }
+                .tabItem { Label("Comunidad", systemImage: "person.3.fill") }
+                .tag(AppTab.community)
             }
-            .tabItem { Label("Comunidad", systemImage: "person.3.fill") }
-            .tag(AppTab.community)
 
             // MAPA (usa el EnvironmentObject global)
             MapTabView()

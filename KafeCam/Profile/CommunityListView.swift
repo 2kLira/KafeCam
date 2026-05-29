@@ -195,6 +195,9 @@ struct CommunityListView: View {
             EditListView(listsManager: listsManager, list: list)
         }
         .task {
+            // Si la comunidad está deshabilitada por feature flag, no disparamos
+            // el onboarding aunque la vista llegara a instanciarse.
+            guard FeatureFlags.communityEnabled else { return }
             #if canImport(Supabase)
             if let uid = try? await SupaAuthService.currentUserId() { currentUserId = uid }
             #endif
