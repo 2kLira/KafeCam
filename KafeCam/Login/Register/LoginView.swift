@@ -5,10 +5,12 @@
 //  Created by Guillermo Lira on 10/09/25.
 //
 import SwiftUI
+import AuthenticationServices
 
 struct LoginView: View {
     @ObservedObject var vm: LoginViewModel
     @State private var goRegister = false
+    @State private var appleNonce = ""
 
     // Palette
     private let accentColor = Color(red: 88/255, green: 129/255, blue: 87/255)
@@ -63,6 +65,28 @@ struct LoginView: View {
                                 if vm.isLoading { ProgressView().tint(.white) }
                             }
                             .disabled(vm.isLoading)
+
+                        // Separador "o"
+                        HStack {
+                            Rectangle().fill(Color(.separator)).frame(height: 1)
+                            Text("o").font(.caption).foregroundStyle(.secondary)
+                            Rectangle().fill(Color(.separator)).frame(height: 1)
+                        }
+                        .padding(.vertical, 4)
+
+                        // Sign in with Apple (nativo → Supabase signInWithIdToken)
+                        SignInWithAppleButton(.signIn) { request in
+                            let nonce = AppleNonce.random()
+                            appleNonce = nonce
+                            request.requestedScopes = [.fullName, .email]
+                            request.nonce = AppleNonce.sha256(nonce)
+                        } onCompletion: { result in
+                            vm.handleApple(result, rawNonce: appleNonce)
+                        }
+                        .signInWithAppleButtonStyle(.black)
+                        .frame(height: 48)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .disabled(vm.isLoading)
                     }
 
                     VStack(spacing: 8) {

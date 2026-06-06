@@ -7,6 +7,7 @@
 
 
 import Foundation
+import AuthenticationServices
 
 @MainActor
 final class LoginViewModel: ObservableObject {
@@ -56,6 +57,67 @@ final class LoginViewModel: ObservableObject {
             session.isLoggedIn = true
         } catch {
             passwordError = "Teléfono o contraseña incorrectos."
+        }
+    }
+
+    // MARK: - Sign in with Apple
+
+    /// Handles the `SignInWithAppleButton` completion. `rawNonce` is the un-hashed
+    /// nonce that was generated for the request (its SHA-256 went to Apple).
+    func handleApple(_ result: Result<ASAuthorization, Error>, rawNonce: String) {
+        phoneError = nil
+        passwordError = nil
+
+        guard case .success(let authorization) = result else {
+            // User cancellation is not an error worth surfacing.
+            if case .failure(let err) = result,
+               (err as? ASAuthorizationError)?.code != .canceled {
+                passwordError = "No se pudo iniciar sesión con Apple."
+            }
+            return
+        }
+        guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
+              let tokenData = credential.identityToken,
+              let idToken = String(data: tokenData, encoding: .utf8) else {
+            passwordError = "No se pudo iniciar sesión con Apple."
+            return
+        }
+
+        // Apple returns fullName/email ONLY on the first authorization — capture now.
+        let fullName = [credential.fullName?.givenName, credential.fullName?.familyName]
+            .compactMap { $0 }
+            .joined(separator: " ")
+        let email = credential.email
+
+        isLoading = true
+        Task {
+            defer { isLoading = false }
+            do {
+                _ = try await SupaAuthService.signInWithApple(idToken: idToken, nonce: rawNonce)
+                UserDefaults.standard.set(true, forKey: "kafe.isLoggedIn")
+
+                #if canImport(Supabase)
+                // Persist name/email on first sign-in (best-effort; profile row is
+                // already created by the handle_new_user trigger).
+                if !fullName.isEmpty || (email?.isEmpty == false) {
+                    _ = try? await ProfilesRepository().upsertCurrentUserProfile(
+                        name: fullName.isEmpty ? nil : fullName,
+                        email: email,
+                        phone: nil,
+                        organization: nil
+                    )
+                    if !fullName.isEmpty {
+                        let first = fullName.split(whereSeparator: { $0.isWhitespace }).first.map(String.init) ?? fullName
+                        UserDefaults.standard.set(first, forKey: "displayName")
+                    }
+                }
+                #endif
+
+                session.isLoggedIn = true
+            } catch {
+                debugLog("[AppleSignIn] failed: \(error)")
+                passwordError = "No se pudo iniciar sesión con Apple."
+            }
         }
     }
 }

@@ -94,7 +94,17 @@ enum SupaAuthService {
 	static func currentUserId() async throws -> UUID {
 		try await SupaClient.shared.auth.session.user.id
 	}
-	
+
+	/// Signs in with a native Apple identity token (Sign in with Apple).
+	/// `nonce` is the RAW nonce whose SHA-256 was sent to Apple in the request.
+	@discardableResult
+	static func signInWithApple(idToken: String, nonce: String) async throws -> UUID {
+		let session = try await SupaClient.shared.auth.signInWithIdToken(
+			credentials: .init(provider: .apple, idToken: idToken, nonce: nonce)
+		)
+		return session.user.id
+	}
+
 	static func signOut() async throws {
 		try await SupaClient.shared.auth.signOut()
 	}
@@ -135,6 +145,8 @@ enum SupaAuthService {
 	static func signInOrSignUp(code: String, password: String) async throws -> UUID { UUID() }
 	@discardableResult
 	static func signUpThenSignIn(code: String, password: String, metaName: String?, metaOrg: String?, metaPhone: String?, metaEmail: String?) async throws -> UUID { UUID() }
+	@discardableResult
+	static func signInWithApple(idToken: String, nonce: String) async throws -> UUID { UUID() }
 	static func currentUserId() async throws -> UUID { UUID() }
 	static func signOut() async throws { }
 	static func currentLoginCode() async throws -> String? { nil }
