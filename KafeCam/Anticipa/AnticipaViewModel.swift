@@ -29,6 +29,11 @@ final class AnticipaViewModel: ObservableObject {
 
     init(service: AnticipaWeatherService = OpenMeteoService()) {
         self.service = service
+        // When the real GPS fix lands (after the initial fallback load), re-fetch
+        // weather for the actual location instead of staying on Monterrey.
+        location.onUpdate = { [weak self] _ in
+            Task { @MainActor in await self?.load(force: true) }
+        }
     }
 
     func onAppear() {
@@ -38,11 +43,11 @@ final class AnticipaViewModel: ObservableObject {
 
     func reload() {
         location.requestOnce()
-        Task { await load() }
+        Task { await load(force: true) }
     }
 
-    func load() async {
-        if isLoading { return }
+    func load(force: Bool = false) async {
+        if isLoading && !force { return }
         isLoading = true
         error = nil
         do {

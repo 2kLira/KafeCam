@@ -20,6 +20,7 @@ struct KafeCamApp: App {
                 .environmentObject(historyStore)
                 .environmentObject(session)
                 .environmentObject(avatarStore)
+                .task { await session.restoreSession() }
                 .task { await avatarStore.warmStart() }
                 .task { await CaficultorBrain.shared.warmUp() }
                 .task { startOfflineServices() }

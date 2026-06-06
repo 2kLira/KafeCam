@@ -16,6 +16,13 @@ struct StorageRepository {
     private struct ListRequest: Encodable { let prefix: String; let limit: Int; let offset: Int; let sortBy: SortBy?; struct SortBy: Encodable { let column: String; let order: String } }
     private struct ListEntry: Decodable { let name: String }
 
+    /// Percent-encodes a storage object key for safe use in a URL path. Legacy
+    /// capture keys were built from profile names and can contain spaces/accents,
+    /// so an unencoded key would make `URL(string:)` return nil → crash.
+    private func encodedKey(_ key: String) -> String {
+        key.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? key
+    }
+
     /// Returns a signed download URL for an object in the `captures` bucket by default.
     func signedDownloadURL(objectKey: String, bucket: String = "captures", expiresIn: Int = 3600) async throws -> URL {
         let session = try await SupaClient.shared.auth.session
@@ -23,7 +30,9 @@ struct StorageRepository {
 
         var base = SupabaseConfig.url.absoluteString
         if base.hasSuffix("/") { base.removeLast() }
-        let endpoint = URL(string: base + "/storage/v1/object/sign/\(bucket)/" + objectKey)!
+        guard let endpoint = URL(string: base + "/storage/v1/object/sign/\(bucket)/" + encodedKey(objectKey)) else {
+            throw NSError(domain: "storage", code: -3, userInfo: [NSLocalizedDescriptionKey: "invalid object key: \(objectKey)"])
+        }
 
         var req = URLRequest(url: endpoint)
         req.timeoutInterval = 20
@@ -44,7 +53,10 @@ struct StorageRepository {
         guard let path = signed.signedURL ?? signed.signedUrl else {
             throw NSError(domain: "storage", code: -2, userInfo: [NSLocalizedDescriptionKey: "signed url missing"])
         }
-        let full = URL(string: base + "/storage/v1/" + path)!
+        // `path` is server-provided and already URL-encoded; strip a leading slash to avoid `//`.
+        guard let full = URL(string: base + "/storage/v1/" + (path.hasPrefix("/") ? String(path.dropFirst()) : path)) else {
+            throw NSError(domain: "storage", code: -4, userInfo: [NSLocalizedDescriptionKey: "invalid signed url path"])
+        }
         return full
     }
 
@@ -62,7 +74,9 @@ struct StorageRepository {
     func listObjects(bucket: String, prefix: String, limit: Int = 20) async throws -> [String] {
         var base = SupabaseConfig.url.absoluteString
         if base.hasSuffix("/") { base.removeLast() }
-        let endpoint = URL(string: base + "/storage/v1/object/list/\(bucket)")!
+        guard let endpoint = URL(string: base + "/storage/v1/object/list/\(bucket)") else {
+            throw NSError(domain: "storage", code: -3, userInfo: [NSLocalizedDescriptionKey: "invalid bucket: \(bucket)"])
+        }
 
         let session = try await SupaClient.shared.auth.session
         let accessToken = session.accessToken
@@ -92,7 +106,9 @@ struct StorageRepository {
 
         var base = SupabaseConfig.url.absoluteString
         if base.hasSuffix("/") { base.removeLast() }
-        let endpoint = URL(string: base + "/storage/v1/object/\(bucket)/" + objectKey)!
+        guard let endpoint = URL(string: base + "/storage/v1/object/\(bucket)/" + encodedKey(objectKey)) else {
+            throw NSError(domain: "storage", code: -3, userInfo: [NSLocalizedDescriptionKey: "invalid object key: \(objectKey)"])
+        }
 
         var req = URLRequest(url: endpoint)
         req.timeoutInterval = 20
@@ -114,7 +130,9 @@ struct StorageRepository {
 
         var base = SupabaseConfig.url.absoluteString
         if base.hasSuffix("/") { base.removeLast() }
-        let endpoint = URL(string: base + "/storage/v1/object/\(bucket)/" + objectKey)!
+        guard let endpoint = URL(string: base + "/storage/v1/object/\(bucket)/" + encodedKey(objectKey)) else {
+            throw NSError(domain: "storage", code: -3, userInfo: [NSLocalizedDescriptionKey: "invalid object key: \(objectKey)"])
+        }
 
         var req = URLRequest(url: endpoint)
         req.timeoutInterval = 20

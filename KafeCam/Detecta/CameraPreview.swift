@@ -12,16 +12,31 @@ struct CameraPreview: UIViewControllerRepresentable {
 
     @Binding var takePhotoTrigger: Bool
     var onPhotoCaptured: (UIImage) -> Void
+    var onError: ((String) -> Void)? = nil
 
     class CameraViewController: UIViewController {
         private var captureSession: AVCaptureSession?
         private var previewLayer: AVCaptureVideoPreviewLayer?
         private var photoOutput = AVCapturePhotoOutput()
         var onPhotoCaptured: ((UIImage) -> Void)?
+        var onError: ((String) -> Void)?
 
         override func viewDidLoad() {
             super.viewDidLoad()
             requestCameraAccess()
+        }
+
+        override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            stopSession()
+        }
+
+        deinit { stopSession() }
+
+        private func stopSession() {
+            guard let session = captureSession, session.isRunning else { return }
+            // Stop off the main thread (startRunning/stopRunning block).
+            DispatchQueue.global(qos: .userInitiated).async { session.stopRunning() }
         }
 
 
@@ -82,6 +97,7 @@ struct CameraPreview: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> CameraViewController {
         let vc = CameraViewController()
         vc.onPhotoCaptured = onPhotoCaptured
+        vc.onError = onError
         return vc
     }
 
@@ -99,10 +115,17 @@ extension CameraPreview.CameraViewController: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput,
                      didFinishProcessingPhoto photo: AVCapturePhoto,
                      error: Error?) {
-        if let data = photo.fileDataRepresentation(),
-           let image = UIImage(data: data) {
-            onPhotoCaptured?(image)
+        if let error = error {
+            debugLog("❌ Error al capturar foto: \(error)")
+            DispatchQueue.main.async { self.onError?("No se pudo tomar la foto. Intenta de nuevo.") }
+            return
         }
+        guard let data = photo.fileDataRepresentation(), let image = UIImage(data: data) else {
+            debugLog("❌ Foto vacía o no decodificable")
+            DispatchQueue.main.async { self.onError?("No se pudo procesar la foto. Intenta de nuevo.") }
+            return
+        }
+        DispatchQueue.main.async { self.onPhotoCaptured?(image) }
     }
 }
 

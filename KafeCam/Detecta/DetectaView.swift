@@ -28,6 +28,9 @@ struct DetectaView: View {
     // true cuando el modelo detecta que la foto no contiene una planta de café
     @State private var isNoPlantDetected: Bool = false
 
+    // Mensaje de error de captura (cámara) — evita un callejón sin salida silencioso.
+    @State private var captureError: String? = nil
+
     // Pregunta con la que se abre el asistente tras el diagnóstico.
     private var assistantQuestion: String {
         let name = lastDiseaseName.isEmpty ? "una posible enfermedad" : lastDiseaseName
@@ -135,7 +138,8 @@ struct DetectaView: View {
                                             takenAt: takenAt,
                                             deviceModel: predText,
                                             lat: lat,
-                                            lon: lon
+                                            lon: lon,
+                                            clientUUID: clientId
                                         )
                                         store.markSynced(id: clientId)
                                         debugLog("[Detecta] Capture synced immediately")
@@ -194,7 +198,7 @@ struct DetectaView: View {
         }
         .fullScreenCover(isPresented: $showCamera) {
             ZStack {
-                CameraPreview(takePhotoTrigger: $takePhotoTrigger) { image in
+                CameraPreview(takePhotoTrigger: $takePhotoTrigger, onPhotoCaptured: { image in
                     self.capturedImage = image
                     self.prediction = ""
                     self.isAnalyzing = true
@@ -202,8 +206,15 @@ struct DetectaView: View {
                     self.showSaveOptions = false
                     self.isNoPlantDetected = false
                     self.classify(image: image)
-                }
+                }, onError: { message in
+                    // La cámara sigue visible; sólo informamos para que reintente.
+                    self.takePhotoTrigger = false
+                    self.captureError = message
+                })
                 .ignoresSafeArea()
+                .alert("Cámara", isPresented: Binding(get: { captureError != nil }, set: { if !$0 { captureError = nil } })) {
+                    Button("OK", role: .cancel) { captureError = nil }
+                } message: { Text(captureError ?? "") }
 
                 VStack {
                     HStack {

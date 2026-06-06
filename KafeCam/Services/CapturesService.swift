@@ -17,7 +17,7 @@ struct CapturesService {
     let storageRepo = StorageRepository()
 	
 	/// Uploads image to Storage then inserts a row in `captures` with the object key.
-	func saveCapture(plotId: UUID, imageData: Data, takenAt: Date = Date(), deviceModel: String? = nil) async throws -> CaptureDTO {
+	func saveCapture(plotId: UUID, imageData: Data, takenAt: Date = Date(), deviceModel: String? = nil, clientUUID: UUID = UUID()) async throws -> CaptureDTO {
 		let userId = try await SupaAuthService.currentUserId()
 
 		// The object key MUST be prefixed with the (lowercased) user id so it
@@ -27,19 +27,18 @@ struct CapturesService {
 		// uppercase, so we must lowercase it or every upload is RLS-denied.)
 		let folderName = userId.uuidString.lowercased()
 
-		// Create object key with user folder and timestamp-based filename
-		let timestamp = Int(Date().timeIntervalSince1970)
-		let filename = "\(timestamp)_\(UUID().uuidString.prefix(8)).jpg"
-		let objectKey = "\(folderName)/\(filename)"
+		// DETERMINISTIC key from clientUUID so a retry overwrites the same object
+		// instead of creating a duplicate (paired with the upsert on client_uuid).
+		let objectKey = "\(folderName)/\(clientUUID.uuidString.lowercased()).jpg"
 
-		// Upload to Storage (RLS enforced)
+		// Upload to Storage (RLS enforced; upsert overwrites on retry)
 		try await storageRepo.upload(bucket: "captures", objectKey: objectKey, data: imageData, contentType: "image/jpeg", upsert: true)
 
 		let capture = try await capturesRepo.createCapture(
 			plotId: plotId,
 			takenAt: takenAt,
 			photoKey: objectKey,
-			clientUUID: UUID(),
+			clientUUID: clientUUID,
 			deviceModel: deviceModel,
 			checksumSha256: nil,
 			createdOfflineAt: nil
@@ -63,9 +62,9 @@ struct CapturesService {
 
     /// Saves a capture using (or creating) a default plot for the current user.
     /// Now accepts optional coordinates to save with the plot
-    func saveCaptureToDefaultPlot(imageData: Data, takenAt: Date = Date(), deviceModel: String? = nil, lat: Double? = nil, lon: Double? = nil) async throws -> CaptureDTO {
+    func saveCaptureToDefaultPlot(imageData: Data, takenAt: Date = Date(), deviceModel: String? = nil, lat: Double? = nil, lon: Double? = nil, clientUUID: UUID = UUID()) async throws -> CaptureDTO {
         let plotId = try await ensureDefaultPlotId(lat: lat, lon: lon)
-        return try await saveCapture(plotId: plotId, imageData: imageData, takenAt: takenAt, deviceModel: deviceModel)
+        return try await saveCapture(plotId: plotId, imageData: imageData, takenAt: takenAt, deviceModel: deviceModel, clientUUID: clientUUID)
     }
 	#else
 	func saveCapture(plotId: UUID, imageData: Data, takenAt: Date = Date(), deviceModel: String? = nil) async throws -> CaptureDTO { throw NSError(domain: "supabase", code: -1) }

@@ -50,9 +50,12 @@ struct CapturesRepository {
 			deviceModel: deviceModel,
 			checksumSha256: checksumSha256
 		)
+		// Upsert on (uploaded_by_user_id, client_uuid) so an offline retry of the
+		// same capture updates the existing row instead of inserting a duplicate.
+		// Requires the unique index from migration 20260529150000.
 		let inserted: CaptureDTO = try await SupaClient.shared
 			.from("captures")
-			.insert(payload)
+			.upsert(payload, onConflict: "uploaded_by_user_id,client_uuid")
 			.select()
 			.single()
 			.execute()

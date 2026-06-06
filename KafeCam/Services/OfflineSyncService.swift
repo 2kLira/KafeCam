@@ -41,16 +41,19 @@ final class OfflineSyncService: ObservableObject {
 
     /// Sube todos los diagnósticos pendientes. Se puede llamar manualmente también.
     func syncPending() async {
+        // Set the guard flag synchronously BEFORE any `await` so two concurrent
+        // callers (network-restored + manual) can't both pass the check and run
+        // the upload loop over the same pending list (which would duplicate rows).
         guard !isSyncing else { return }
+        isSyncing = true
+        defer { isSyncing = false }
         #if canImport(Supabase)
         guard let userId = try? await SupaAuthService.currentUserId() else { return }
 
         let pending = PendingCaptureStore.shared.pending(for: userId.uuidString)
         guard !pending.isEmpty else { return }
 
-        isSyncing = true
         defer {
-            isSyncing = false
             pendingCount = PendingCaptureStore.shared.pending(for: userId.uuidString).count
         }
 
@@ -64,7 +67,8 @@ final class OfflineSyncService: ObservableObject {
                     takenAt: capture.takenAt,
                     deviceModel: capture.prediction,
                     lat: capture.lat,
-                    lon: capture.lon
+                    lon: capture.lon,
+                    clientUUID: capture.clientUUID
                 )
                 PendingCaptureStore.shared.markSynced(id: capture.id)
                 debugLog("[OfflineSync] Synced capture \(capture.id)")

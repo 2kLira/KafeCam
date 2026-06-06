@@ -15,6 +15,10 @@ final class AnticipaLocation: NSObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
     private(set) var coord: CLLocationCoordinate2D?
 
+    /// Called on the main thread when the first/updated fix arrives, so the VM can
+    /// re-fetch weather for the real location instead of staying on the fallback.
+    var onUpdate: ((CLLocationCoordinate2D) -> Void)?
+
     override init() {
         super.init()
         manager.delegate = self
@@ -39,7 +43,11 @@ final class AnticipaLocation: NSObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        coord = locations.first?.coordinate
+        guard let c = locations.first?.coordinate else { return }
+        DispatchQueue.main.async {
+            self.coord = c
+            self.onUpdate?(c)
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
