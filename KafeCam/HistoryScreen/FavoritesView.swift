@@ -2,14 +2,13 @@ import SwiftUI
 
 struct FavoritesView: View {
     @EnvironmentObject var historyStore: HistoryStore
-    private let accentColor = Color(red: 134/255.0, green: 155/255.0, blue: 116/255.0)
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Favoritos")
                     .font(.largeTitle.bold())
-                    .foregroundColor(accentColor)
+                    .foregroundStyle(AppTheme.accent)
                     .padding(.horizontal)
 
                 let favorites = historyStore.favorites
@@ -30,13 +29,15 @@ struct FavoritesView: View {
                                 .environmentObject(historyStore)
                         }
                         .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
                     }
                     .listStyle(.plain)
                 }
             }
             .navigationTitle("Favoritos")
             .navigationBarTitleDisplayMode(.inline)
-            .tint(accentColor)
+            .tint(AppTheme.accent)
         }
     }
 }

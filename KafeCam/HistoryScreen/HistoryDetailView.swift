@@ -8,8 +8,8 @@ struct HistoryDetailView: View {
     @State private var showSaveConfirmation = false
     @State private var isSavingNotes = false
     @FocusState private var notesFieldFocused: Bool
-    
-    private let accentColor = Color(red: 88/255, green: 129/255, blue: 87/255)
+    @State private var diagnosis: DiagnosisWithRecommendations? = nil
+    @State private var isLoadingRecs = false
 
     var body: some View {
         ScrollView {
@@ -28,13 +28,22 @@ struct HistoryDetailView: View {
                 Text(entry.date.formatted(date: .abbreviated, time: .shortened))
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
+                // Recommendations Section
+                if isLoadingRecs {
+                    ProgressView()
+                        .padding(.vertical, 8)
+                } else if let recs = diagnosis?.recommendations, !recs.isEmpty {
+                    RecommendationsSection(recommendations: recs)
+                        .padding(.horizontal)
+                }
+
                 // Notes Section
                 VStack(alignment: .leading, spacing: 12) {
                     HStack {
                         Label("Notas", systemImage: "note.text")
                             .font(.headline)
-                            .foregroundColor(accentColor)
+                            .foregroundColor(AppTheme.accent)
                         
                         Spacer()
                         
@@ -45,7 +54,7 @@ struct HistoryDetailView: View {
                             } label: {
                                 Text("Editar")
                                     .font(.subheadline)
-                                    .foregroundColor(accentColor)
+                                    .foregroundColor(AppTheme.accent)
                             }
                         }
                     }
@@ -61,7 +70,7 @@ struct HistoryDetailView: View {
                                 .cornerRadius(12)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(accentColor.opacity(0.3), lineWidth: 1)
+                                        .stroke(AppTheme.accent.opacity(0.3), lineWidth: 1)
                                 )
                             
                             HStack(spacing: 12) {
@@ -89,7 +98,7 @@ struct HistoryDetailView: View {
                                             .scaleEffect(0.8)
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, 10)
-                                            .background(accentColor)
+                                            .background(AppTheme.accent)
                                             .cornerRadius(10)
                                     } else {
                                         Text("Guardar")
@@ -97,7 +106,7 @@ struct HistoryDetailView: View {
                                             .foregroundColor(.white)
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, 10)
-                                            .background(accentColor)
+                                            .background(AppTheme.accent)
                                             .cornerRadius(10)
                                     }
                                 }
@@ -131,7 +140,7 @@ struct HistoryDetailView: View {
                 } label: {
                     Label(entry.isFavorite ? "Quitar de Favoritos" : "Agregar a Favoritos",
                           systemImage: entry.isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(entry.isFavorite ? .red : .accentColor)
+                        .foregroundColor(entry.isFavorite ? .red : AppTheme.accent)
                         .padding()
                         .background(Color(.systemGray6))
                         .clipShape(Capsule())
@@ -142,8 +151,8 @@ struct HistoryDetailView: View {
         .navigationTitle("Detalle")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            // Load existing notes if available
             notes = entry.captureData?.notes ?? ""
+            loadRecommendations()
         }
         .alert("Notas guardadas", isPresented: $showSaveConfirmation) {
             Button("OK", role: .cancel) { }
@@ -152,6 +161,22 @@ struct HistoryDetailView: View {
         }
     }
     
+    private func loadRecommendations() {
+        guard let captureId = entry.captureData?.id else { return }
+        isLoadingRecs = true
+        Task {
+            #if canImport(Supabase)
+            let result = try? await RecommendationsRepository().fetchForCapture(captureId: captureId)
+            await MainActor.run {
+                diagnosis = result
+                isLoadingRecs = false
+            }
+            #else
+            await MainActor.run { isLoadingRecs = false }
+            #endif
+        }
+    }
+
     private func saveNotes() {
         debugLog("[HistoryDetail] saveNotes called - notes: '\(notes)'")
         debugLog("[HistoryDetail] entry.captureData is \(entry.captureData != nil ? "present" : "nil")")
@@ -205,3 +230,65 @@ struct HistoryDetailView: View {
     }
 }
 
+// MARK: - Recommendations Section
+
+private struct RecommendationsSection: View {
+    let recommendations: [RecommendationDTO]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("Recomendaciones", systemImage: "list.clipboard.fill")
+                .font(.headline)
+                .foregroundStyle(Color(red: 88/255, green: 129/255, blue: 87/255))
+
+            ForEach(recommendations) { rec in
+                RecommendationRow(rec: rec)
+            }
+        }
+    }
+}
+
+private struct RecommendationRow: View {
+    let rec: RecommendationDTO
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            RoundedRectangle(cornerRadius: 3)
+                .fill(levelColor)
+                .frame(width: 4)
+                .padding(.vertical, 2)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(levelLabel)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(levelColor)
+                Text(rec.text)
+                    .font(.subheadline)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(levelColor.opacity(0.07))
+        )
+    }
+
+    private var levelColor: Color {
+        switch rec.level {
+        case "critical": return .red
+        case "warn":     return .orange
+        default:         return Color(red: 0, green: 0.55, blue: 0.65)
+        }
+    }
+
+    private var levelLabel: String {
+        switch rec.level {
+        case "critical": return "URGENTE"
+        case "warn":     return "ATENCIÓN"
+        default:         return "CONSEJO"
+        }
+    }
+}

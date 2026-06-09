@@ -1,38 +1,25 @@
-//
-//  RegisterView.swift
-//  Register
-//
-//  Created by Guillermo Lira on 10/09/25.
-//
-
-
-//
-//  RegisterView.swift
-//  KafeCam
-//
-
 import SwiftUI
 
 struct RegisterView: View {
     @ObservedObject var vm: RegisterViewModel
     @Environment(\.dismiss) private var dismiss
 
-    private let accentColor = Color(red: 88/255, green: 129/255, blue: 87/255)
-    private let darkColor   = Color(red: 82/255,  green: 76/255,  blue: 41/255)
-
     var body: some View {
         ScrollView {
-            VStack(spacing: 16) {
+            VStack(spacing: 20) {
                 Image(systemName: "leaf.fill")
-                    .font(.system(size: 40))
-                    .foregroundColor(accentColor)
+                    .font(.system(size: 44))
+                    .foregroundStyle(AppTheme.accent)
 
-                Text("Crear cuenta")
-                    .font(.largeTitle.weight(.bold))
-                    .foregroundColor(accentColor)
+                VStack(spacing: 6) {
+                    Text("Crear cuenta")
+                        .font(.largeTitle.weight(.bold))
+                        .foregroundStyle(AppTheme.accent)
 
-                Text("Regístrate con tus datos")
-                    .foregroundColor(darkColor)
+                    Text("Regístrate con tus datos")
+                        .font(.subheadline)
+                        .foregroundStyle(AppTheme.dark)
+                }
 
                 AuthCard {
                     ktextfild(title: "Nombres",
@@ -40,7 +27,7 @@ struct RegisterView: View {
                               keyboard: .default,
                               contentType: .givenName)
                     if let e = vm.firstNameError {
-                        Text(e).font(.caption).foregroundColor(.red)
+                        Text(e).font(.caption).foregroundStyle(.red)
                     }
 
                     ktextfild(title: "Apellidos",
@@ -48,7 +35,7 @@ struct RegisterView: View {
                               keyboard: .default,
                               contentType: .familyName)
                     if let e = vm.lastNameError {
-                        Text(e).font(.caption).foregroundColor(.red)
+                        Text(e).font(.caption).foregroundStyle(.red)
                     }
 
                     ktextfild(title: "Teléfono (10 dígitos)",
@@ -56,7 +43,7 @@ struct RegisterView: View {
                               keyboard: .numberPad,
                               contentType: .telephoneNumber)
                     if let e = vm.phoneError {
-                        Text(e).font(.caption).foregroundColor(.red)
+                        Text(e).font(.caption).foregroundStyle(.red)
                     }
 
                     ktextfild(title: "Correo (opcional)",
@@ -64,7 +51,7 @@ struct RegisterView: View {
                               keyboard: .emailAddress,
                               contentType: .emailAddress)
                     if let e = vm.emailError {
-                        Text(e).font(.caption).foregroundColor(.red)
+                        Text(e).font(.caption).foregroundStyle(.red)
                     }
 
                     ktextfild(title: "Contraseña",
@@ -73,7 +60,7 @@ struct RegisterView: View {
                               keyboard: .default,
                               contentType: .newPassword)
                     if let e = vm.passwordError {
-                        Text(e).font(.caption).foregroundColor(.red)
+                        Text(e).font(.caption).foregroundStyle(.red)
                     }
 
                     ktextfild(title: "Organización (opcional)",
@@ -83,17 +70,23 @@ struct RegisterView: View {
                               contentType: .organizationName,
                               isDisabled: false)
 
-                    Button("Crear cuenta") {
+                    // Primary CTA — spinner replaces text while loading
+                    Button {
                         vm.submit()
+                    } label: {
+                        ZStack {
+                            Text("Crear cuenta")
+                                .opacity(vm.isLoading ? 0 : 1)
+                            if vm.isLoading {
+                                ProgressView().tint(.white)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(accentColor)
-                    .buttonBorderShape(.roundedRectangle(radius: 14))
-                    .controlSize(.small)
-                    .frame(maxWidth: .infinity)
-                    .overlay {
-                        if vm.isLoading { ProgressView().tint(.white) }
-                    }
+                    .tint(AppTheme.accent)
+                    .buttonBorderShape(.roundedRectangle(radius: AppTheme.radiusSM))
+                    .controlSize(.large)
                     .disabled(vm.isLoading)
                 }
             }
@@ -105,10 +98,9 @@ struct RegisterView: View {
         .navigationBarBackButtonHidden(false)
         .onAppear {
             let minDate = Calendar.current.date(byAdding: .year, value: -120, to: Date()) ?? .distantPast
-            if vm.dateOfBirth > Date()    { vm.dateOfBirth = Date() }
-            if vm.dateOfBirth < minDate   { vm.dateOfBirth = minDate }
+            if vm.dateOfBirth > Date()  { vm.dateOfBirth = Date() }
+            if vm.dateOfBirth < minDate { vm.dateOfBirth = minDate }
         }
-        // Dismiss as soon as the VM signals success
         .onChange(of: vm.registrationSucceeded) { _, succeeded in
             if succeeded { dismiss() }
         }

@@ -1,39 +1,31 @@
-//
-//  MapTabView.swift
-//  KafeCam
-//
-//  Created by Guillermo Lira on 01/10/25.
-//
-
 import SwiftUI
 import MapKit
 
 struct MapTabView: View {
-    // ✅ El VM viene inyectado desde HomeView como EnvironmentObject
     @EnvironmentObject var vm: PlotsMapViewModel
 
     @State private var showHint = false
-    @State private var hintText = "📍 Pin agregado"
+    @State private var hintText = "Pin agregado"
+    @State private var hintIcon = "mappin.circle.fill"
 
     var body: some View {
         NavigationStack {
             GeometryReader { geo in
                 ZStack {
-                    // Mapa con punto azul y pines
+                    // Map with user location and pins
                     Map(position: .constant(.region(vm.region))) {
                         ForEach(vm.pins) { pin in
                             Annotation("", coordinate: pin.coordinate) {
                                 Button { vm.selectedPin = pin } label: {
                                     Image(systemName: "leaf.fill")
-                                        .foregroundColor(color(for: pin.status))
-                                        .padding(6)
+                                        .foregroundStyle(pinColor(for: pin.status))
+                                        .padding(7)
                                         .background(.white, in: Circle())
-                                        .shadow(radius: 2)
+                                        .shadow(color: .black.opacity(0.15), radius: 3, y: 1)
                                 }
+                                .accessibilityLabel("Pin: \(pin.name)")
                             }
                         }
-                        
-                        // Show user location
                         UserAnnotation()
                     }
                     .mapControls {
@@ -43,50 +35,59 @@ struct MapTabView: View {
                     }
                     .ignoresSafeArea()
 
-                    // Overlay SOLO cuando vamos a colocar un pin manual
+                    // Tap overlay for manual pin placement
                     if vm.isAddingPin {
                         Color.clear
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .contentShape(Rectangle())
-                            // Capturamos el toque antes que el Map
                             .highPriorityGesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged { value in
                                         guard vm.isAddingPin else { return }
-                                        let pt = value.location
-                                        let coord = toCoordinate(point: pt, in: geo.size, region: vm.region)
+                                        let coord = toCoordinate(
+                                            point: value.location,
+                                            in: geo.size,
+                                            region: vm.region
+                                        )
                                         vm.addPin(at: coord)
-                                        showTemporaryHint("📍 Pin agregado")
+                                        showTemporaryHint("Pin agregado", icon: "mappin.circle.fill")
                                     }
                             )
                     }
 
-                    // Menú vertical flotante (derecha)
+                    // Floating action buttons (right side)
                     VStack {
                         Spacer()
                         VStack(spacing: 12) {
-                            // Alterna "Agregar pin" / "Cancelar"
+                            // Toggle add-pin mode
                             Button {
                                 vm.isAddingPin.toggle()
                             } label: {
-                                menuButton(
-                                    icon: vm.isAddingPin ? "xmark.circle.fill" : "mappin.and.ellipse",
-                                    color: vm.isAddingPin ? .gray : .blue
+                                mapButton(
+                                    icon: vm.isAddingPin ? "xmark" : "mappin.and.ellipse",
+                                    color: vm.isAddingPin ? AppTheme.dark : AppTheme.accent
                                 )
                             }
+                            .accessibilityLabel(vm.isAddingPin ? "Cancelar" : "Agregar pin")
 
+                            // Go to base region
                             Button { vm.resetToBase() } label: {
-                                menuButton(icon: "house.fill", color: .orange)
+                                mapButton(icon: "house.fill", color: AppTheme.dark)
                             }
+                            .accessibilityLabel("Vista inicial")
 
+                            // Go to user location
                             Button { vm.goToUser() } label: {
-                                menuButton(icon: "location.fill", color: .red)
+                                mapButton(icon: "location.fill", color: AppTheme.accent)
                             }
+                            .accessibilityLabel("Mi ubicación")
 
+                            // Go to each pin
                             ForEach(Array(vm.pins.enumerated()), id: \.1.id) { idx, pin in
                                 Button { vm.goToPin(pin) } label: {
-                                    menuButton(icon: "\(idx + 1).circle.fill", color: .green)
+                                    mapButton(icon: "\(idx + 1).circle.fill", color: AppTheme.cardGreen2)
                                 }
+                                .accessibilityLabel("Pin \(idx + 1): \(pin.name)")
                             }
                         }
                         .padding(.trailing, 12)
@@ -95,31 +96,41 @@ struct MapTabView: View {
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .zIndex(2)
 
-                    // Hint flotante (éxito / error)
+                    // Toast hint (success / error)
                     if showHint {
                         VStack {
                             Spacer()
-                            Text(hintText)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 10)
-                                .background(.ultraThinMaterial)
-                                .clipShape(Capsule())
-                                .shadow(radius: 3)
-                                .padding(.bottom, 70)
+                            HStack(spacing: 6) {
+                                Image(systemName: hintIcon)
+                                    .foregroundStyle(AppTheme.accent)
+                                Text(hintText)
+                                    .font(.subheadline.weight(.medium))
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                            .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
+                            .padding(.bottom, 70)
                         }
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .zIndex(3)
                     }
 
-                    // Instrucción para modo agregar pin
+                    // Add-pin instruction banner
                     if vm.isAddingPin {
                         VStack {
-                            Text("Toca el mapa para colocar el pin")
-                                .font(.callout.weight(.semibold))
-                                .padding(8)
-                                .background(.ultraThinMaterial)
-                                .clipShape(Capsule())
-                                .padding(.top, 12)
+                            HStack(spacing: 6) {
+                                Image(systemName: "hand.tap.fill")
+                                    .foregroundStyle(AppTheme.accent)
+                                Text("Toca el mapa para colocar el pin")
+                                    .font(.callout.weight(.semibold))
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                            .padding(.top, 12)
                             Spacer()
                         }
                         .transition(.opacity)
@@ -136,54 +147,51 @@ struct MapTabView: View {
                     onDelete: { vm.removePin($0) }
                 )
             }
-            // 🔔 Hints desde Detecta (éxito / fallo)
             .onReceive(NotificationCenter.default.publisher(for: .kafePinAdded)) { _ in
-                showTemporaryHint("📍 Pin agregado automáticamente")
+                showTemporaryHint("Pin agregado automáticamente", icon: "mappin.circle.fill")
             }
             .onReceive(NotificationCenter.default.publisher(for: .kafePinAddFailedNoLocation)) { _ in
-                showTemporaryHint("⚠️ No se pudo obtener tu ubicación")
+                showTemporaryHint("No se pudo obtener tu ubicación", icon: "location.slash.fill")
             }
         }
     }
 
-    // MARK: - Binding real al pin dentro del array del VM
+    // MARK: - Binding to pin in array
     private func binding(for pin: MapPlotPin) -> Binding<MapPlotPin> {
         if let idx = vm.pins.firstIndex(where: { $0.id == pin.id }) {
             return $vm.pins[idx]
         }
-        // Pin was removed while the sheet was open — dismiss gracefully
         DispatchQueue.main.async { vm.selectedPin = nil }
         return .constant(pin)
     }
 
-    // MARK: - Helpers UI / Coord
-
-    private func menuButton(icon: String, color: Color) -> some View {
+    // MARK: - Map button helper
+    private func mapButton(icon: String, color: Color) -> some View {
         Image(systemName: icon)
-            .font(.system(size: 20))
-            .foregroundColor(.white)
-            .padding()
+            .font(.system(size: 18, weight: .medium))
+            .foregroundStyle(.white)
+            .frame(width: AppTheme.minTouchTarget, height: AppTheme.minTouchTarget)
             .background(color, in: Circle())
-            .shadow(radius: 3)
+            .shadow(color: color.opacity(0.35), radius: 4, y: 2)
     }
 
-    private func color(for status: PlotStatus) -> Color {
+    private func pinColor(for status: PlotStatus) -> Color {
         switch status {
-        case .sano:     return .green
-        case .sospecha: return .yellow
-        case .enfermo:  return .red
+        case .sano:     return AppTheme.statusHealthy
+        case .sospecha: return AppTheme.statusSuspect
+        case .enfermo:  return AppTheme.statusSick
         }
     }
 
-    private func showTemporaryHint(_ text: String) {
+    private func showTemporaryHint(_ text: String, icon: String = "checkmark.circle.fill") {
         hintText = text
+        hintIcon = icon
         withAnimation { showHint = true }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
             withAnimation { showHint = false }
         }
     }
 
-    /// Conversión aproximada punto (en la vista) → coordenada usando la región visible
     private func toCoordinate(point: CGPoint, in size: CGSize, region: MKCoordinateRegion) -> CLLocationCoordinate2D {
         let latDelta = region.span.latitudeDelta
         let lonDelta = region.span.longitudeDelta
@@ -195,7 +203,7 @@ struct MapTabView: View {
     }
 }
 
-// MARK: - Sheet de detalle
+// MARK: - Pin Detail Sheet
 struct PinDetailSheet: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -247,9 +255,8 @@ struct PinDetailSheet: View {
     }
 }
 
-// MARK: - Helper genérico: Binding<Optional> → Binding<Wrapped>
+// MARK: - Binding<Optional> helper
 extension Binding {
-    /// Convierte un Binding<T?> en Binding<T> proporcionando un valor por defecto.
     func unwrap<T>(_ defaultValue: T) -> Binding<T> where Value == T? {
         Binding<T>(
             get: { self.wrappedValue ?? defaultValue },

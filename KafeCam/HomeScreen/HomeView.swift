@@ -77,8 +77,8 @@ struct HomeView: View {
 
                         Header(displayName: displayName,
                                greetingName: vm.greetingName,
-                               accent: vm.accentColor,
-                               dark: vm.darkColor,
+                               accent: AppTheme.accent,
+                               dark: AppTheme.dark,
                                initials: profileInitials)
 
                         // buscador
@@ -107,7 +107,7 @@ struct HomeView: View {
                         }
 
                         Text("¿Qué quieres hacer hoy?")
-                            .foregroundColor(vm.accentColor)
+                            .foregroundStyle(AppTheme.accent)
                             .fontWeight(.semibold)
 
                         // grid de acciones
@@ -157,7 +157,7 @@ struct HomeView: View {
         }
         // ✅ Inyectamos el VM del mapa a TODO el TabView
         .environmentObject(plotsVM)
-        .tint(vm.accentColor)
+        .tint(AppTheme.accent)
         // 👇 LÍNEA CLAVE: hace que toda la UI use el idioma elegido en Perfil
         .environment(\.locale, LanguageManager.shared.currentLocale)
         .onReceive(NotificationCenter.default.publisher(for: .switchToHomeTab)) { _ in
@@ -319,75 +319,115 @@ private struct MatchesList: View {
 }
 
 private struct ActionsGrid: View {
+    @State private var appeared = false
+
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
 
             // ANTICIPA
-            NavigationLink {
-                AnticipaView()
-            } label: {
-                ActionCardView(color: green1, systemImage: "cloud.sun.fill",
-                               title: "Anticipa", subtitle: "Prevé el clima")
-                    .contentShape(Rectangle())
+            staggered(0) {
+                NavigationLink { AnticipaView() } label: {
+                    ActionCardView(color: green1, systemImage: "cloud.sun.fill",
+                                   title: "Anticipa", subtitle: "Prevé el clima")
+                        .contentShape(Rectangle())
+                }
+                .simultaneousGesture(TapGesture().onEnded { dismissKeyboard() })
             }
-            .simultaneousGesture(TapGesture().onEnded {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                                                to: nil, from: nil, for: nil)
-            })
 
             // DETECTA
-            NavigationLink {
-                DetectaView()
-            } label: {
-                ActionCardView(color: brown1,
-                               systemImage: "camera.fill",
-                               title: "Detecta",
-                               subtitle: "Prevención temprana")
-                    .contentShape(Rectangle())
+            staggered(1) {
+                NavigationLink { DetectaView() } label: {
+                    ActionCardView(color: brown1, systemImage: "camera.fill",
+                                   title: "Detecta", subtitle: "Prevención temprana")
+                        .contentShape(Rectangle())
+                }
+                .simultaneousGesture(TapGesture().onEnded { dismissKeyboard() })
             }
-            .simultaneousGesture(TapGesture().onEnded {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                                                to: nil, from: nil, for: nil)
-            })
 
             // INFÓRMATE
-            NavigationLink {
-                DiseaseView(diseaseList: diseases)
-            } label: {
-                ActionCardView(color: brown2, systemImage: "bandage.fill",
-                               title: "Infórmate", subtitle: "Cuida tu cultivo")
-                    .contentShape(Rectangle())
+            staggered(2) {
+                NavigationLink { DiseaseView(diseaseList: diseases) } label: {
+                    ActionCardView(color: brown2, systemImage: "bandage.fill",
+                                   title: "Infórmate", subtitle: "Cuida tu cultivo")
+                        .contentShape(Rectangle())
+                }
             }
 
             // CONSULTA
-            NavigationLink {
-                HistoryView()
-            } label: {
-                ActionCardView(color: green2, systemImage: "leaf.fill",
-                               title: "Consulta", subtitle: "Tus registros siempre")
-                    .contentShape(Rectangle())
+            staggered(3) {
+                NavigationLink { HistoryView() } label: {
+                    ActionCardView(color: green2, systemImage: "leaf.fill",
+                                   title: "Consulta", subtitle: "Tus registros siempre")
+                        .contentShape(Rectangle())
+                }
+                .simultaneousGesture(TapGesture().onEnded { dismissKeyboard() })
             }
-            .simultaneousGesture(TapGesture().onEnded {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                                                to: nil, from: nil, for: nil)
-            })
 
             // ASISTENTE
-            NavigationLink {
-                AsistenteView()
-            } label: {
-                ActionCardView(color: brown1,
-                               systemImage: "bubble.left.and.exclamationmark.bubble.right.fill",
-                               title: "Asistente",
-                               subtitle: "Pregunta lo que necesites")
-                    .contentShape(Rectangle())
+            staggered(4) {
+                NavigationLink { AsistenteView() } label: {
+                    ActionCardView(color: AppTheme.cardTeal,
+                                   systemImage: "bubble.left.and.exclamationmark.bubble.right.fill",
+                                   title: "Asistente",
+                                   subtitle: "Pregunta lo que necesites")
+                        .contentShape(Rectangle())
+                }
+                .simultaneousGesture(TapGesture().onEnded { dismissKeyboard() })
             }
-            .simultaneousGesture(TapGesture().onEnded {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                                                to: nil, from: nil, for: nil)
-            })
+
+            // BITÁCORA
+            staggered(5) {
+                NavigationLink { BitacoraView() } label: {
+                    ActionCardView(color: AppTheme.cardTeal,
+                                   systemImage: "book.pages.fill",
+                                   title: "Bitácora",
+                                   subtitle: "Tu cuaderno de campo")
+                        .contentShape(Rectangle())
+                }
+            }
+
+            // APRENDE
+            staggered(6) {
+                NavigationLink { AprendeView() } label: {
+                    ActionCardView(color: Color.indigo,
+                                   systemImage: "graduationcap.fill",
+                                   title: "Aprende",
+                                   subtitle: "Rutas de capacitación")
+                        .contentShape(Rectangle())
+                }
+            }
+
+            // MI CAMINO
+            staggered(7) {
+                NavigationLink { MiCaminoView() } label: {
+                    ActionCardView(color: Color(red: 0.75, green: 0.45, blue: 0.10),
+                                   systemImage: "figure.walk.motion",
+                                   title: "Mi Camino",
+                                   subtitle: "Tu progreso")
+                        .contentShape(Rectangle())
+                }
+            }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(KafeCardPressStyle())
+        .onAppear {
+            withAnimation(.easeOut(duration: AppTheme.animNormal)) { appeared = true }
+        }
+    }
+
+    @ViewBuilder
+    private func staggered<V: View>(_ index: Int, @ViewBuilder content: () -> V) -> some View {
+        content()
+            .opacity(appeared ? 1 : 0)
+            .offset(y: appeared ? 0 : 14)
+            .animation(
+                .easeOut(duration: AppTheme.animNormal).delay(Double(index) * 0.055),
+                value: appeared
+            )
+    }
+
+    private func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                        to: nil, from: nil, for: nil)
     }
 }
 

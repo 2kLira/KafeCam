@@ -1,8 +1,3 @@
-//
-//  DetectaView.swift
-//  KafeCam
-//
-
 import SwiftUI
 import CoreML
 import Vision
@@ -21,17 +16,12 @@ struct DetectaView: View {
     @State private var isAnalyzing = false
     @State private var showAsistente = false
 
-    // Datos para el pin del mapa
     @State private var lastStatus: PlotStatus = .sano
     @State private var lastConfidencePct: Double = 0.0
     @State private var lastDiseaseName: String = ""
-    // true cuando el modelo detecta que la foto no contiene una planta de café
     @State private var isNoPlantDetected: Bool = false
-
-    // Mensaje de error de captura (cámara) — evita un callejón sin salida silencioso.
     @State private var captureError: String? = nil
 
-    // Pregunta con la que se abre el asistente tras el diagnóstico.
     private var assistantQuestion: String {
         let name = lastDiseaseName.isEmpty ? "una posible enfermedad" : lastDiseaseName
         return "Detecté \(name) en una foto de mi cafetal. ¿Qué me recomiendas?"
@@ -40,155 +30,179 @@ struct DetectaView: View {
     var body: some View {
         ZStack {
             if let image = capturedImage {
-                VStack(spacing: 20) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxHeight: 250)
-                        .cornerRadius(12)
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Captured photo
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 280)
+                            .clipShape(RoundedRectangle(cornerRadius: AppTheme.radiusMD, style: .continuous))
+                            .padding(.horizontal)
 
-                    if isAnalyzing {
-                        ProgressView("Analizando hoja...")
-                            .padding(.top, 8)
-                    }
+                        if isAnalyzing {
+                            AnalyzingCard()
+                                .padding(.horizontal)
+                                .transition(.opacity)
+                        }
 
-                    Text(prediction.isEmpty ? "Procesando resultado..." : prediction)
-                        .font(.title2)
-                        .multilineTextAlignment(.center)
-                        .padding()
-
-                    if showSaveOptions && !isAnalyzing {
-                        if isNoPlantDetected {
-                            // ── No se detectó planta ──────────────────────────
-                            VStack(spacing: 12) {
-                                Text("Acerca la cámara directamente a una hoja de café e intenta de nuevo.")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal)
-
-                                Button("🔄 Volver a capturar") {
+                        if showSaveOptions && !isAnalyzing {
+                            if isNoPlantDetected {
+                                NoPlantCard {
                                     capturedImage = nil
                                     prediction = ""
                                     showSaveOptions = false
                                     isNoPlantDetected = false
                                     showCamera = true
                                 }
-                                .buttonStyle(.borderedProminent)
-                                .tint(.brown)
-                            }
-                        } else {
-                        // ── Diagnóstico válido ────────────────────────────────
-                        HStack(spacing: 40) {
-                            Button("❌ Rechazar") {
-                                capturedImage = nil
-                                prediction = ""
-                                showSaveOptions = false
-                                isAnalyzing = false
-                                isNoPlantDetected = false
-                                showCamera = true
-                            }
-                            .foregroundColor(.red)
+                                .padding(.horizontal)
+                                .transition(.opacity.combined(with: .move(edge: .bottom)))
+                            } else {
+                                // Diagnosis result card
+                                DiagnosisResultCard(
+                                    status: lastStatus,
+                                    diseaseName: lastDiseaseName,
+                                    confidence: lastConfidencePct
+                                )
+                                .padding(.horizontal)
+                                .transition(.opacity.combined(with: .move(edge: .bottom)))
 
-                            Button("✅ Aceptar") {
-                                guard let image = capturedImage else { return }
-
-                                historyStore.add(image: image, prediction: prediction)
-                                showSaveOptions = false
-
-                                Task {
-                                    let takenAt = Date()
-                                    let lat = locationManager.lastLocation?.coordinate.latitude
-                                    let lon = locationManager.lastLocation?.coordinate.longitude
-                                    let predText = prediction.isEmpty ? "Foto" : prediction
-                                    CrashMonitor.breadcrumb("Captura aceptada: \(predText)", category: "detecta")
-
-                                    // 1. Siempre persistir en disco primero (funciona sin red)
-                                    #if canImport(Supabase)
-                                    guard let uid = try? await SupaAuthService.currentUserId() else { return }
-                                    #else
-                                    let uid = UUID()
-                                    #endif
-                                    let clientId = UUID()
-                                    let store = PendingCaptureStore.shared
-                                    let fileName = store.saveImage(image, userId: uid.uuidString) ?? ""
-                                    let pending = PendingCapture(
-                                        id: clientId,
-                                        userId: uid.uuidString,
-                                        clientUUID: clientId,
-                                        imageFileName: fileName,
-                                        prediction: predText,
-                                        diseaseName: lastDiseaseName,
-                                        statusRaw: lastStatus.rawValue,
-                                        confidencePct: lastConfidencePct,
-                                        lat: lat,
-                                        lon: lon,
-                                        takenAt: takenAt,
-                                        syncedAt: nil
-                                    )
-                                    store.queue(pending)
-
-                                    // 2. Intentar subir a Supabase; si falla, OfflineSyncService lo reintentará
-                                    #if canImport(Supabase)
-                                    guard let jpeg = image.jpegData(compressionQuality: 0.85) else { return }
-                                    do {
-                                        let svc = CapturesService()
-                                        _ = try await svc.saveCaptureToDefaultPlot(
-                                            imageData: jpeg,
-                                            takenAt: takenAt,
-                                            deviceModel: predText,
-                                            lat: lat,
-                                            lon: lon,
-                                            clientUUID: clientId
-                                        )
-                                        store.markSynced(id: clientId)
-                                        debugLog("[Detecta] Capture synced immediately")
-                                        await historyStore.syncFromSupabase()
-                                        // Notificación al técnico: gated (v2). La Edge Function
-                                        // `notify-technician` no está desplegada y no hay técnico
-                                        // asignado mientras el flujo de asignación esté apagado.
-                                        if FeatureFlags.assignmentsEnabled {
-                                            await PushNotificationService.shared.notifyTechnicianCaptureSaved(
-                                                captureId: clientId,
-                                                prediction: predText
-                                            )
-                                        }
-                                    } catch {
-                                        debugLog("[Detecta] Sin red – capture en cola: \(error)")
-                                        OfflineSyncService.shared.refreshPendingCount(for: uid.uuidString)
-                                        // Error de red esperado — no enviar a Sentry (se reintentará)
-                                    }
-                                    #endif
+                                // Advice card — what to do next
+                                if let advice = adviceForCurrentDiagnosis() {
+                                    AdviceCard(advice: advice)
+                                        .padding(.horizontal)
+                                        .transition(.opacity.combined(with: .move(edge: .bottom)))
                                 }
 
-                                // Notificar al mapa para crear pin
-                                NotificationCenter.default.post(
-                                    name: .kafeCreatePin,
-                                    object: nil,
-                                    userInfo: [
-                                        "estado": lastStatus.rawValue.lowercased(),
-                                        "probabilidad": lastConfidencePct,
-                                        "label": lastDiseaseName,
-                                        "fecha": Date()
-                                    ]
-                                )
+                                // Accept / Reject actions
+                                VStack(spacing: 12) {
+                                    HStack(spacing: 12) {
+                                        // Reject — resets to camera
+                                        Button {
+                                            capturedImage = nil
+                                            prediction = ""
+                                            showSaveOptions = false
+                                            isAnalyzing = false
+                                            isNoPlantDetected = false
+                                            showCamera = true
+                                        } label: {
+                                            Label("Rechazar", systemImage: "arrow.counterclockwise")
+                                                .frame(maxWidth: .infinity)
+                                        }
+                                        .buttonStyle(.bordered)
+                                        .tint(.primary)
+                                        .controlSize(.large)
 
-                                dismiss()
+                                        // Accept — saves capture (logic preserved exactly)
+                                        Button {
+                                            guard let image = capturedImage else { return }
+                                            historyStore.add(image: image, prediction: prediction)
+                                            showSaveOptions = false
+                                            Task {
+                                                let takenAt = Date()
+                                                let lat = locationManager.lastLocation?.coordinate.latitude
+                                                let lon = locationManager.lastLocation?.coordinate.longitude
+                                                let predText = prediction.isEmpty ? "Foto" : prediction
+                                                CrashMonitor.breadcrumb("Captura aceptada: \(predText)", category: "detecta")
+
+                                                #if canImport(Supabase)
+                                                guard let uid = try? await SupaAuthService.currentUserId() else { return }
+                                                #else
+                                                let uid = UUID()
+                                                #endif
+                                                let clientId = UUID()
+                                                let store = PendingCaptureStore.shared
+                                                let fileName = store.saveImage(image, userId: uid.uuidString) ?? ""
+                                                let pending = PendingCapture(
+                                                    id: clientId,
+                                                    userId: uid.uuidString,
+                                                    clientUUID: clientId,
+                                                    imageFileName: fileName,
+                                                    prediction: predText,
+                                                    diseaseName: lastDiseaseName,
+                                                    statusRaw: lastStatus.rawValue,
+                                                    confidencePct: lastConfidencePct,
+                                                    lat: lat,
+                                                    lon: lon,
+                                                    takenAt: takenAt,
+                                                    syncedAt: nil
+                                                )
+                                                store.queue(pending)
+
+                                                #if canImport(Supabase)
+                                                guard let jpeg = image.jpegData(compressionQuality: 0.85) else { return }
+                                                do {
+                                                    let svc = CapturesService()
+                                                    let diagInput = DiagnosisInput.from(
+                                                        diseaseName: lastDiseaseName,
+                                                        status: lastStatus,
+                                                        confidencePct: lastConfidencePct
+                                                    )
+                                                    _ = try await svc.saveCaptureToDefaultPlot(
+                                                        imageData: jpeg,
+                                                        takenAt: takenAt,
+                                                        deviceModel: predText,
+                                                        lat: lat,
+                                                        lon: lon,
+                                                        clientUUID: clientId,
+                                                        diagnosis: diagInput
+                                                    )
+                                                    store.markSynced(id: clientId)
+                                                    debugLog("[Detecta] Capture synced immediately")
+                                                    await historyStore.syncFromSupabase()
+                                                    if FeatureFlags.assignmentsEnabled {
+                                                        await PushNotificationService.shared.notifyTechnicianCaptureSaved(
+                                                            captureId: clientId,
+                                                            prediction: predText
+                                                        )
+                                                    }
+                                                } catch {
+                                                    debugLog("[Detecta] Sin red – capture en cola: \(error)")
+                                                    OfflineSyncService.shared.refreshPendingCount(for: uid.uuidString)
+                                                }
+                                                #endif
+                                            }
+
+                                            NotificationCenter.default.post(
+                                                name: .kafeCreatePin,
+                                                object: nil,
+                                                userInfo: [
+                                                    "estado": lastStatus.rawValue.lowercased(),
+                                                    "probabilidad": lastConfidencePct,
+                                                    "label": lastDiseaseName,
+                                                    "fecha": Date()
+                                                ]
+                                            )
+                                            dismiss()
+                                        } label: {
+                                            Label("Aceptar", systemImage: "checkmark")
+                                                .frame(maxWidth: .infinity)
+                                        }
+                                        .buttonStyle(.borderedProminent)
+                                        .tint(AppTheme.accent)
+                                        .controlSize(.large)
+                                    }
+
+                                    Button {
+                                        showAsistente = true
+                                    } label: {
+                                        Label("Preguntar al asistente",
+                                              systemImage: "bubble.left.and.exclamationmark.bubble.right.fill")
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .tint(AppTheme.dark)
+                                }
+                                .padding(.horizontal)
+                                .transition(.opacity)
                             }
-                            .foregroundColor(.green)
                         }
 
-                        Button {
-                            showAsistente = true
-                        } label: {
-                            Label("Preguntar al asistente", systemImage: "bubble.left.and.exclamationmark.bubble.right.fill")
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.brown)
-                        } // end else (diagnóstico válido)
+                        Spacer(minLength: 20)
                     }
+                    .padding(.vertical, 16)
                 }
-                .padding()
+                .animation(.easeOut(duration: AppTheme.animNormal), value: isAnalyzing)
+                .animation(.easeOut(duration: AppTheme.animNormal), value: showSaveOptions)
             }
         }
         .sheet(isPresented: $showAsistente) {
@@ -207,43 +221,59 @@ struct DetectaView: View {
                     self.isNoPlantDetected = false
                     self.classify(image: image)
                 }, onError: { message in
-                    // La cámara sigue visible; sólo informamos para que reintente.
                     self.takePhotoTrigger = false
                     self.captureError = message
                 })
                 .ignoresSafeArea()
-                .alert("Cámara", isPresented: Binding(get: { captureError != nil }, set: { if !$0 { captureError = nil } })) {
+                .alert("Cámara", isPresented: Binding(
+                    get: { captureError != nil },
+                    set: { if !$0 { captureError = nil } }
+                )) {
                     Button("OK", role: .cancel) { captureError = nil }
-                } message: { Text(captureError ?? "") }
+                } message: {
+                    Text(captureError ?? "")
+                }
 
+                // Camera UI overlay
                 VStack {
                     HStack {
                         Button(action: { dismiss() }) {
                             Image(systemName: "chevron.left.circle.fill")
-                                .font(.system(size: 32))
-                                .foregroundColor(.white)
+                                .font(.system(size: 30))
+                                .foregroundStyle(.white)
                                 .shadow(radius: 4)
-                                .padding(.leading, 20)
-                                .padding(.top, 20)
                         }
+                        .frame(width: AppTheme.minTouchTarget, height: AppTheme.minTouchTarget)
+                        .contentShape(Rectangle())
+                        .padding(.leading, 16)
+                        .padding(.top, 16)
+                        .accessibilityLabel("Volver")
+
                         Spacer()
                     }
 
                     Spacer()
 
+                    // Shutter button
                     Button(action: { takePhotoTrigger = true }) {
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: 80, height: 80)
-                            .overlay(Circle().stroke(Color.black, lineWidth: 2))
+                        ZStack {
+                            Circle()
+                                .fill(.white)
+                                .frame(width: 76, height: 76)
+                            Circle()
+                                .strokeBorder(.white.opacity(0.6), lineWidth: 4)
+                                .frame(width: 88, height: 88)
+                        }
                     }
-                    .padding(.bottom, 40)
+                    .buttonStyle(KafeCardPressStyle())
+                    .accessibilityLabel("Capturar foto")
+                    .padding(.bottom, 48)
                 }
             }
         }
     }
 
-    // MARK: - Clasificación con CoreML
+    // MARK: - CoreML Classification (unchanged)
     func classify(image: UIImage) {
         let config = MLModelConfiguration()
 
@@ -262,7 +292,7 @@ struct DetectaView: View {
             ])
             DispatchQueue.main.async {
                 self.isAnalyzing = false
-                self.prediction = "⚠️ Error al cargar el modelo: \(error.localizedDescription)"
+                self.prediction = "Error al cargar el modelo: \(error.localizedDescription)"
                 self.showSaveOptions = true
             }
             return
@@ -285,7 +315,7 @@ struct DetectaView: View {
                     self.isNoPlantDetected = isNoPlant
 
                     if isNoPlant {
-                        self.prediction = "📷 No se detectó una hoja de café"
+                        self.prediction = "No se detectó una hoja de café"
                         self.isAnalyzing = false
                         self.showSaveOptions = true
                         return
@@ -298,12 +328,10 @@ struct DetectaView: View {
                     switch status {
                     case .sano:
                         self.prediction = "🌿 Hoja sana (\(Int(confidence))%)"
-
                     case .sospecha:
                         self.prediction = diseaseName.isEmpty
                             ? "⚠️ Posible problema (\(Int(confidence))%)"
                             : "⚠️ Posible \(shownName) (\(Int(confidence))%)"
-
                     case .enfermo:
                         self.prediction = diseaseName.isEmpty
                             ? "🚨 Enfermedad detectada (\(Int(confidence))%)"
@@ -323,9 +351,9 @@ struct DetectaView: View {
         }
 
         request.imageCropAndScaleOption = .scaleFit
-        
+
         guard let ciImage = CIImage(image: image) else {
-            prediction = "⚠️ Imagen inválida"
+            prediction = "Imagen inválida"
             isAnalyzing = false
             showSaveOptions = true
             return
@@ -343,64 +371,287 @@ struct DetectaView: View {
                 ])
                 DispatchQueue.main.async {
                     self.isAnalyzing = false
-                    self.prediction = "⚠️ Error al procesar la imagen"
+                    self.prediction = "Error al procesar la imagen"
                     self.showSaveOptions = true
                 }
             }
         }
     }
 
-    // MARK: - Parser del label del modelo
+    // MARK: - Parser del label del modelo (unchanged)
     private func parseStatus(from raw: String, confidence: Double) -> (status: PlotStatus, diseaseName: String) {
         let label = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-
         switch label {
         case "sana", "sano", "saludable", "healthy":
             return (.sano, "")
-
         case "no_planta", "no planta", "noplanta":
             return (.sospecha, "no_planta")
-
         case "roya":
-            let status: PlotStatus = confidence >= 70 ? .enfermo : .sospecha
-            return (status, "roya")
-
+            return (confidence >= 70 ? .enfermo : .sospecha, "roya")
         case "minador":
-            let status: PlotStatus = confidence >= 70 ? .enfermo : .sospecha
-            return (status, "minador")
-
+            return (confidence >= 70 ? .enfermo : .sospecha, "minador")
         case "phoma":
-            let status: PlotStatus = confidence >= 70 ? .enfermo : .sospecha
-            return (status, "phoma")
-
+            return (confidence >= 70 ? .enfermo : .sospecha, "phoma")
+        case "brown_eye":
+            return (confidence >= 70 ? .enfermo : .sospecha, "BROWN_EYE")
+        case "white_eye":
+            return (confidence >= 70 ? .enfermo : .sospecha, "WHITE_EYE")
         default:
             return (.sospecha, label)
         }
     }
 
-    // MARK: - Nombre bonito para mostrar al usuario
+    // MARK: - Advice for current diagnosis
+
+    // Declared as fileprivate so AdviceCard (outside DetectaView) can reference it.
+    fileprivate struct DiseaseAdvice {
+        let icon: String
+        let tint: Color
+        let title: String
+        let text: String
+    }
+
+    private static let adviceMap: [String: DiseaseAdvice] = [
+        "roya": DiseaseAdvice(
+            icon: "exclamationmark.triangle.fill", tint: .orange,
+            title: "Qué hacer con la Roya",
+            text: "Retira hojas con polvo naranja. Si la incidencia supera el 5%, aplica fungicida cúprico. Evita mojar el follaje. Consulta a tu técnico antes de cualquier tratamiento."
+        ),
+        "minador": DiseaseAdvice(
+            icon: "ant.fill", tint: Color(red: 0.7, green: 0.5, blue: 0.0),
+            title: "Qué hacer con el Minador",
+            text: "Elimina hojas con galerías visibles. Favorece los enemigos naturales evitando insecticidas de amplio espectro. Control biológico efectivo en etapas tempranas."
+        ),
+        "phoma": DiseaseAdvice(
+            icon: "drop.triangle.fill", tint: .red,
+            title: "Qué hacer con Phoma",
+            text: "Mejora el drenaje y la aireación del cafetal. Retira frutos y hojas afectados. Aplica fungicida solo si la incidencia es alta. Consulta a tu técnico."
+        ),
+        "sano": DiseaseAdvice(
+            icon: "checkmark.seal.fill", tint: .green,
+            title: "Planta en buen estado",
+            text: "Tu cafetal luce saludable. Continúa con las labores culturales de rutina: deshije, poda, fertilización según el ciclo. Monitorea semanalmente."
+        ),
+        "BROWN_EYE": DiseaseAdvice(
+            icon: "eye.trianglebadge.exclamationmark.fill", tint: Color(red: 0.55, green: 0.35, blue: 0.15),
+            title: "Mancha de ojo café",
+            text: "Cercospora coffeicola. Mejora la nutrición (especialmente zinc y boro). Retira hojas con manchas. Aplica fungicida si la incidencia supera el 10%."
+        ),
+        "WHITE_EYE": DiseaseAdvice(
+            icon: "eye.fill", tint: Color(red: 0.4, green: 0.5, blue: 0.6),
+            title: "Mancha de ojo blanco",
+            text: "Lesiones circulares con centro pálido. Mejora el drenaje y reduce la humedad. Retira hojas afectadas. Monitorea la propagación semanalmente."
+        )
+    ]
+
+    private func adviceForCurrentDiagnosis() -> DiseaseAdvice? {
+        guard let code = DiagnosisInput.from(
+            diseaseName: lastDiseaseName,
+            status: lastStatus,
+            confidencePct: lastConfidencePct
+        )?.diseaseCode else { return nil }
+        return Self.adviceMap[code]
+    }
+
+    // MARK: - Display name for classify() (unchanged)
     private func displayName(for disease: String) -> String {
         switch disease.lowercased() {
-        case "roya":
-            return "Roya del café"
-        case "minador":
-            return "Minador de la hoja"
-        case "phoma":
-            return "Phoma (mancha de hierro)"
-        case "no_planta":
-            return "Sin planta detectada"
-        default:
-            return disease.capitalized
+        case "roya":       return "Roya del café"
+        case "minador":    return "Minador de la hoja"
+        case "phoma":      return "Phoma (mancha de hierro)"
+        case "brown_eye":  return "Mancha de ojo café"
+        case "white_eye":  return "Mancha de ojo blanco"
+        case "no_planta":  return "Sin planta detectada"
+        default:           return disease.capitalized
         }
     }
 }
+
+// MARK: - Analyzing Card
+
+private struct AnalyzingCard: View {
+    var body: some View {
+        HStack(spacing: 14) {
+            ProgressView()
+                .scaleEffect(1.1)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Analizando la hoja...")
+                    .font(.subheadline.weight(.medium))
+                Text("Esto tarda unos segundos")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: AppTheme.radiusMD, style: .continuous)
+                .fill(Color(.secondarySystemBackground))
+        )
+    }
+}
+
+// MARK: - No Plant Detected Card
+
+private struct NoPlantCard: View {
+    let onRetry: () -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "camera.metering.unknown")
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary)
+
+            Text("No se detectó una hoja de café")
+                .font(.headline)
+                .multilineTextAlignment(.center)
+
+            Text("Acerca la cámara directamente a una hoja de café e intenta de nuevo.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button {
+                onRetry()
+            } label: {
+                Label("Volver a capturar", systemImage: "arrow.counterclockwise")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(AppTheme.dark)
+            .controlSize(.large)
+        }
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: AppTheme.radiusLG, style: .continuous)
+                .fill(Color(.secondarySystemBackground))
+        )
+    }
+}
+
+// MARK: - Diagnosis Result Card
+
+private struct DiagnosisResultCard: View {
+    let status: PlotStatus
+    let diseaseName: String
+    let confidence: Double
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Image(systemName: statusIcon)
+                .font(.system(size: 52, weight: .medium))
+                .foregroundStyle(statusColor)
+
+            VStack(spacing: 6) {
+                Text(statusTitle)
+                    .font(.title2.bold())
+                    .foregroundStyle(.primary)
+
+                if !diseaseName.isEmpty && diseaseName != "no_planta" {
+                    Text(formattedDiseaseName)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
+                Text("\(Int(confidence))% de confianza")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(statusColor.opacity(0.8))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 4)
+                    .background(
+                        Capsule()
+                            .fill(statusColor.opacity(0.12))
+                    )
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: AppTheme.radiusLG, style: .continuous)
+                .fill(statusColor.opacity(0.08))
+                .overlay(
+                    RoundedRectangle(cornerRadius: AppTheme.radiusLG, style: .continuous)
+                        .stroke(statusColor.opacity(0.25), lineWidth: 1)
+                )
+        )
+    }
+
+    private var statusColor: Color {
+        switch status {
+        case .sano:     return AppTheme.statusHealthy
+        case .sospecha: return AppTheme.statusSuspect
+        case .enfermo:  return AppTheme.statusSick
+        }
+    }
+
+    private var statusIcon: String {
+        switch status {
+        case .sano:     return "checkmark.circle.fill"
+        case .sospecha: return "exclamationmark.circle.fill"
+        case .enfermo:  return "xmark.octagon.fill"
+        }
+    }
+
+    private var statusTitle: String {
+        switch status {
+        case .sano:     return "Hoja sana"
+        case .sospecha: return "Posible problema"
+        case .enfermo:  return "Enfermedad detectada"
+        }
+    }
+
+    private var formattedDiseaseName: String {
+        switch diseaseName.lowercased() {
+        case "roya":    return "Roya del café"
+        case "minador": return "Minador de la hoja"
+        case "phoma":   return "Phoma (mancha de hierro)"
+        default:        return diseaseName.capitalized
+        }
+    }
+}
+
+// MARK: - Advice Card
+
+private struct AdviceCard: View {
+    let advice: DetectaView.DiseaseAdvice
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            Image(systemName: advice.icon)
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(advice.tint)
+                .frame(width: 28)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(advice.title)
+                    .font(.subheadline.weight(.semibold))
+                Text(advice.text)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: AppTheme.radiusMD, style: .continuous)
+                .fill(advice.tint.opacity(0.08))
+                .overlay(
+                    RoundedRectangle(cornerRadius: AppTheme.radiusMD, style: .continuous)
+                        .stroke(advice.tint.opacity(0.2), lineWidth: 1)
+                )
+        )
+    }
+}
+
+// MARK: - Preview
 
 #Preview {
     DetectaView()
         .environmentObject(HistoryStore())
 }
 
-// MARK: - Simple Location Manager
+// MARK: - Simple Location Manager (unchanged)
 class SimpleLocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
 

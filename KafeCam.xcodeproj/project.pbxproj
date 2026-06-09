@@ -287,6 +287,8 @@
 				en,
 				Base,
 				es,
+				tzo,
+				nah,
 			);
 			mainGroup = 144DD90C2E6CDF5700CCE4F4;
 			minimizedProjectReferenceProxies = 1;

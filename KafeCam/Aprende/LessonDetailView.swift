@@ -136,15 +136,24 @@ struct LessonView: View {
     let route: LearningRoute
     let lesson: Lesson
 
+    @Environment(\.dismiss) private var dismiss
     @State private var currentStep: Int = -1   // -1 = intro, n = step n, count = reflexión/cierre
     @AppStorage("completedLessonIDs") private var completedLessonIDsRaw: String = ""
     @State private var showHelpFlow: Bool = false
     @State private var reflectionText: String = ""
+    @State private var isCompleted: Bool = false
 
     private var totalSlides: Int { 1 + lesson.steps.count + (lesson.reflection != nil ? 1 : 0) }
     private var progress: Double {
+        if isCompleted { return 1.0 }
         let i = max(0, currentStep + 1)
         return Double(i + 1) / Double(totalSlides + 1)
+    }
+
+    private var nextLesson: Lesson? {
+        guard let idx = route.lessons.firstIndex(where: { $0.id == lesson.id }),
+              idx + 1 < route.lessons.count else { return nil }
+        return route.lessons[idx + 1]
     }
 
     var body: some View {
@@ -173,40 +182,76 @@ struct LessonView: View {
             }
 
             // Barra de navegación inferior
-            HStack(spacing: 12) {
-                if currentStep > -1 {
+            if isCompleted {
+                VStack(spacing: 10) {
+                    if let next = nextLesson {
+                        NavigationLink {
+                            LessonView(route: route, lesson: next)
+                        } label: {
+                            HStack(spacing: 8) {
+                                Text("Siguiente lección")
+                                    .fontWeight(.semibold)
+                                Image(systemName: "arrow.right")
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 54)
+                            .background(route.colorTag.color)
+                            .foregroundStyle(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        }
+                        .accessibilityLabel("Ir a la siguiente lección: \(next.title)")
+                    }
                     Button {
-                        withAnimation { currentStep -= 1 }
+                        dismiss()
                     } label: {
-                        Image(systemName: "arrow.left")
-                            .font(.title3.bold())
-                            .frame(width: 54, height: 54)
-                            .foregroundStyle(brown1)
+                        Text(nextLesson == nil ? "Listo" : "Volver a la ruta")
+                            .fontWeight(.medium)
+                            .frame(maxWidth: .infinity, minHeight: 54)
+                            .foregroundStyle(route.colorTag.color)
                             .background(
                                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .stroke(brown1, lineWidth: 1.5)
+                                    .stroke(route.colorTag.color, lineWidth: 1.5)
                             )
                     }
-                    .accessibilityLabel("Paso anterior")
+                    .accessibilityLabel(nextLesson == nil ? "Terminar y volver" : "Volver a la lista de lecciones")
                 }
-
-                Button {
-                    if currentStep < lesson.steps.count {
-                        withAnimation { currentStep += 1 }
-                    } else {
-                        markComplete()
+                .padding()
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            } else {
+                HStack(spacing: 12) {
+                    if currentStep > -1 {
+                        Button {
+                            withAnimation { currentStep -= 1 }
+                        } label: {
+                            Image(systemName: "arrow.left")
+                                .font(.title3.bold())
+                                .frame(width: 54, height: 54)
+                                .foregroundStyle(brown1)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                        .stroke(brown1, lineWidth: 1.5)
+                                )
+                        }
+                        .accessibilityLabel("Paso anterior")
                     }
-                } label: {
-                    Text(currentStep < lesson.steps.count ? "Continuar" : "Terminar lección")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, minHeight: 54)
-                        .background(route.colorTag.color)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+                    Button {
+                        if currentStep < lesson.steps.count {
+                            withAnimation { currentStep += 1 }
+                        } else {
+                            markComplete()
+                        }
+                    } label: {
+                        Text(currentStep < lesson.steps.count ? "Continuar" : "Terminar lección")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, minHeight: 54)
+                            .background(route.colorTag.color)
+                            .foregroundStyle(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    }
+                    .accessibilityLabel(currentStep < lesson.steps.count ? "Ir al siguiente paso" : "Marcar lección como completada")
                 }
-                .accessibilityLabel(currentStep < lesson.steps.count ? "Ir al siguiente paso" : "Marcar lección como completada")
+                .padding()
             }
-            .padding()
         }
         .navigationTitle(lesson.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -236,8 +281,8 @@ struct LessonView: View {
             )
         }
 
-        // Posteriormente: dismiss o navegar a siguiente lección.
         NotificationCenter.default.post(name: .lessonCompleted, object: lesson.id)
+        withAnimation(.easeOut(duration: 0.25)) { isCompleted = true }
     }
 }
 

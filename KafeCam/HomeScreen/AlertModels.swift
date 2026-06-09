@@ -1,26 +1,20 @@
-//
-//  AlertModels.swift
-//  KafeCam
-//
-//  Created by Grecia Saucedo on 08/09/25.
-//
 import SwiftUI
 
 enum AlertLevel {
     case critical, warning, ok
-    
+
     var bg: Color {
         switch self {
-        case .critical: return .red.opacity(0.18)
-        case .warning:  return .yellow.opacity(0.22)
-        case .ok:       return .green.opacity(0.18)
+        case .critical: return Color.red.opacity(0.15)
+        case .warning:  return Color.orange.opacity(0.15)
+        case .ok:       return Color.green.opacity(0.15)
         }
     }
     var border: Color {
         switch self {
-        case .critical: return .red
-        case .warning:  return .yellow
-        case .ok:       return .green
+        case .critical: return Color.red
+        case .warning:  return Color.orange   // Changed from .yellow — better contrast (≥3:1)
+        case .ok:       return Color.green
         }
     }
     var icon: String {

@@ -1,9 +1,3 @@
-//
-//  LoginView.swift
-//  Register
-//
-//  Created by Guillermo Lira on 10/09/25.
-//
 import SwiftUI
 import AuthenticationServices
 
@@ -12,27 +6,25 @@ struct LoginView: View {
     @State private var goRegister = false
     @State private var appleNonce = ""
 
-    // Palette
-    private let accentColor = Color(red: 88/255, green: 129/255, blue: 87/255)
-    private let darkColor   = Color(red: 82/255,  green: 76/255,  blue: 41/255)
-
     var body: some View {
         NavigationStack {
             VStack {
                 Spacer()
 
-                VStack(spacing: 16) {
-                    // Leaf icon on top
+                VStack(spacing: 20) {
                     Image(systemName: "leaf.fill")
-                        .font(.system(size: 40))
-                        .foregroundColor(accentColor)
+                        .font(.system(size: 44))
+                        .foregroundStyle(AppTheme.accent)
 
-                    Text("Bienvenido")
-                        .font(.largeTitle.weight(.bold))
-                        .foregroundColor(accentColor)
+                    VStack(spacing: 6) {
+                        Text("Bienvenido")
+                            .font(.largeTitle.weight(.bold))
+                            .foregroundStyle(AppTheme.accent)
 
-                    Text("Inicia sesión para continuar")
-                        .foregroundColor(darkColor)
+                        Text("Inicia sesión para continuar")
+                            .font(.subheadline)
+                            .foregroundStyle(AppTheme.dark)
+                    }
 
                     AuthCard {
                         // Phone
@@ -41,7 +33,7 @@ struct LoginView: View {
                                   keyboard: .numberPad,
                                   contentType: .telephoneNumber)
                         if let err = vm.phoneError {
-                            Text(err).font(.caption).foregroundColor(.red)
+                            Text(err).font(.caption).foregroundStyle(.red)
                         }
 
                         // Password
@@ -51,22 +43,27 @@ struct LoginView: View {
                                   keyboard: .default,
                                   contentType: .password)
                         if let err = vm.passwordError {
-                            Text(err).font(.caption).foregroundColor(.red)
+                            Text(err).font(.caption).foregroundStyle(.red)
                         }
 
-                        // Apple-like button
-                        Button("Iniciar sesión", action: vm.submit)
-                            .buttonStyle(.borderedProminent)
-                            .tint(accentColor)
-                            .buttonBorderShape(.roundedRectangle(radius: 14))
-                            .controlSize(.small)
-                            .frame(maxWidth: .infinity)
-                            .overlay {
-                                if vm.isLoading { ProgressView().tint(.white) }
+                        // Primary CTA — spinner replaces text while loading
+                        Button(action: vm.submit) {
+                            ZStack {
+                                Text("Iniciar sesión")
+                                    .opacity(vm.isLoading ? 0 : 1)
+                                if vm.isLoading {
+                                    ProgressView().tint(.white)
+                                }
                             }
-                            .disabled(vm.isLoading)
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(AppTheme.accent)
+                        .buttonBorderShape(.roundedRectangle(radius: AppTheme.radiusSM))
+                        .controlSize(.large)
+                        .disabled(vm.isLoading)
 
-                        // Separador "o"
+                        // Divider "o"
                         HStack {
                             Rectangle().fill(Color(.separator)).frame(height: 1)
                             Text("o").font(.caption).foregroundStyle(.secondary)
@@ -74,7 +71,7 @@ struct LoginView: View {
                         }
                         .padding(.vertical, 4)
 
-                        // Sign in with Apple (nativo → Supabase signInWithIdToken)
+                        // Sign in with Apple
                         SignInWithAppleButton(.signIn) { request in
                             let nonce = AppleNonce.random()
                             appleNonce = nonce
@@ -84,30 +81,31 @@ struct LoginView: View {
                             vm.handleApple(result, rawNonce: appleNonce)
                         }
                         .signInWithAppleButtonStyle(.black)
-                        .frame(height: 48)
-                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .frame(height: 50)
+                        .clipShape(RoundedRectangle(cornerRadius: AppTheme.radiusSM))
                         .disabled(vm.isLoading)
                     }
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 10) {
                         HStack(spacing: 6) {
                             Text("¿No tienes cuenta?")
                             Button("Crear una") { goRegister = true }
-                                .foregroundColor(accentColor)
+                                .foregroundStyle(AppTheme.accent)
                         }
                         .font(.subheadline)
+
                         NavigationLink {
                             ForgotPasswordView()
                         } label: {
                             Text("¿Olvidaste tu contraseña?").underline()
                         }
-                        .foregroundColor(accentColor)
+                        .foregroundStyle(AppTheme.accent)
                         .font(.footnote)
 
                         Button("Continuar sin cuenta") {
                             vm.session.continueAsGuest()
                         }
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .font(.footnote)
                     }
                 }
@@ -117,10 +115,8 @@ struct LoginView: View {
             }
             .padding(.horizontal, 20)
             .navigationDestination(isPresented: $goRegister) {
-                // Pass the same auth & session to Register
                 RegisterView(vm: RegisterViewModel(auth: vm.auth, session: vm.session))
             }
         }
-        // Signup success alert disabled to avoid showing on cold launches
     }
 }

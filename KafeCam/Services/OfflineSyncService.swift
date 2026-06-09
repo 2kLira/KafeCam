@@ -62,13 +62,19 @@ final class OfflineSyncService: ObservableObject {
             let imageURL = PendingCaptureStore.shared.imageURL(for: capture)
             guard let data = try? Data(contentsOf: imageURL) else { continue }
             do {
+                let diagInput = DiagnosisInput.from(
+                    diseaseName: capture.diseaseName,
+                    status: capture.status,
+                    confidencePct: capture.confidencePct
+                )
                 _ = try await svc.saveCaptureToDefaultPlot(
                     imageData: data,
                     takenAt: capture.takenAt,
                     deviceModel: capture.prediction,
                     lat: capture.lat,
                     lon: capture.lon,
-                    clientUUID: capture.clientUUID
+                    clientUUID: capture.clientUUID,
+                    diagnosis: diagInput
                 )
                 PendingCaptureStore.shared.markSynced(id: capture.id)
                 debugLog("[OfflineSync] Synced capture \(capture.id)")
