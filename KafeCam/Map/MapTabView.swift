@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import Combine
 
 struct MapTabView: View {
     @EnvironmentObject var vm: PlotsMapViewModel
@@ -7,13 +8,18 @@ struct MapTabView: View {
     @State private var showHint = false
     @State private var hintText = "Pin agregado"
     @State private var hintIcon = "mappin.circle.fill"
+    @State private var cameraPosition: MapCameraPosition = .automatic
+    @State private var currentRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 15.7846022, longitude: -92.7611756),
+        span: MKCoordinateSpan(latitudeDelta: 0.35, longitudeDelta: 0.35)
+    )
 
     var body: some View {
         NavigationStack {
             GeometryReader { geo in
                 ZStack {
                     // Map with user location and pins
-                    Map(position: .constant(.region(vm.region))) {
+                    Map(position: $cameraPosition) {
                         ForEach(vm.pins) { pin in
                             Annotation("", coordinate: pin.coordinate) {
                                 Button { vm.selectedPin = pin } label: {
@@ -34,6 +40,19 @@ struct MapTabView: View {
                         MapScaleView()
                     }
                     .ignoresSafeArea()
+                    .onAppear {
+                        cameraPosition = .region(vm.region)
+                        currentRegion = vm.region
+                    }
+                    .onReceive(vm.$region) { newRegion in
+                        withAnimation(.easeOut(duration: 0.4)) {
+                            cameraPosition = .region(newRegion)
+                        }
+                        currentRegion = newRegion
+                    }
+                    .onMapCameraChange { ctx in
+                        currentRegion = ctx.region
+                    }
 
                     // Tap overlay for manual pin placement
                     if vm.isAddingPin {
@@ -47,7 +66,7 @@ struct MapTabView: View {
                                         let coord = toCoordinate(
                                             point: value.location,
                                             in: geo.size,
-                                            region: vm.region
+                                            region: currentRegion
                                         )
                                         vm.addPin(at: coord)
                                         showTemporaryHint("Pin agregado", icon: "mappin.circle.fill")

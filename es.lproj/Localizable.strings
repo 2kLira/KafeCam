@@ -1,7 +1,12 @@
+// Español — cobertura 100%
 
+// Tabs
 "Inicio" = "Inicio";
 "Mapa" = "Mapa";
 "Favoritos" = "Favoritos";
+"Comunidad" = "Comunidad";
+
+// Home
 "Coincidencias" = "Coincidencias";
 "Alertas" = "Alertas";
 "¿Qué quieres hacer hoy?" = "¿Qué quieres hacer hoy?";
@@ -13,21 +18,74 @@
 "Cuida tu cultivo" = "Cuida tu cultivo";
 "Consulta" = "Consulta";
 "Tus registros siempre" = "Tus registros siempre";
+"Asistente" = "Asistente";
+"Pregunta lo que necesites" = "Pregunta lo que necesites";
+"Bitácora" = "Bitácora";
+"Tu cuaderno de campo" = "Tu cuaderno de campo";
+"Aprende" = "Aprende";
+"Rutas de capacitación" = "Rutas de capacitación";
+"Mi Camino" = "Mi Camino";
+"Tu progreso" = "Tu progreso";
+"Hola, %@ 👋" = "Hola, %@ 👋";
+"Todo lo que tu cafetal necesita..." = "Todo lo que tu cafetal necesita...";
+"Abrir perfil" = "Abrir perfil";
 
+// Perfil — secciones
 "Perfil" = "Perfil";
 "Cuenta" = "Cuenta";
 "Detalles" = "Detalles";
+"Información" = "Información";
+"Idioma" = "Idioma";
+"Configuración" = "Configuración";
+"Legal" = "Legal";
+"Zona de peligro" = "Zona de peligro";
+
+// Perfil — campos
 "Teléfono" = "Teléfono";
+"Mail" = "Mail";
+"Correo" = "Correo";
 "Organización" = "Organización";
 "Rol" = "Rol";
 "Técnico" = "Técnico";
+"Género" = "Género";
+"Fecha de nacimiento" = "Fecha de nacimiento";
+"Edad" = "Edad";
+"País" = "País";
+"Estado" = "Estado";
+"Biografía" = "Biografía";
+"Nombres" = "Nombres";
+"Apellidos" = "Apellidos";
+"Masculino" = "Masculino";
+"Femenino" = "Femenino";
+"Otro" = "Otro";
+
+// Perfil — acciones
 "Peticiones" = "Peticiones";
 "Farmers" = "Farmers";
 "Cambiar contraseña" = "Cambiar contraseña";
 "Cerrar sesión" = "Cerrar sesión";
+"Eliminar mi cuenta" = "Eliminar mi cuenta";
+"Política de privacidad y términos" = "Política de privacidad y términos";
 
-"Idioma" = "Idioma";
+// Acciones comunes
+"Guardar" = "Guardar";
+"Cancelar" = "Cancelar";
+"Editar" = "Editar";
+
+// Historial / detalle
+"Detalle" = "Detalle";
+"Notas" = "Notas";
+"Recomendaciones" = "Recomendaciones";
+"Agregar a Favoritos" = "Agregar a Favoritos";
+"Quitar de Favoritos" = "Quitar de Favoritos";
+"Las notas se han guardado correctamente." = "Las notas se han guardado correctamente.";
+"Toca para agregar notas sobre esta captura..." = "Toca para agregar notas sobre esta captura...";
+
+// Niveles de recomendación
+"URGENTE" = "URGENTE";
+"ATENCIÓN" = "ATENCIÓN";
+"CONSEJO" = "CONSEJO";
+
+// Idioma
+"Tzotzil — traducción comunitaria" = "Tzotzil — traducción comunitaria";
 "Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — puede contener errores";
-"Abrir perfil" = "Abrir perfil";
-"Hola, %@ 👋" = "Hola, %@ 👋";
-"Todo lo que tu cafetal necesita..." = "Todo lo que tu cafetal necesita...";

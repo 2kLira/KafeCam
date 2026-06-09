@@ -19,9 +19,10 @@ struct HomeView: View {
     @AppStorage("avatarKey") private var avatarKey: String = ""
     @StateObject private var vm = HomeViewModel()
     @StateObject private var anticipaVM = AnticipaViewModel()
-
-    // ✅ Instancia global del mapa: vive todo el tiempo y escucha notificaciones
     @StateObject private var plotsVM = PlotsMapViewModel()
+    // Forces a full body re-evaluation when language changes, so all Text() keys
+    // are re-looked-up in the new bundle without restarting the app.
+    @ObservedObject private var lang = LanguageManager.shared
 
     // ✅ Store compartido ya viene por EnvironmentObject desde arriba
     @EnvironmentObject var historyStore: HistoryStore

@@ -10,6 +10,9 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var session: SessionViewModel
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    // Observing LanguageManager at the root forces the entire view hierarchy
+    // to re-render whenever the user switches language — no per-view wiring needed.
+    @ObservedObject private var lang = LanguageManager.shared
 
     var body: some View {
         if session.isLoggedIn || session.isGuest {

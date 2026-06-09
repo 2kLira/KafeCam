@@ -3,6 +3,17 @@ import CoreML
 import Vision
 import CoreLocation
 
+private enum MLModelCache {
+    static let vnModel: VNCoreMLModel? = {
+        let config = MLModelConfiguration()
+        if let compiledURL = Bundle.main.url(forResource: "CoffeeDiseaseClassifier_v10", withExtension: "mlmodelc"),
+           let coreML = try? MLModel(contentsOf: compiledURL, configuration: config) {
+            return try? VNCoreMLModel(for: coreML)
+        }
+        return try? VNCoreMLModel(for: CoffeeDiseaseClassifier_v100(configuration: config).model)
+    }()
+}
+
 struct DetectaView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var historyStore: HistoryStore
@@ -21,6 +32,7 @@ struct DetectaView: View {
     @State private var lastDiseaseName: String = ""
     @State private var isNoPlantDetected: Bool = false
     @State private var captureError: String? = nil
+    @State private var showCameraDeniedAlert = false
 
     private var assistantQuestion: String {
         let name = lastDiseaseName.isEmpty ? "una posible enfermedad" : lastDiseaseName
@@ -106,7 +118,7 @@ struct DetectaView: View {
                                                 CrashMonitor.breadcrumb("Captura aceptada: \(predText)", category: "detecta")
 
                                                 #if canImport(Supabase)
-                                                guard let uid = try? await SupaAuthService.currentUserId() else { return }
+                                                let uid = (try? await SupaAuthService.currentUserId()) ?? UUID()
                                                 #else
                                                 let uid = UUID()
                                                 #endif
@@ -222,7 +234,11 @@ struct DetectaView: View {
                     self.classify(image: image)
                 }, onError: { message in
                     self.takePhotoTrigger = false
-                    self.captureError = message
+                    if message == "camera_denied" {
+                        self.showCameraDeniedAlert = true
+                    } else {
+                        self.captureError = message
+                    }
                 })
                 .ignoresSafeArea()
                 .alert("Cámara", isPresented: Binding(
@@ -270,98 +286,99 @@ struct DetectaView: View {
                     .padding(.bottom, 48)
                 }
             }
+            .onAppear {
+                DispatchQueue.global(qos: .userInitiated).async { _ = MLModelCache.vnModel }
+            }
+            .alert("Acceso a la cámara", isPresented: $showCameraDeniedAlert) {
+                Button("Ahora no", role: .cancel) { showCamera = false }
+                Button("Ir a Configuración") {
+                    showCamera = false
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            } message: {
+                Text("Para usar Detecta, permite el acceso a la cámara en Configuración.")
+            }
         }
     }
 
-    // MARK: - CoreML Classification (unchanged)
+    // MARK: - CoreML Classification
     func classify(image: UIImage) {
-        let config = MLModelConfiguration()
-
-        let vnModel: VNCoreMLModel
-        do {
-            if let compiledURL = Bundle.main.url(forResource: "CoffeeDiseaseClassifier_v10", withExtension: "mlmodelc") {
-                let coreML = try MLModel(contentsOf: compiledURL, configuration: config)
-                vnModel = try VNCoreMLModel(for: coreML)
-            } else {
-                vnModel = try VNCoreMLModel(for: CoffeeDiseaseClassifier_v100(configuration: config).model)
-            }
-        } catch {
-            CrashMonitor.capture(error, context: [
-                "model": "CoffeeDiseaseClassifier_v10",
-                "phase": "load"
-            ])
-            DispatchQueue.main.async {
-                self.isAnalyzing = false
-                self.prediction = "Error al cargar el modelo: \(error.localizedDescription)"
-                self.showSaveOptions = true
-            }
-            return
-        }
-
-        let request = VNCoreMLRequest(model: vnModel) { req, _ in
-            if let result = req.results?.first as? VNClassificationObservation {
-                let label = result.identifier
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                    .lowercased()
-
-                let confidence = Double(result.confidence * 100.0)
-                let isNoPlant = label == "no_planta" || label == "no planta" || label == "noplanta"
-                let parsed = self.parseStatus(from: label, confidence: confidence)
-                let status = parsed.status
-                let diseaseName = parsed.diseaseName
-                let shownName = self.displayName(for: diseaseName)
-
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard let vnModel = MLModelCache.vnModel else {
                 DispatchQueue.main.async {
-                    self.isNoPlantDetected = isNoPlant
+                    self.isAnalyzing = false
+                    self.prediction = "Modelo no disponible. Intenta de nuevo."
+                    self.showSaveOptions = true
+                }
+                return
+            }
 
-                    if isNoPlant {
-                        self.prediction = "No se detectó una hoja de café"
+            let request = VNCoreMLRequest(model: vnModel) { req, _ in
+                if let result = req.results?.first as? VNClassificationObservation {
+                    let label = result.identifier
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .lowercased()
+
+                    let confidence = Double(result.confidence * 100.0)
+                    let isNoPlant = label == "no_planta" || label == "no planta" || label == "noplanta"
+                    let parsed = self.parseStatus(from: label, confidence: confidence)
+                    let status = parsed.status
+                    let diseaseName = parsed.diseaseName
+                    let shownName = self.displayName(for: diseaseName)
+
+                    DispatchQueue.main.async {
+                        self.isNoPlantDetected = isNoPlant
+
+                        if isNoPlant {
+                            self.prediction = "No se detectó una hoja de café"
+                            self.isAnalyzing = false
+                            self.showSaveOptions = true
+                            return
+                        }
+
+                        self.lastStatus = status
+                        self.lastConfidencePct = confidence
+                        self.lastDiseaseName = diseaseName
+
+                        switch status {
+                        case .sano:
+                            self.prediction = "🌿 Hoja sana (\(Int(confidence))%)"
+                        case .sospecha:
+                            self.prediction = diseaseName.isEmpty
+                                ? "⚠️ Posible problema (\(Int(confidence))%)"
+                                : "⚠️ Posible \(shownName) (\(Int(confidence))%)"
+                        case .enfermo:
+                            self.prediction = diseaseName.isEmpty
+                                ? "🚨 Enfermedad detectada (\(Int(confidence))%)"
+                                : "🚨 \(shownName) (\(Int(confidence))%)"
+                        }
+
                         self.isAnalyzing = false
                         self.showSaveOptions = true
-                        return
                     }
-
-                    self.lastStatus = status
-                    self.lastConfidencePct = confidence
-                    self.lastDiseaseName = diseaseName
-
-                    switch status {
-                    case .sano:
-                        self.prediction = "🌿 Hoja sana (\(Int(confidence))%)"
-                    case .sospecha:
-                        self.prediction = diseaseName.isEmpty
-                            ? "⚠️ Posible problema (\(Int(confidence))%)"
-                            : "⚠️ Posible \(shownName) (\(Int(confidence))%)"
-                    case .enfermo:
-                        self.prediction = diseaseName.isEmpty
-                            ? "🚨 Enfermedad detectada (\(Int(confidence))%)"
-                            : "🚨 \(shownName) (\(Int(confidence))%)"
+                } else {
+                    DispatchQueue.main.async {
+                        self.isAnalyzing = false
+                        self.prediction = "⚠️ No se pudo clasificar la imagen"
+                        self.showSaveOptions = true
                     }
-
-                    self.isAnalyzing = false
-                    self.showSaveOptions = true
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.isAnalyzing = false
-                    self.prediction = "⚠️ No se pudo clasificar la imagen"
-                    self.showSaveOptions = true
                 }
             }
-        }
 
-        request.imageCropAndScaleOption = .scaleFit
+            request.imageCropAndScaleOption = .scaleFit
 
-        guard let ciImage = CIImage(image: image) else {
-            prediction = "Imagen inválida"
-            isAnalyzing = false
-            showSaveOptions = true
-            return
-        }
+            guard let ciImage = CIImage(image: image) else {
+                DispatchQueue.main.async {
+                    self.prediction = "Imagen inválida"
+                    self.isAnalyzing = false
+                    self.showSaveOptions = true
+                }
+                return
+            }
 
-        let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
-
-        DispatchQueue.global(qos: .userInitiated).async {
+            let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
             do {
                 try handler.perform([request])
             } catch {

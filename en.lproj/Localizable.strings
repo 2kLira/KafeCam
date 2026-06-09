@@ -1,7 +1,12 @@
+// English — 100% coverage
 
+// Tabs
 "Inicio" = "Home";
 "Mapa" = "Map";
 "Favoritos" = "Favorites";
+"Comunidad" = "Community";
+
+// Home
 "Coincidencias" = "Matches";
 "Alertas" = "Alerts";
 "¿Qué quieres hacer hoy?" = "What do you want to do today?";
@@ -13,21 +18,74 @@
 "Cuida tu cultivo" = "Care for your crop";
 "Consulta" = "Records";
 "Tus registros siempre" = "Your records, always";
+"Asistente" = "Assistant";
+"Pregunta lo que necesites" = "Ask anything";
+"Bitácora" = "Field Journal";
+"Tu cuaderno de campo" = "Your field notebook";
+"Aprende" = "Learn";
+"Rutas de capacitación" = "Training routes";
+"Mi Camino" = "My Progress";
+"Tu progreso" = "Your progress";
+"Hola, %@ 👋" = "Hi, %@ 👋";
+"Todo lo que tu cafetal necesita..." = "Everything your coffee farm needs...";
+"Abrir perfil" = "Open profile";
 
+// Profile — sections
 "Perfil" = "Profile";
 "Cuenta" = "Account";
 "Detalles" = "Details";
+"Información" = "Information";
+"Idioma" = "Language";
+"Configuración" = "Settings";
+"Legal" = "Legal";
+"Zona de peligro" = "Danger zone";
+
+// Profile — fields
 "Teléfono" = "Phone";
+"Mail" = "Email";
+"Correo" = "Email";
 "Organización" = "Organization";
 "Rol" = "Role";
 "Técnico" = "Technician";
+"Género" = "Gender";
+"Fecha de nacimiento" = "Date of birth";
+"Edad" = "Age";
+"País" = "Country";
+"Estado" = "State";
+"Biografía" = "Biography";
+"Nombres" = "First name(s)";
+"Apellidos" = "Last name(s)";
+"Masculino" = "Male";
+"Femenino" = "Female";
+"Otro" = "Other";
+
+// Profile — actions
 "Peticiones" = "Requests";
 "Farmers" = "Farmers";
 "Cambiar contraseña" = "Change password";
 "Cerrar sesión" = "Log out";
+"Eliminar mi cuenta" = "Delete my account";
+"Política de privacidad y términos" = "Privacy policy & terms";
 
-"Idioma" = "Language";
+// Common actions
+"Guardar" = "Save";
+"Cancelar" = "Cancel";
+"Editar" = "Edit";
+
+// History / detail
+"Detalle" = "Details";
+"Notas" = "Notes";
+"Recomendaciones" = "Recommendations";
+"Agregar a Favoritos" = "Add to Favorites";
+"Quitar de Favoritos" = "Remove from Favorites";
+"Las notas se han guardado correctamente." = "Notes saved successfully.";
+"Toca para agregar notas sobre esta captura..." = "Tap to add notes about this capture...";
+
+// Recommendation levels
+"URGENTE" = "URGENT";
+"ATENCIÓN" = "ATTENTION";
+"CONSEJO" = "TIP";
+
+// Language
+"Tzotzil — traducción comunitaria" = "Tzotzil — community translation";
 "Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — may contain errors";
-"Abrir perfil" = "Open profile";
-"Hola, %@ 👋" = "Hi, %@ 👋";
-"Todo lo que tu cafetal necesita..." = "Everything your coffee farm needs...";

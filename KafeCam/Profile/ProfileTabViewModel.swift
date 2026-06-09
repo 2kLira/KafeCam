@@ -37,8 +37,77 @@ final class ProfileTabViewModel: ObservableObject {
 	@Published var showCountry: Bool = true
 	@Published var showState: Bool = true
 	@Published var showAbout: Bool = true
-	
+
+	// Editing state (moved from View)
+	@Published var isEditing = false
+	@Published var isSaving = false
+	@Published var editFirstName: String = ""
+	@Published var editLastName: String = ""
+	@Published var editEmail: String = ""
+	@Published var editOrganization: String = ""
+	@Published var editGender: String = ""
+	@Published var editDOB: Date = Date(timeIntervalSince1970: 0)
+	@Published var editAge: String = ""
+	@Published var editCountry: String = ""
+	@Published var editState: String = ""
+
 	var canManageFarmers: Bool { (role == "technician") || (role == "admin") }
+
+	func beginEditing() {
+		let full = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+		if full.isEmpty { editFirstName = ""; editLastName = "" }
+		else {
+			let parts = full.split(separator: " ")
+			editFirstName = parts.first.map(String.init) ?? full
+			editLastName = parts.dropFirst().joined(separator: " ")
+		}
+		editEmail = email ?? ""
+		editOrganization = organization ?? ""
+		editGender = (gender ?? "").isEmpty ? "male" : (gender ?? "")
+		editDOB = dateOfBirth ?? Date(timeIntervalSince1970: 0)
+		editAge = age.map { String($0) } ?? ""
+		editCountry = country ?? ""
+		editState = state ?? ""
+		isEditing = true
+	}
+
+	func cancelEditing() { isEditing = false }
+
+	func commitEdits() {
+		let fullName = editLastName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+			? editFirstName
+			: "\(editFirstName) \(editLastName)"
+		displayName = fullName
+		email = editEmail.isEmpty ? nil : editEmail
+		organization = editOrganization.isEmpty ? nil : editOrganization
+
+		let first = editFirstName.trimmingCharacters(in: .whitespacesAndNewlines)
+		if !first.isEmpty { UserDefaults.standard.set(first, forKey: "displayName") }
+
+		isEditing = false
+		isSaving = true
+		Task {
+			await saveProfile(
+				name: fullName,
+				email: self.email,
+				phone: self.phone,
+				organization: self.organization,
+				gender: editGender,
+				dateOfBirth: editDOB,
+				age: Int(editAge),
+				country: editCountry,
+				state: editState,
+				about: about,
+				showGender: showGender,
+				showDateOfBirth: showDateOfBirth,
+				showAge: showAge,
+				showCountry: showCountry,
+				showState: showState,
+				showAbout: showAbout
+			)
+			isSaving = false
+		}
+	}
 	
 	func load() async {
 		do {

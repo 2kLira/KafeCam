@@ -41,14 +41,20 @@ struct CameraPreview: UIViewControllerRepresentable {
 
 
         private func requestCameraAccess() {
-            AVCaptureDevice.requestAccess(for: .video) { granted in
-                if granted {
+            switch AVCaptureDevice.authorizationStatus(for: .video) {
+            case .authorized:
+                DispatchQueue.main.async { self.setupCamera() }
+            case .notDetermined:
+                AVCaptureDevice.requestAccess(for: .video) { granted in
                     DispatchQueue.main.async {
-                        self.setupCamera()
+                        if granted { self.setupCamera() }
+                        else { self.onError?("camera_denied") }
                     }
-                } else {
-                    debugLog("❌ Acceso a la cámara denegado")
                 }
+            case .denied, .restricted:
+                DispatchQueue.main.async { self.onError?("camera_denied") }
+            @unknown default:
+                DispatchQueue.main.async { self.setupCamera() }
             }
         }
 

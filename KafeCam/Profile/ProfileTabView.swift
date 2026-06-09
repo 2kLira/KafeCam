@@ -6,29 +6,17 @@ import PhotosUI
 
 struct ProfileTabView: View {
     @StateObject private var vm = ProfileTabViewModel()
+    // Observing LanguageManager forces a re-render whenever the user switches language,
+    // so all Text() keys are re-looked-up against the new bundle immediately.
+    @ObservedObject private var lang = LanguageManager.shared
 
-    // Avatar / picker
+    // Avatar / picker (pure UI state — stays in View)
     @State private var showAvatarEditor = false
     @State private var pickedImage: UIImage? = nil
     @State private var showAvatarSource = false
     @State private var presentPicker = false
     @State private var avatarSourceToPresent: ImagePicker.Source = .library
     @State private var showViewer = false
-
-    // Edición
-    @State private var isEditing = false
-    @State private var editFirstName: String = ""
-    @State private var editLastName: String = ""
-    @State private var editPhone: String = ""
-    @State private var editEmail: String = ""
-    @State private var editOrganization: String = ""
-
-    // Datos personales (edición)
-    @State private var editGender: String = ""
-    @State private var editDOB: Date = Date(timeIntervalSince1970: 0)
-    @State private var editAge: String = ""
-    @State private var editCountry: String = ""
-    @State private var editState: String = ""
 
     @EnvironmentObject var avatarStore: AvatarStore
     @EnvironmentObject var session: SessionViewModel
@@ -57,7 +45,7 @@ struct ProfileTabView: View {
                             .frame(width: 128, height: 128)
                             .onTapGesture {
                                 let hasAvatar = (avatarStore.image != nil) || (vm.avatarImage != nil)
-                                if isEditing { showAvatarSource = true }
+                                if vm.isEditing { showAvatarSource = true }
                                 else if hasAvatar { showViewer = true }
                                 else { showAvatarSource = true }
                             }
@@ -76,16 +64,16 @@ struct ProfileTabView: View {
                     .listRowBackground(Color.clear)
 
                     // MARK: - MODO EDICIÓN
-                    if isEditing {
+                    if vm.isEditing {
                         Section {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Nombres").font(.subheadline).foregroundStyle(.secondary)
-                                TextField("Nombres", text: $editFirstName)
+                                TextField("Nombres", text: $vm.editFirstName)
                                     .textInputAutocapitalization(.words)
                             }
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Apellidos").font(.subheadline).foregroundStyle(.secondary)
-                                TextField("Apellidos", text: $editLastName)
+                                TextField("Apellidos", text: $vm.editLastName)
                                     .textInputAutocapitalization(.words)
                             }
                             VStack(alignment: .leading, spacing: 8) {
@@ -97,13 +85,13 @@ struct ProfileTabView: View {
                             }
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Correo").font(.subheadline).foregroundStyle(.secondary)
-                                TextField("Correo", text: $editEmail)
+                                TextField("Correo", text: $vm.editEmail)
                                     .keyboardType(.emailAddress)
                                     .textInputAutocapitalization(.never)
                             }
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Organización").font(.subheadline).foregroundStyle(.secondary)
-                                TextField("Organización", text: $editOrganization)
+                                TextField("Organización", text: $vm.editOrganization)
                             }
                             LabeledContent {
                                 Text(roleDisplayText(vm.role))
@@ -121,17 +109,17 @@ struct ProfileTabView: View {
                         Section {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Género").font(.subheadline).foregroundStyle(.secondary)
-                                Picker("Género", selection: $editGender) {
+                                Picker("Género", selection: $vm.editGender) {
                                     Text("Masculino").tag("male")
                                     Text("Femenino").tag("female")
                                     Text("Otro").tag("other")
                                 }
                                 .pickerStyle(.segmented)
                             }
-                            DatePicker("Fecha de nacimiento", selection: $editDOB, displayedComponents: .date)
-                            TextField("Edad", text: $editAge).keyboardType(.numberPad)
-                            TextField("País", text: $editCountry)
-                            TextField("Estado", text: $editState)
+                            DatePicker("Fecha de nacimiento", selection: $vm.editDOB, displayedComponents: .date)
+                            TextField("Edad", text: $vm.editAge).keyboardType(.numberPad)
+                            TextField("País", text: $vm.editCountry)
+                            TextField("Estado", text: $vm.editState)
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Biografía").font(.subheadline).foregroundStyle(.secondary)
                                 TextEditor(text: Binding(
@@ -278,13 +266,17 @@ struct ProfileTabView: View {
                 .navigationTitle("Perfil")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        if isEditing {
-                            Button("Cancelar") { cancelEdits() }
+                        if vm.isEditing {
+                            Button("Cancelar") { vm.cancelEditing() }
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(isEditing ? "Guardar" : "Editar") {
-                            isEditing ? saveEdits() : beginEdits()
+                        if vm.isSaving {
+                            ProgressView().controlSize(.small).tint(AppTheme.accent)
+                        } else {
+                            Button(vm.isEditing ? "Guardar" : "Editar") {
+                                vm.isEditing ? vm.commitEdits() : vm.beginEditing()
+                            }
                         }
                     }
                 }
@@ -342,7 +334,7 @@ struct ProfileTabView: View {
     /// Shows initials in view mode; shows "+" icon in edit mode.
     @ViewBuilder
     private var avatarPlaceholder: some View {
-        if isEditing {
+        if vm.isEditing {
             Image(systemName: "plus.circle.fill")
                 .font(.system(size: 32))
                 .foregroundStyle(AppTheme.accent)
@@ -383,63 +375,6 @@ private extension ProfileTabView {
     func labelDate(_ d: Date?) -> String {
         guard let d else { return "—" }
         return d.formatted(date: .abbreviated, time: .omitted)
-    }
-
-    func beginEdits() {
-        let full = vm.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
-        if full.isEmpty { editFirstName = ""; editLastName = "" }
-        else {
-            let parts = full.split(separator: " ")
-            editFirstName = parts.first.map(String.init) ?? full
-            editLastName = parts.dropFirst().joined(separator: " ")
-        }
-        editPhone = vm.phone ?? ""
-        editEmail = vm.email ?? ""
-        editOrganization = vm.organization ?? ""
-        editGender = (vm.gender ?? "").isEmpty ? "male" : (vm.gender ?? "")
-        editDOB = vm.dateOfBirth ?? Date(timeIntervalSince1970: 0)
-        editAge = vm.age.map { String($0) } ?? ""
-        editCountry = vm.country ?? ""
-        editState = vm.state ?? ""
-        isEditing = true
-    }
-
-    func cancelEdits() { isEditing = false }
-
-    func saveEdits() {
-        let fullName = editLastName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            ? editFirstName
-            : "\(editFirstName) \(editLastName)"
-        vm.displayName = fullName
-        vm.phone = editPhone.isEmpty ? nil : editPhone
-        vm.email = editEmail.isEmpty ? nil : editEmail
-        vm.organization = editOrganization.isEmpty ? nil : editOrganization
-
-        let first = editFirstName.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !first.isEmpty { UserDefaults.standard.set(first, forKey: "displayName") }
-
-        let ageInt = Int(editAge)
-        Task {
-            await vm.saveProfile(
-                name: fullName,
-                email: vm.email,
-                phone: vm.phone,
-                organization: vm.organization,
-                gender: editGender,
-                dateOfBirth: editDOB,
-                age: ageInt,
-                country: editCountry,
-                state: editState,
-                about: vm.about,
-                showGender: vm.showGender,
-                showDateOfBirth: vm.showDateOfBirth,
-                showAge: vm.showAge,
-                showCountry: vm.showCountry,
-                showState: vm.showState,
-                showAbout: vm.showAbout
-            )
-        }
-        isEditing = false
     }
 
     func roleDisplayText(_ role: String?) -> String {

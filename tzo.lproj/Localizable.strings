@@ -1,36 +1,94 @@
-// Localizable.strings — Tzotzil (Bats'i k'op)
-// Traducción comunitaria en progreso (~30%).
-// Las claves sin traducir usan el español como fallback automático.
+// Tzotzil (Bats'i k'op) — Traducción comunitaria
+// Cobertura: ~80% — términos sin equivalente tzotzil usan préstamos del español.
 
+// Tabs
 "Inicio" = "Yo'on";
 "Mapa" = "Sbajk'oplal";
-"Favoritos" = "Favoritos";
-"Coincidencias" = "Coincidencias";
-"Alertas" = "Alertas";
-"¿Qué quieres hacer hoy?" = "¿Qué quieres hacer hoy?";
-"Anticipa" = "Anticipa";
-"Prevé el clima" = "Prevé el clima";
-"Detecta" = "Detecta";
-"Prevención temprana" = "Prevención temprana";
-"Infórmate" = "Infórmate";
-"Cuida tu cultivo" = "Cuida tu cultivo";
-"Consulta" = "Consulta";
-"Tus registros siempre" = "Tus registros siempre";
+"Favoritos" = "Albil";
+"Comunidad" = "Komel";
 
-"Perfil" = "Perfil";
-"Cuenta" = "Cuenta";
-"Detalles" = "Detalles";
-"Teléfono" = "Teléfono";
-"Organización" = "Organización";
-"Rol" = "Rol";
-"Técnico" = "Técnico";
-"Peticiones" = "Peticiones";
-"Farmers" = "Farmers";
-"Cambiar contraseña" = "Cambiar contraseña";
-"Cerrar sesión" = "Lok'el ta sesión";
-
-"Idioma" = "K'op";
-"Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — tsotsil k'opetik, oy xa smelol";
-"Abrir perfil" = "Abrir perfil";
+// Home — encabezado
 "Hola, %@ 👋" = "Lekil kuxlejal, %@ 👋";
-"Todo lo que tu cafetal necesita..." = "Todo lo que tu cafetal necesita...";
+"Todo lo que tu cafetal necesita..." = "Lek k'usi sc'an li akafetale...";
+"¿Qué quieres hacer hoy?" = "¿K'usi cha'an li k'ak'ale?";
+"Coincidencias" = "K'opetik";
+"Alertas" = "Ts'akal k'op";
+"Abrir perfil" = "Il jkuxlejal";
+
+// Action cards
+"Anticipa" = "Jnabtik";
+"Prevé el clima" = "K'elo k'ak'al";
+"Detecta" = "Ilel";
+"Prevención temprana" = "Sk'an ta noj";
+"Infórmate" = "Chanob";
+"Cuida tu cultivo" = "Kolta li akafetale";
+"Consulta" = "K'elo";
+"Tus registros siempre" = "Li ak'optak ta ora jech";
+"Asistente" = "Jtakbol";
+"Pregunta lo que necesites" = "Cha'an k'usi sc'an";
+"Bitácora" = "Jts'ibal";
+"Tu cuaderno de campo" = "Ats'ibajel ta osil";
+"Aprende" = "Chanob";
+"Rutas de capacitación" = "Bek'tal chanobil";
+"Mi Camino" = "Jbek'tal";
+"Tu progreso" = "Abek'tal";
+
+// Perfil — secciones
+"Perfil" = "Jkuxlejal";
+"Cuenta" = "Jun";
+"Detalles" = "Sbainil k'opetik";
+"Información" = "K'opetik";
+"Idioma" = "K'op";
+"Configuración" = "Pasotan";
+"Legal" = "Lekil pasel";
+"Zona de peligro" = "Chopol pasel";
+
+// Perfil — campos
+"Teléfono" = "Talefono";
+"Mail" = "Mail";
+"Correo" = "Ts'ibal";
+"Organización" = "Ch'ielan";
+"Rol" = "Spas k'op";
+"Técnico" = "Snopol";
+"Género" = "Sjunukal";
+"Fecha de nacimiento" = "K'ak'al lokeb";
+"Edad" = "K'ak'altik";
+"País" = "Osil";
+"Estado" = "Lum";
+"Biografía" = "Sbainil kuxlejal";
+"Nombres" = "Biil";
+"Apellidos" = "Stot biil";
+"Masculino" = "Vinik";
+"Femenino" = "Antz";
+"Otro" = "Yan";
+
+// Perfil — acciones
+"Peticiones" = "Ilbajin k'op";
+"Farmers" = "Kaficultores";
+"Cambiar contraseña" = "Losobal password";
+"Cerrar sesión" = "Lok'el ta sesión";
+"Eliminar mi cuenta" = "Ch'ayel jun";
+"Política de privacidad y términos" = "Lekil pasel sok k'opetik";
+
+// Acciones comunes
+"Guardar" = "Chikan";
+"Cancelar" = "Mu xa";
+"Editar" = "Slosobal";
+
+// Historial / detalle
+"Detalle" = "Sbainil";
+"Notas" = "Ts'ibal";
+"Recomendaciones" = "Sk'opal";
+"Agregar a Favoritos" = "Chot ta albil";
+"Quitar de Favoritos" = "Lok'esob ta albil";
+"Las notas se han guardado correctamente." = "La chikanik li ats'ibaletike.";
+"Toca para agregar notas sobre esta captura..." = "Pasbo ta atuk' ts'ibal ta li'e...";
+
+// Niveles de recomendación
+"URGENTE" = "YA'";
+"ATENCIÓN" = "K'ELO";
+"CONSEJO" = "K'OP";
+
+// Idioma
+"Tzotzil — traducción comunitaria" = "Tzotzil — tsotsil k'opetik";
+"Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — tsotsil k'opetik, oy xa smelol";
