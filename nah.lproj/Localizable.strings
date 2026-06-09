@@ -1,0 +1,35 @@
+// Localizable.strings — Náhuatl (Nāhuatl)
+// Traducción pendiente. Todas las claves usan español como fallback automático.
+
+"Inicio" = "Inicio";
+"Mapa" = "Mapa";
+"Favoritos" = "Favoritos";
+"Coincidencias" = "Coincidencias";
+"Alertas" = "Alertas";
+"¿Qué quieres hacer hoy?" = "¿Qué quieres hacer hoy?";
+"Anticipa" = "Anticipa";
+"Prevé el clima" = "Prevé el clima";
+"Detecta" = "Detecta";
+"Prevención temprana" = "Prevención temprana";
+"Infórmate" = "Infórmate";
+"Cuida tu cultivo" = "Cuida tu cultivo";
+"Consulta" = "Consulta";
+"Tus registros siempre" = "Tus registros siempre";
+
+"Perfil" = "Perfil";
+"Cuenta" = "Cuenta";
+"Detalles" = "Detalles";
+"Teléfono" = "Teléfono";
+"Organización" = "Organización";
+"Rol" = "Rol";
+"Técnico" = "Técnico";
+"Peticiones" = "Peticiones";
+"Farmers" = "Farmers";
+"Cambiar contraseña" = "Cambiar contraseña";
+"Cerrar sesión" = "Cerrar sesión";
+
+"Idioma" = "Idioma";
+"Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — puede contener errores";
+"Abrir perfil" = "Abrir perfil";
+"Hola, %@ 👋" = "Hola, %@ 👋";
+"Todo lo que tu cafetal necesita..." = "Todo lo que tu cafetal necesita...";

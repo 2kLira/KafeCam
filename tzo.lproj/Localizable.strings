@@ -1,0 +1,36 @@
+// Localizable.strings — Tzotzil (Bats'i k'op)
+// Traducción comunitaria en progreso (~30%).
+// Las claves sin traducir usan el español como fallback automático.
+
+"Inicio" = "Yo'on";
+"Mapa" = "Sbajk'oplal";
+"Favoritos" = "Favoritos";
+"Coincidencias" = "Coincidencias";
+"Alertas" = "Alertas";
+"¿Qué quieres hacer hoy?" = "¿Qué quieres hacer hoy?";
+"Anticipa" = "Anticipa";
+"Prevé el clima" = "Prevé el clima";
+"Detecta" = "Detecta";
+"Prevención temprana" = "Prevención temprana";
+"Infórmate" = "Infórmate";
+"Cuida tu cultivo" = "Cuida tu cultivo";
+"Consulta" = "Consulta";
+"Tus registros siempre" = "Tus registros siempre";
+
+"Perfil" = "Perfil";
+"Cuenta" = "Cuenta";
+"Detalles" = "Detalles";
+"Teléfono" = "Teléfono";
+"Organización" = "Organización";
+"Rol" = "Rol";
+"Técnico" = "Técnico";
+"Peticiones" = "Peticiones";
+"Farmers" = "Farmers";
+"Cambiar contraseña" = "Cambiar contraseña";
+"Cerrar sesión" = "Lok'el ta sesión";
+
+"Idioma" = "K'op";
+"Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — tsotsil k'opetik, oy xa smelol";
+"Abrir perfil" = "Abrir perfil";
+"Hola, %@ 👋" = "Lekil kuxlejal, %@ 👋";
+"Todo lo que tu cafetal necesita..." = "Todo lo que tu cafetal necesita...";

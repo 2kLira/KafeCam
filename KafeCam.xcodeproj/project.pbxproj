@@ -87,6 +87,16 @@
 			path = en.lproj;
 			sourceTree = "<group>";
 		};
+		96426B9C4D254EBEB10907459BDF4D45 /* tzo.lproj */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = tzo.lproj;
+			sourceTree = "<group>";
+		};
+		C2D04290C4054B27848E0A008ECC90A1 /* nah.lproj */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = nah.lproj;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +147,8 @@
 				144DD9162E6CDF5700CCE4F4 /* Products */,
 				4E3C27F62EA947D40057D44B /* es.lproj */,
 				4E3C27FA2EA947E50057D44B /* en.lproj */,
+				96426B9C4D254EBEB10907459BDF4D45 /* tzo.lproj */,
+				C2D04290C4054B27848E0A008ECC90A1 /* nah.lproj */,
 				E531F7742F85E00800C88941 /* KafeCamSecrets.xcconfig */,
 				4E93C4232FBFCED60059C52E /* KafeCamSecrets.xcconfig */,
 			);
@@ -178,6 +190,8 @@
 				144DD9172E6CDF5700CCE4F4 /* KafeCam */,
 				4E3C27F62EA947D40057D44B /* es.lproj */,
 				4E3C27FA2EA947E50057D44B /* en.lproj */,
+				96426B9C4D254EBEB10907459BDF4D45 /* tzo.lproj */,
+				C2D04290C4054B27848E0A008ECC90A1 /* nah.lproj */,
 			);
 			name = KafeCam;
 			packageProductDependencies = (
