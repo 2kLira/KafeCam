@@ -32,6 +32,18 @@ struct AsistenteView: View {
     }
 
     var body: some View {
+        Group {
+            if !brain.isLLMAvailable {
+                LLMUnavailableScreen(reason: brain.llmUnavailableReason)
+            } else {
+                chatInterface
+            }
+        }
+        .navigationTitle("Asistente")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var chatInterface: some View {
             VStack(spacing: 0) {
                 ReadinessBar(brain: brain, translator: translator)
 
@@ -70,8 +82,6 @@ struct AsistenteView: View {
                 )
                 .focused($inputFocused)
             }
-            .navigationTitle("Asistente")
-            .navigationBarTitleDisplayMode(.inline)
             .task {
                 await stt.requestAuthorization()
                 stt.configure(for: brain.activeLanguage)
@@ -347,6 +357,99 @@ private struct InputBar: View {
         }
         .padding(12)
         .background(.bar)
+    }
+}
+
+// MARK: - LLM Unavailable Screen
+
+private struct LLMUnavailableScreen: View {
+    let reason: CaficultorBrain.LLMUnavailableReason
+
+    var body: some View {
+        VStack(spacing: 28) {
+            Spacer()
+
+            Image(systemName: icon)
+                .font(.system(size: 64, weight: .light))
+                .symbolRenderingMode(.hierarchical)
+                .foregroundStyle(color)
+
+            VStack(spacing: 12) {
+                Text(title)
+                    .font(.title2.bold())
+                    .multilineTextAlignment(.center)
+
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 32)
+            }
+
+            if reason == .notEnabled {
+                Button {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                } label: {
+                    Label("Ir a Configuración", systemImage: "gear")
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color(red: 88/255, green: 129/255, blue: 87/255))
+                .padding(.horizontal, 40)
+            }
+
+            Spacer()
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.systemBackground))
+    }
+
+    private var icon: String {
+        switch reason {
+        case .available:         return "checkmark.circle"
+        case .deviceNotEligible: return "cpu"
+        case .notEnabled:        return "apple.intelligence"
+        case .downloading:       return "arrow.down.circle"
+        }
+    }
+
+    private var color: Color {
+        switch reason {
+        case .available:         return .green
+        case .deviceNotEligible: return .secondary
+        case .notEnabled:        return .orange
+        case .downloading:       return .blue
+        }
+    }
+
+    private var title: String {
+        switch reason {
+        case .available:
+            return "Asistente listo"
+        case .deviceNotEligible:
+            return "Dispositivo no compatible"
+        case .notEnabled:
+            return "Apple Intelligence desactivado"
+        case .downloading:
+            return "Descargando el modelo…"
+        }
+    }
+
+    private var message: String {
+        switch reason {
+        case .available:
+            return "El asistente está listo."
+        case .deviceNotEligible:
+            return "El asistente de IA requiere un iPhone con chip A17 Pro o superior (iPhone 15 Pro, 16 o más reciente) con iOS 26 o superior."
+        case .notEnabled:
+            return "Activa Apple Intelligence en Configuración → [Tu nombre] → Apple Intelligence & Siri. Necesitas iOS 26 y tener configurado el idioma del dispositivo en español o inglés."
+        case .downloading:
+            return "El modelo de IA se está descargando en segundo plano. Regresa en unos minutos. Asegúrate de estar conectado a WiFi."
+        }
     }
 }
 

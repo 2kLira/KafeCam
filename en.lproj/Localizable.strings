@@ -7,6 +7,11 @@
 "Comunidad" = "Community";
 
 // Home
+"Buscar" = "Search";
+"Secciones" = "Sections";
+"En tu historial" = "In your history";
+"Sin resultados" = "No results";
+"Borrar búsqueda" = "Clear search";
 "Coincidencias" = "Matches";
 "Alertas" = "Alerts";
 "¿Qué quieres hacer hoy?" = "What do you want to do today?";
@@ -313,3 +318,32 @@
 "En tu idioma" = "In your language";
 "Empezar" = "Start";
 "Comenzar" = "Start";
+
+// ===== MiCamino / Progress =====
+"Lo que has aprendido y lo que has hecho. Sin prisa, sin comparaciones." = "What you've learned and what you've done. No rush, no comparisons.";
+"completadas" = "completed";
+"Entradas" = "Entries";
+"en bitácora" = "in journal";
+"%lld de %lld lecciones del programa" = "%lld of %lld lessons in the program";
+"Cuando apliques algo nuevo en tu cafetal —un biopreparado, una poda, una observación— registralo en tu bitácora como Acción. Aquí aparecerá." = "When you apply something new in your farm —a biopreparat, a pruning, an observation— log it in your journal as an Action. It will appear here.";
+
+// ===== Aprende (numeric format) =====
+"%lld lecciones" = "%lld lessons";
+"%lld min" = "%lld min";
+"%lld hechas" = "%lld done";
+
+// ===== Anticipa =====
+"Ubicación actual" = "Current location";
+"Condiciones estables." = "Stable conditions.";
+"%d evento(s) detectado(s)." = "%d event(s) detected.";
+"Revisar envés de hojas por roya/mildiu." = "Check the underside of leaves for rust/mildew.";
+"Recolectar frutos caídos antes de lluvia." = "Collect fallen fruit before rain.";
+"Retirar ramas sueltas cercanas a cafetos." = "Remove loose branches near coffee plants.";
+"Evitar transitar en zonas arboladas con viento." = "Avoid walking in wooded areas when windy.";
+"Mover grano cosechado a sombra natural." = "Move harvested grain to natural shade.";
+"Planear actividades en horas frescas." = "Plan activities during cooler hours.";
+"Programar corte y tendido para secado." = "Schedule cutting and spreading for drying.";
+"Mantener claras veredas naturales." = "Keep natural pathways clear.";
+
+// ===== Encyclopedia =====
+"Enciclopedia de Enfermedades" = "Disease Encyclopedia";

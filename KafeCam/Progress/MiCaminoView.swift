@@ -23,28 +23,32 @@ struct MiCaminoView: View {
     private var totalLessons: Int { allRoutes.reduce(0) { $0 + $1.lessons.count } }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    Header()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                Header()
+                    .kafeSoftEntry(0)
 
-                    OverviewCard(
-                        completedLessons: completedIDs.count,
-                        totalLessons: totalLessons,
-                        journalEntries: bitacora.entries.count
-                    )
+                OverviewCard(
+                    completedLessons: completedIDs.count,
+                    totalLessons: totalLessons,
+                    journalEntries: bitacora.entries.count
+                )
+                .kafeSoftEntry(1)
 
-                    RoutesProgressSection(routes: allRoutes, completedIDs: completedIDs)
+                RoutesProgressSection(routes: allRoutes, completedIDs: completedIDs)
+                    .kafeSoftEntry(2)
 
-                    PracticesSection(entries: bitacora.entries)
+                PracticesSection(entries: bitacora.entries)
+                    .kafeSoftEntry(3)
 
-                    Spacer(minLength: 20)
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 32)
+                Spacer(minLength: 20)
             }
-            .background(Color(.systemBackground))
+            .padding(.horizontal)
+            .padding(.bottom, 32)
         }
+        .background(Color(.systemBackground))
+        .navigationTitle("Mi Camino")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -81,8 +85,11 @@ private struct OverviewCard: View {
                           icon: "book.pages.fill", color: brown1)
             }
             if totalLessons > 0 {
-                ProgressView(value: Double(completedLessons), total: Double(totalLessons))
-                    .tint(green1)
+                AnimatedProgressBar(
+                    value: Double(completedLessons),
+                    total: Double(totalLessons),
+                    tint: green1
+                )
                 Text("\(completedLessons) de \(totalLessons) lecciones del programa")
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -166,8 +173,7 @@ private struct RoutesProgressSection: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    ProgressView(value: pct)
-                        .tint(route.colorTag.color)
+                    AnimatedProgressBar(value: pct, total: 1, tint: route.colorTag.color)
                 }
                 .padding(14)
                 .background(
@@ -241,6 +247,37 @@ private struct PracticesSection: View {
         fmt.locale = LanguageManager.shared.currentLocale
         fmt.dateStyle = .medium
         return fmt.string(from: d)
+    }
+}
+
+// MARK: - Animated Progress Bar
+/// Progress bar that fills from zero with a smooth spring when it first appears.
+/// Honors Reduce Motion (renders at final value without movement).
+struct AnimatedProgressBar: View {
+    let value: Double
+    let total: Double
+    let tint: Color
+
+    @State private var animatedValue: Double = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        ProgressView(value: animatedValue, total: total)
+            .tint(tint)
+            .onAppear {
+                if reduceMotion {
+                    animatedValue = value
+                } else {
+                    // Small delay so the fill reads as a deliberate moment,
+                    // landing right after the block's soft entry.
+                    withAnimation(AppTheme.springSmooth.delay(0.25)) {
+                        animatedValue = value
+                    }
+                }
+            }
+            .onChange(of: value) { _, new in
+                withAnimation(AppTheme.springSmooth) { animatedValue = new }
+            }
     }
 }
 

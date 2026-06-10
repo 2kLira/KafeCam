@@ -60,13 +60,40 @@ struct HomeView: View {
         UITabBar.appearance().shadowImage = UIImage()
     }
 
-    // filtro simple (sobre la enciclopedia)
+    private var trimmedQuery: String {
+        query.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var filteredFeatures: [HomeFeature] {
+        guard !trimmedQuery.isEmpty else { return [] }
+        return HomeFeature.allCases.filter { $0.matches(trimmedQuery) }
+    }
+
     private var filteredDiseases: [DiseaseModel] {
-        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmed = trimmedQuery
         guard !trimmed.isEmpty else { return [] }
-        // Filtra por nombre (ajusta si tu modelo tiene más campos como altNames/tags)
-        let hits = diseases.filter { $0.name.localizedCaseInsensitiveContains(trimmed) }
-        return Array(hits.prefix(10))
+        return Array(diseases.filter {
+            $0.name.searchContains(trimmed)
+            || ($0.scientificName ?? "").searchContains(trimmed)
+            || $0.description.searchContains(trimmed)
+        }.prefix(5))
+    }
+
+    private var filteredHistory: [HistoryEntry] {
+        let trimmed = trimmedQuery
+        guard !trimmed.isEmpty else { return [] }
+        return Array(historyStore.entries.filter {
+            $0.prediction.searchContains(trimmed)
+            || ($0.diseaseName ?? "").searchContains(trimmed)
+            || $0.notes.searchContains(trimmed)
+        }.prefix(3))
+    }
+
+    private var hasNoResults: Bool {
+        !trimmedQuery.isEmpty
+        && filteredFeatures.isEmpty
+        && filteredDiseases.isEmpty
+        && filteredHistory.isEmpty
     }
 
     var body: some View {
@@ -85,11 +112,30 @@ struct HomeView: View {
                         // buscador
                         SearchBar(text: $query)
 
-                        // coincidencias
+                        // coincidencias secciones (Detecta, Mi Camino, ...)
+                        FeatureMatchesList(filtered: filteredFeatures)
+
+                        // coincidencias enfermedades
                         MatchesList(filtered: filteredDiseases, onTap: { disease in
                             selectedDisease = disease
                             openDiseaseDetail = true
                         })
+
+                        // coincidencias historial
+                        HistoryMatchesList(filtered: filteredHistory)
+
+                        if hasNoResults {
+                            HStack(spacing: 8) {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundStyle(.secondary)
+                                Text("Sin resultados")
+                                    .foregroundStyle(.secondary)
+                            }
+                            .font(.subheadline)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .transition(.opacity)
+                        }
 
                         // alertas
                         if !vm.alerts.isEmpty {
@@ -131,6 +177,10 @@ struct HomeView: View {
                     if let d = selectedDisease {
                         DiseaseDetailView(disease: d)
                     }
+                }
+                .navigationDestination(for: HistoryEntry.self) { entry in
+                    HistoryDetailView(entry: entry)
+                        .environmentObject(historyStore)
                 }
             }
             .environmentObject(anticipaVM)
@@ -226,6 +276,13 @@ extension Notification.Name {
     static let switchToHomeTab = Notification.Name("kafe.switchToHomeTab")
 }
 
+private extension String {
+    // Case- and accent-insensitive, so "bitacora" matches "Bitácora" and "cafe" matches "café".
+    func searchContains(_ query: String) -> Bool {
+        range(of: query, options: [.caseInsensitive, .diacriticInsensitive]) != nil
+    }
+}
+
 // MARK: - Subvistas
 
 private struct Header: View {
@@ -285,6 +342,42 @@ private struct HeaderAvatar: View {
         .shadow(radius: 3)
         .onAppear { self.image = avatarStore.image }
         .onChange(of: avatarStore.image) { _, img in self.image = img }
+    }
+}
+
+private struct HistoryMatchesList: View {
+    let filtered: [HistoryEntry]
+
+    var body: some View {
+        if !filtered.isEmpty {
+            Text("En tu historial").font(.headline)
+            LazyVStack(alignment: .leading, spacing: 8) {
+                ForEach(filtered) { entry in
+                    NavigationLink(value: entry) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "photo.fill").foregroundStyle(.secondary)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(entry.diseaseName ?? entry.prediction)
+                                    .foregroundStyle(.primary)
+                                    .lineLimit(1)
+                                Text(entry.date.formatted(date: .abbreviated, time: .omitted))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
+                        }
+                        .padding(10)
+                        .background(Color(.systemGray6))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+            }
+            .transition(.opacity)
+            .animation(.easeInOut(duration: 0.15), value: filtered.map(\.id))
+        }
     }
 }
 
@@ -372,6 +465,16 @@ private struct ActionsGrid: View {
                                    title: "Asistente",
                                    subtitle: "Pregunta lo que necesites")
                         .contentShape(Rectangle())
+                        .overlay(alignment: .topTrailing) {
+                            if !CaficultorBrain.shared.isLLMAvailable {
+                                Image(systemName: "lock.fill")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.white)
+                                    .padding(5)
+                                    .background(Circle().fill(.black.opacity(0.35)))
+                                    .padding(10)
+                            }
+                        }
                 }
                 .simultaneousGesture(TapGesture().onEnded { dismissKeyboard() })
             }

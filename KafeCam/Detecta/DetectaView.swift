@@ -107,6 +107,7 @@ struct DetectaView: View {
 
                                         // Accept — saves capture (logic preserved exactly)
                                         Button {
+                                            UINotificationFeedbackGenerator().notificationOccurred(.success)
                                             guard let image = capturedImage else { return }
                                             historyStore.add(image: image, prediction: prediction)
                                             showSaveOptions = false
@@ -271,7 +272,10 @@ struct DetectaView: View {
                     Spacer()
 
                     // Shutter button
-                    Button(action: { takePhotoTrigger = true }) {
+                    Button(action: {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        takePhotoTrigger = true
+                    }) {
                         ZStack {
                             Circle()
                                 .fill(.white)
@@ -309,7 +313,7 @@ struct DetectaView: View {
             guard let vnModel = MLModelCache.vnModel else {
                 DispatchQueue.main.async {
                     self.isAnalyzing = false
-                    self.prediction = "Modelo no disponible. Intenta de nuevo."
+                    self.prediction = "No pudimos cargar el análisis. ¿Intentamos de nuevo?"
                     self.showSaveOptions = true
                 }
                 return
@@ -361,7 +365,7 @@ struct DetectaView: View {
                 } else {
                     DispatchQueue.main.async {
                         self.isAnalyzing = false
-                        self.prediction = "⚠️ No se pudo clasificar la imagen"
+                        self.prediction = "⚠️ No pudimos analizar la imagen. ¿Intentamos de nuevo?"
                         self.showSaveOptions = true
                     }
                 }
@@ -371,7 +375,7 @@ struct DetectaView: View {
 
             guard let ciImage = CIImage(image: image) else {
                 DispatchQueue.main.async {
-                    self.prediction = "Imagen inválida"
+                    self.prediction = "No pudimos leer la foto. Intenta tomar otra."
                     self.isAnalyzing = false
                     self.showSaveOptions = true
                 }
@@ -388,7 +392,7 @@ struct DetectaView: View {
                 ])
                 DispatchQueue.main.async {
                     self.isAnalyzing = false
-                    self.prediction = "Error al procesar la imagen"
+                    self.prediction = "Algo salió mal al analizar. Intenta de nuevo."
                     self.showSaveOptions = true
                 }
             }

@@ -23,41 +23,46 @@ struct BitacoraView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    Header()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Header()
+                    .kafeSoftEntry(0)
 
-                    KindFilterRow(selected: $selectedKindFilter)
+                KindFilterRow(selected: $selectedKindFilter)
+                    .kafeSoftEntry(1)
 
-                    if filteredEntries.isEmpty {
-                        EmptyState(hasFilter: selectedKindFilter != nil)
-                    } else {
-                        LazyVStack(spacing: 12) {
-                            ForEach(filteredEntries) { entry in
-                                EntryRow(entry: entry)
-                                    .contextMenu {
-                                        Button(role: .destructive) {
-                                            store.delete(entry)
-                                        } label: {
-                                            Label("Borrar", systemImage: "trash")
-                                        }
-                                    }
-                            }
+                if filteredEntries.isEmpty {
+                    EmptyState(hasFilter: selectedKindFilter != nil)
+                        .transition(.opacity.combined(with: .scale(scale: 0.97)))
+                } else {
+                    LazyVStack(spacing: 12) {
+                        ForEach(filteredEntries) { entry in
+                            EntryRow(entry: entry, onDelete: {
+                                withAnimation(AppTheme.springList) {
+                                    store.delete(entry)
+                                }
+                            })
+                            .transition(.kafeListItem)
                         }
                     }
+                    .kafeSoftEntry(2)
                 }
-                .padding(.horizontal)
-                .padding(.bottom, 100)  // espacio para el FAB
             }
-            .background(Color(.systemBackground))
-            .overlay(alignment: .bottomTrailing) {
-                AddButton(action: { showNewSheet = true })
-                    .padding(20)
-            }
-            .sheet(isPresented: $showNewSheet) {
-                NewEntrySheet()
-            }
+            .padding(.horizontal)
+            .padding(.bottom, 100)
+            // Spring keyed to the visible list: inserts rise in, deletes collapse,
+            // and neighbors glide into place instead of jumping.
+            .animation(AppTheme.springList, value: filteredEntries)
+        }
+        .background(Color(.systemBackground))
+        .navigationTitle("Bitácora")
+        .navigationBarTitleDisplayMode(.inline)
+        .overlay(alignment: .bottomTrailing) {
+            AddButton(action: { showNewSheet = true })
+                .padding(20)
+        }
+        .sheet(isPresented: $showNewSheet) {
+            NewEntrySheet()
         }
     }
 }
@@ -152,6 +157,9 @@ private struct EmptyState: View {
 
 private struct EntryRow: View {
     let entry: BitacoraEntry
+    var onDelete: (() -> Void)? = nil
+
+    @State private var confirmDelete = false
 
     private var dateLabel: String {
         let fmt = DateFormatter()
@@ -182,6 +190,19 @@ private struct EntryRow: View {
                 }
                 Spacer(minLength: 0)
                 AudioReadButton(text: entry.body, compact: true)
+
+                if onDelete != nil {
+                    Button {
+                        confirmDelete = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .font(.subheadline)
+                            .foregroundStyle(.red.opacity(0.75))
+                            .frame(width: 32, height: 32)
+                            .contentShape(Rectangle())
+                    }
+                    .accessibilityLabel("Borrar entrada")
+                }
             }
 
             if let data = entry.imageData, let ui = UIImage(data: data) {
@@ -208,6 +229,12 @@ private struct EntryRow: View {
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(entry.kind.displayName), \(dateLabel). \(entry.title). \(entry.body)")
+        .confirmationDialog("¿Borrar esta entrada?", isPresented: $confirmDelete, titleVisibility: .visible) {
+            Button("Borrar", role: .destructive) { onDelete?() }
+            Button("Cancelar", role: .cancel) {}
+        } message: {
+            Text("Esta acción no se puede deshacer.")
+        }
     }
 }
 
@@ -317,7 +344,10 @@ struct NewEntrySheet: View {
             body: detailsText.trimmingCharacters(in: .whitespacesAndNewlines),
             imageData: imageData
         )
-        BitacoraStore.shared.add(entry)
+        // Animate the insertion so the list glides the new row in after the sheet closes.
+        withAnimation(AppTheme.springList) {
+            BitacoraStore.shared.add(entry)
+        }
         dismiss()
     }
 }

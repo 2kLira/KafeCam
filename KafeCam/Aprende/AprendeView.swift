@@ -21,46 +21,49 @@ struct AprendeView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Header()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Header()
+                    .kafeSoftEntry(0)
 
-                    // Continuar (si hay lección en curso, ver MiCaminoView)
-                    if !completedIDs.isEmpty {
-                        ContinueCard(completed: completedIDs.count,
-                                     total: totalLessons)
-                    }
+                if !completedIDs.isEmpty {
+                    ContinueCard(completed: completedIDs.count,
+                                 total: totalLessons)
+                        .kafeSoftEntry(1)
+                }
 
-                    Text("Rutas de aprendizaje")
-                        .font(.title3.bold())
-                        .foregroundStyle(.primary)
-                        .padding(.top, 4)
+                Text("Rutas de aprendizaje")
+                    .font(.title3.bold())
+                    .foregroundStyle(.primary)
+                    .padding(.top, 4)
+                    .kafeSoftEntry(2)
 
-                    LazyVStack(spacing: 14) {
-                        ForEach(routes) { route in
-                            Button {
-                                selectedRoute = route
-                            } label: {
-                                RouteCard(
-                                    route: route,
-                                    completedCount: completedCount(in: route)
-                                )
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityElement(children: .combine)
-                            .accessibilityLabel(accessibilityLabel(for: route))
-                            .accessibilityHint("Toca para abrir la ruta y ver sus lecciones.")
+                LazyVStack(spacing: 14) {
+                    ForEach(Array(routes.enumerated()), id: \.element.id) { idx, route in
+                        Button {
+                            selectedRoute = route
+                        } label: {
+                            RouteCard(
+                                route: route,
+                                completedCount: completedCount(in: route)
+                            )
                         }
+                        .buttonStyle(KafeCardPressStyle())
+                        .kafeSoftEntry(3 + idx)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel(accessibilityLabel(for: route))
+                        .accessibilityHint("Toca para abrir la ruta y ver sus lecciones.")
                     }
                 }
-                .padding(.horizontal)
-                .padding(.bottom, 32)
             }
-            .background(Color(.systemBackground))
-            .navigationDestination(item: $selectedRoute) { route in
-                RouteDetailView(route: route)
-            }
+            .padding(.horizontal)
+            .padding(.bottom, 32)
+        }
+        .background(Color(.systemBackground))
+        .navigationTitle("Aprende")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(item: $selectedRoute) { route in
+            RouteDetailView(route: route)
         }
     }
 
@@ -122,8 +125,7 @@ private struct ContinueCard: View {
                     .foregroundStyle(.white.opacity(0.9))
             }
 
-            ProgressView(value: progress)
-                .tint(.white)
+            AnimatedProgressBar(value: progress, total: 1, tint: .white)
         }
         .padding(16)
         .background(

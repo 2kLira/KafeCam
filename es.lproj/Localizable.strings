@@ -7,6 +7,11 @@
 "Comunidad" = "Comunidad";
 
 // Home
+"Buscar" = "Buscar";
+"Secciones" = "Secciones";
+"En tu historial" = "En tu historial";
+"Sin resultados" = "Sin resultados";
+"Borrar búsqueda" = "Borrar búsqueda";
 "Coincidencias" = "Coincidencias";
 "Alertas" = "Alertas";
 "¿Qué quieres hacer hoy?" = "¿Qué quieres hacer hoy?";
@@ -104,3 +109,32 @@
 
 // MARK: - Disease detail picker (English literal)
 "Choose description" = "Elegir descripción";
+
+// ===== MiCamino / Progreso =====
+"Lo que has aprendido y lo que has hecho. Sin prisa, sin comparaciones." = "Lo que has aprendido y lo que has hecho. Sin prisa, sin comparaciones.";
+"completadas" = "completadas";
+"Entradas" = "Entradas";
+"en bitácora" = "en bitácora";
+"%lld de %lld lecciones del programa" = "%lld de %lld lecciones del programa";
+"Cuando apliques algo nuevo en tu cafetal —un biopreparado, una poda, una observación— registralo en tu bitácora como Acción. Aquí aparecerá." = "Cuando apliques algo nuevo en tu cafetal —un biopreparado, una poda, una observación— registralo en tu bitácora como Acción. Aquí aparecerá.";
+
+// ===== Aprende (formato numérico) =====
+"%lld lecciones" = "%lld lecciones";
+"%lld min" = "%lld min";
+"%lld hechas" = "%lld hechas";
+
+// ===== Anticipa =====
+"Ubicación actual" = "Ubicación actual";
+"Condiciones estables." = "Condiciones estables.";
+"%d evento(s) detectado(s)." = "%d evento(s) detectado(s).";
+"Revisar envés de hojas por roya/mildiu." = "Revisar envés de hojas por roya/mildiu.";
+"Recolectar frutos caídos antes de lluvia." = "Recolectar frutos caídos antes de lluvia.";
+"Retirar ramas sueltas cercanas a cafetos." = "Retirar ramas sueltas cercanas a cafetos.";
+"Evitar transitar en zonas arboladas con viento." = "Evitar transitar en zonas arboladas con viento.";
+"Mover grano cosechado a sombra natural." = "Mover grano cosechado a sombra natural.";
+"Planear actividades en horas frescas." = "Planear actividades en horas frescas.";
+"Programar corte y tendido para secado." = "Programar corte y tendido para secado.";
+"Mantener claras veredas naturales." = "Mantener claras veredas naturales.";
+
+// ===== Enciclopedia =====
+"Enciclopedia de Enfermedades" = "Enciclopedia de Enfermedades";

@@ -33,9 +33,11 @@ struct HistoryDetailView: View {
                 if isLoadingRecs {
                     ProgressView()
                         .padding(.vertical, 8)
+                        .transition(.opacity)
                 } else if let recs = diagnosis?.recommendations, !recs.isEmpty {
                     RecommendationsSection(recommendations: recs)
                         .padding(.horizontal)
+                        .transition(.opacity.combined(with: .offset(y: 8)))
                 }
 
                 // Notes Section
@@ -168,8 +170,10 @@ struct HistoryDetailView: View {
             #if canImport(Supabase)
             let result = try? await RecommendationsRepository().fetchForCapture(captureId: captureId)
             await MainActor.run {
-                diagnosis = result
-                isLoadingRecs = false
+                withAnimation(AppTheme.springSmooth) {
+                    diagnosis = result
+                    isLoadingRecs = false
+                }
             }
             #else
             await MainActor.run { isLoadingRecs = false }

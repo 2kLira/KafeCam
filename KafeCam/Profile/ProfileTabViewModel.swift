@@ -270,9 +270,9 @@ final class ProfileTabViewModel: ObservableObject {
 	}
 	
 	func logout() {
-		// clear app storage and sign out, then flip session flag back to login if available
 		displayNameAS = ""
-		Task { try? await SupaAuthService.signOut() }
+		// SessionViewModel observes this notification and handles the full signout + state reset.
+		// Don't call SupaAuthService.signOut() here — SessionViewModel.logout() does it.
 		NotificationCenter.default.post(name: .init("kafe.session.logout"), object: nil)
 	}
 	

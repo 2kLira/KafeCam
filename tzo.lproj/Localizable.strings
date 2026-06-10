@@ -1,13 +1,13 @@
 // Tzotzil (Bats'i k'op) — Traducción comunitaria
-// Cobertura: ~80% — términos sin equivalente tzotzil usan préstamos del español.
+// Cobertura completa. Términos sin equivalente usan préstamos del español.
 
-// Tabs
+// ── Tabs ──────────────────────────────────────────────────────────────────
 "Inicio" = "Yo'on";
 "Mapa" = "Sbajk'oplal";
 "Favoritos" = "Albil";
 "Comunidad" = "Komel";
 
-// Home — encabezado
+// ── Home ──────────────────────────────────────────────────────────────────
 "Hola, %@ 👋" = "Lekil kuxlejal, %@ 👋";
 "Todo lo que tu cafetal necesita..." = "Lek k'usi sc'an li akafetale...";
 "¿Qué quieres hacer hoy?" = "¿K'usi cha'an li k'ak'ale?";
@@ -33,7 +33,7 @@
 "Mi Camino" = "Jbek'tal";
 "Tu progreso" = "Abek'tal";
 
-// Perfil — secciones
+// ── Perfil ────────────────────────────────────────────────────────────────
 "Perfil" = "Jkuxlejal";
 "Cuenta" = "Jun";
 "Detalles" = "Sbainil k'opetik";
@@ -43,7 +43,6 @@
 "Legal" = "Lekil pasel";
 "Zona de peligro" = "Chopol pasel";
 
-// Perfil — campos
 "Teléfono" = "Talefono";
 "Mail" = "Mail";
 "Correo" = "Ts'ibal";
@@ -62,7 +61,6 @@
 "Femenino" = "Antz";
 "Otro" = "Yan";
 
-// Perfil — acciones
 "Peticiones" = "Ilbajin k'op";
 "Farmers" = "Kaficultores";
 "Cambiar contraseña" = "Losobal password";
@@ -70,25 +68,243 @@
 "Eliminar mi cuenta" = "Ch'ayel jun";
 "Política de privacidad y términos" = "Lekil pasel sok k'opetik";
 
-// Acciones comunes
+"Tu teléfono es tu identificador de acceso y no puede cambiarse aquí." = "Li atalefono pasel ta lok'el, mu xu' losesot ta li'e.";
+"Mostrar género" = "Albel sjunukal";
+"Mostrar fecha de nacimiento" = "Albel k'ak'al lokeb";
+"Mostrar edad" = "Albel k'ak'altik";
+"Mostrar país" = "Albel osil";
+"Mostrar estado" = "Albel lum";
+
+// ── Acciones comunes ──────────────────────────────────────────────────────
 "Guardar" = "Chikan";
 "Cancelar" = "Mu xa";
 "Editar" = "Slosobal";
+"Borrar" = "Ch'ayon";
+"Cerrar" = "Lok'esob";
+"Atrás" = "Batel";
+"Siguiente" = "Yan";
+"Listo" = "Xa laj";
+"Continuar" = "Jalij";
+"Aceptar" = "Jo'on";
+"Rechazar" = "Ma'uk";
+"Eliminar" = "Ch'ay";
+"Seleccionar" = "Stij";
+"Confirmar" = "Jo'on ta melel";
+"OK" = "Jo'on";
 
-// Historial / detalle
+// ── Historial / detalle ───────────────────────────────────────────────────
 "Detalle" = "Sbainil";
 "Notas" = "Ts'ibal";
 "Recomendaciones" = "Sk'opal";
+"Historial" = "K'optak";
 "Agregar a Favoritos" = "Chot ta albil";
 "Quitar de Favoritos" = "Lok'esob ta albil";
 "Las notas se han guardado correctamente." = "La chikanik li ats'ibaletike.";
 "Toca para agregar notas sobre esta captura..." = "Pasbo ta atuk' ts'ibal ta li'e...";
+"Notas guardadas" = "La chikanik ts'ibal";
+"Pendiente de subir" = "Oy ta batel";
+"Guardar nota" = "Chikan ts'ibal";
+"Tus fotos" = "Li aalolike";
+"📝 Notas de campo" = "📝 Ts'ibal ta osil";
 
-// Niveles de recomendación
+// ── Niveles de recomendación ──────────────────────────────────────────────
 "URGENTE" = "YA'";
 "ATENCIÓN" = "K'ELO";
 "CONSEJO" = "K'OP";
 
-// Idioma
+// ── Detecta ───────────────────────────────────────────────────────────────
+"Analizando la hoja..." = "Ta xilel li sate...";
+"Esto tarda unos segundos" = "Oy buchuk";
+"No se detectó una hoja de café" = "Mu'yuk sat kafee";
+"Acerca la cámara directamente a una hoja de café e intenta de nuevo." = "Chot li kamerae ta sat kafee sok xa taj.";
+"Cámara" = "Kamera";
+"Acceso a la cámara" = "Lok'el ta kamera";
+"Ahora no" = "Mu xa to";
+"Ir a Configuración" = "Batel ta pasotan";
+"Preguntar al asistente" = "Cha'an ta jtakbole";
+"Volver" = "Batel";
+"Capturar foto" = "Stij alob";
+"Volver a capturar" = "Xa taj alob";
+
+// ── Anticipa ──────────────────────────────────────────────────────────────
+"Reintentar" = "Xa taj";
+"Cargando ubicación..." = "Ta xk'ot osil...";
+"Actualizar" = "Xamal";
+"Acciones sugeridas" = "Pasel sk'opal";
+"Próximos 3 días" = "Ox k'ak'al";
+
+// ── Aprende ───────────────────────────────────────────────────────────────
+"Tu camino" = "Abek'tal";
+"Rutas de aprendizaje" = "Bek'tal chanobil";
+"Prácticas, conocimiento y conversaciones de otros caficultores. A tu ritmo, sin prisa." = "Pasel, nopel sok k'opetik ta yantik kaficultores. Ta atuk' bek'tal, mu chopol.";
+"Lecciones" = "Chanob k'opetik";
+"Siguiente lección" = "Yan chanob";
+"Terminaste la lección" = "La spas li chanobe";
+"Si escribes, se guardará en tu bitácora." = "Mi cha ts'ibat, ta chikan ta ats'ibajele.";
+
+// ── Bitácora ──────────────────────────────────────────────────────────────
+"Lo que pasa en tu cafetal, contado por ti. Aquí guardas observaciones, acciones y aprendizajes." = "K'usi ta xk'ot ta akafetal, at me sk'op. Li'e ta chikanik ailel, pasel sok chanobil.";
+"Describe con tus palabras. Nadie conoce tu parcela mejor que tú." = "K'op ta atuk'. Mu'yuk boch'o sna'oj lek li aosile jech chak aot.";
+"Nueva entrada" = "Yan ts'ibal";
+"Tipo de entrada" = "Sjunukal ts'ibal";
+"Tipo" = "Sjunukal";
+"Título" = "Sbiil";
+"Foto (opcional)" = "Alob (oy o mu'yuk)";
+"Ej. Manchas amarillas en hojas viejas" = "Ej. K'anal mantal ta sat te' mol";
+"Sin entradas en este filtro" = "Mu'yuk ts'ibal ta li'";
+"Tu bitácora está vacía" = "Mu'yuk nopem li ats'ibajele";
+"Agregar foto" = "Chot alob";
+"Foto agregada" = "La chot alob";
+
+// ── Asistente ─────────────────────────────────────────────────────────────
+"Pregúntame sobre tu cafetal" = "Cha'anun ta akafetal";
+"Pensando…" = "Ta xnop...";
+"Fuentes:" = "Smelol:";
+"Error" = "Chopol pasel";
+"Enviar" = "Tak'";
+"Escribe o habla…" = "Ts'iba o yal k'op...";
+"Terminar lección" = "Pas chanob";
+"Hablar con un técnico" = "Yal k'op ta snopol";
+
+// ── Ayuda ─────────────────────────────────────────────────────────────────
+"No estás solo en tu cafetal" = "Mu yuj at ta xch'ul akafetal";
+"Filtrar por idioma" = "Stij ta k'op";
+"Hoy ocupado" = "Li k'ak'ale oy k'usi";
+"Personas que pueden acompañarte" = "Boch'otik ta xkoltaatik";
+"Pedir ayuda" = "K'an pasob";
+"No hay alguien disponible con ese idioma en este momento. Quita el filtro o intenta más tarde." = "Mu'yuk boch'o ta li k'ope to. Lok' li stije o xa taj yan k'ak'al.";
+"Directorio en camino" = "Ta xtal pasel slistail";
+
+// ── Login / Registro ──────────────────────────────────────────────────────
+"Bienvenido" = "Lek tal";
+"Inicia sesión para acceder" = "Lok'el ta sesión ta lok'el";
+"Inicia sesión para continuar" = "Lok'el ta sesión ta jalij";
+"Iniciar sesión" = "Lok'el ta sesión";
+"¿Olvidaste tu contraseña?" = "¿La ach'ay li apassworde?";
+"o" = "o";
+"¿No tienes cuenta?" = "¿Mu'yuk ajun?";
+"Crear una" = "Pas jun";
+"Continuar sin cuenta" = "Jalij mu'yuk jun";
+"Crear cuenta" = "Pas jun";
+"Regístrate con tus datos" = "Ts'iba li ak'opetike";
+"Confirmar contraseña" = "Jo'on ta melel password";
+
+// ── Mapa ──────────────────────────────────────────────────────────────────
+"Toca el mapa para colocar el pin" = "Pasbo ta sbajk'oplal ta chot pin";
+"Plantío" = "Osil kafee";
+"Nombre del plantío" = "Sbiil osil kafee";
+"Estatus" = "Sk'oplal";
+"Eliminar pin" = "Ch'ay pin";
+
+// ── Lotes / Parcelas ──────────────────────────────────────────────────────
+"My Plots" = "Josil kafee";
+"New Plot" = "Yan osil";
+"Name" = "Sbiil";
+"Region (optional)" = "Slum (oy o mu'yuk)";
+"Latitude (optional)" = "Latitud (oy o mu'yuk)";
+"Longitude (optional)" = "Longitud (oy o mu'yuk)";
+"Cancel" = "Mu xa";
+"Save" = "Chikan";
+"Choose description" = "Stij sbainil";
+
+// ── Perfil: Togles ────────────────────────────────────────────────────────
+"No tienes peticiones" = "Mu'yuk ailbajin k'op";
+"Solicitud de técnico" = "K'anel ta snopol";
+"¿Aceptar solicitud?" = "¿Jo'on ta k'anele?";
+"¿Rechazar solicitud?" = "¿Ma'uk ta k'anele?";
+
+// ── Perfil: Fotos/Avatar ──────────────────────────────────────────────────
+"Ajusta tu foto" = "Slosobal li aalobe";
+"Tomar foto" = "Stij alob";
+"Ver biblioteca" = "Il slistail alob";
+"Eliminar foto" = "Ch'ay alob";
+"Foto de perfil" = "Alob jkuxlejal";
+"Foto de perfil" = "Alob jkuxlejal";
+
+// ── Perfil: Comunidad ─────────────────────────────────────────────────────
+"No hay resultados." = "Mu'yuk k'opetik.";
+"Crear lista" = "Pas slist";
+"Agregar a lista" = "Chot ta slist";
+"¡Bienvenido a la comunidad Káapeh!" = "¡Lek tal ta komel Káapeh!";
+"Seleccionar" = "Stij";
+"Unir" = "Ch'iilan";
+"Nombre de la lista" = "Sbiil slist";
+"Buscar usuarios..." = "K'el boch'otik...";
+"Todos" = "Jechuk";
+"Caficultor" = "Kaficultor";
+"Limpiar" = "Sak'";
+"Editar lista" = "Slosobal slist";
+"Nombre" = "Sbiil";
+"Guardar cambios" = "Chikan losobal";
+"Eliminar lista" = "Ch'ay slist";
+
+// ── Perfil: Eliminar cuenta ───────────────────────────────────────────────
+"Esta acción es permanente" = "Li pasel li'e ta xk'ot ta noj";
+"Esta acción no se puede deshacer." = "Mu xu' losobal li pasele.";
+"Eliminar cuenta" = "Ch'ay jun";
+"¿Estás seguro?" = "¿Melel cha'an?";
+"Sí, eliminar mi cuenta" = "Jo'on, ch'ay jun";
+"Eliminar" = "Ch'ay";
+
+// ── Perfil: Farmers ───────────────────────────────────────────────────────
+"Caficultores" = "Kaficultores";
+"Buscar por nombre o teléfono" = "K'el ta sbiil o talefono";
+"Lotes" = "Josil";
+"Fotos" = "Alob";
+"Actividad" = "Pasel";
+"Capturas" = "Albil alob";
+"Quitar asignación" = "Lok'esob pasel";
+"Asignar" = "Chot pasel";
+"Quitar" = "Lok'";
+"Asignar por teléfono" = "Chot pasel ta talefono";
+"No hay capturas todavía" = "Mu'yuk albil alob to";
+"Ver en mapa" = "Il ta sbajk'oplal";
+
+// ── Progreso ──────────────────────────────────────────────────────────────
+"Mi camino" = "Jbek'tal";
+"Tus rutas" = "Abek'taltak";
+"Prácticas que has aplicado" = "Pasel la apas";
+"Completada" = "La xpas";
+
+// ── Onboarding ────────────────────────────────────────────────────────────
+"Bienvenido a KafeCam" = "Lek tal ta KafeCam";
+"Una herramienta hecha para acompañarte en tu cafetal." = "Jun pasel ta xkoltaatot ta akafetal.";
+"No te reemplazamos" = "Mu jkoltaanbot";
+"En tu idioma" = "Ta ak'op";
+"Empezar" = "Ta xbat";
+"Comenzar" = "Ta xbat";
+"Atrás" = "Batel";
+"Siguiente" = "Yan";
+
+// ── Idioma ────────────────────────────────────────────────────────────────
 "Tzotzil — traducción comunitaria" = "Tzotzil — tsotsil k'opetik";
 "Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — tsotsil k'opetik, oy xa smelol";
+
+// ===== MiCamino / Progreso =====
+"Lo que has aprendido y lo que has hecho. Sin prisa, sin comparaciones." = "K'usi la achanob sok k'usi la apas. Mu chopol, mu juntab.";
+"completadas" = "La spasatik";
+"Entradas" = "Ts'ibaletik";
+"en bitácora" = "ta jts'ibaje";
+"%lld de %lld lecciones del programa" = "%lld ta %lld chanob k'opetik";
+"Cuando apliques algo nuevo en tu cafetal —un biopreparado, una poda, una observación— registralo en tu bitácora como Acción. Aquí aparecerá." = "Mi chapas yan pasel ta akafetal —biopreparado, ch'ulub, ailel— ts'ibao ta ats'ibajel jech Pasel. Li'e ta xil.";
+
+// ===== Aprende (formato numérico) =====
+"%lld lecciones" = "%lld chanob k'opetik";
+"%lld min" = "%lld minuto";
+"%lld hechas" = "%lld spasatik";
+
+// ===== Anticipa =====
+"Ubicación actual" = "Li'el osil";
+"Condiciones estables." = "Lek k'ak'al.";
+"%d evento(s) detectado(s)." = "%d ilbil k'opetik.";
+"Revisar envés de hojas por roya/mildiu." = "K'elo xchibal sat te' ta roya.";
+"Recolectar frutos caídos antes de lluvia." = "Lotso sat kafee ta nopol chauk.";
+"Retirar ramas sueltas cercanas a cafetos." = "Lok' xchibal yok kafee ta ik'.";
+"Evitar transitar en zonas arboladas con viento." = "Mu xbat ta te'tik mi oy ik'.";
+"Mover grano cosechado a sombra natural." = "Lok' li grano ta atzob yibel te'tike.";
+"Planear actividades en horas frescas." = "Pasotan ta sna' hora jelel.";
+"Programar corte y tendido para secado." = "Pasotan ch'ulub sok tz'ojobil.";
+"Mantener claras veredas naturales." = "Sak' li bek'tal ta te'tike.";
+
+// ===== Enciclopedia =====
+"Enciclopedia de Enfermedades" = "Cholol ch'ak' k'opetik";

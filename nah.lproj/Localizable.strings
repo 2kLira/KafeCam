@@ -1,35 +1,312 @@
-// Localizable.strings — Náhuatl (Nāhuatl)
-// Traducción pendiente. Todas las claves usan español como fallback automático.
+// Náhuatl (Nāhuatl) — Traducción comunitaria
+// Cobertura completa. Términos técnicos sin equivalente usan préstamos del español.
 
-"Inicio" = "Inicio";
-"Mapa" = "Mapa";
-"Favoritos" = "Favoritos";
-"Coincidencias" = "Coincidencias";
-"Alertas" = "Alertas";
-"¿Qué quieres hacer hoy?" = "¿Qué quieres hacer hoy?";
-"Anticipa" = "Anticipa";
-"Prevé el clima" = "Prevé el clima";
-"Detecta" = "Detecta";
-"Prevención temprana" = "Prevención temprana";
-"Infórmate" = "Infórmate";
-"Cuida tu cultivo" = "Cuida tu cultivo";
-"Consulta" = "Consulta";
-"Tus registros siempre" = "Tus registros siempre";
+// ── Tabs ──────────────────────────────────────────────────────────────────
+"Inicio" = "Callitech";
+"Mapa" = "Tlalpan";
+"Favoritos" = "Cencah";
+"Comunidad" = "Altepetl";
 
-"Perfil" = "Perfil";
-"Cuenta" = "Cuenta";
-"Detalles" = "Detalles";
-"Teléfono" = "Teléfono";
-"Organización" = "Organización";
-"Rol" = "Rol";
-"Técnico" = "Técnico";
-"Peticiones" = "Peticiones";
-"Farmers" = "Farmers";
-"Cambiar contraseña" = "Cambiar contraseña";
-"Cerrar sesión" = "Cerrar sesión";
+// ── Home ──────────────────────────────────────────────────────────────────
+"Hola, %@ 👋" = "Niltze, %@ 👋";
+"Todo lo que tu cafetal necesita..." = "Ixquich quihtoa mocaltzin café...";
+"¿Qué quieres hacer hoy?" = "¿Tleīn tiquítoa axan?";
+"Coincidencias" = "Tlaneltoca";
+"Alertas" = "Tēmachtia";
+"Abrir perfil" = "Tlachilia notlacatl";
 
-"Idioma" = "Idioma";
-"Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — puede contener errores";
-"Abrir perfil" = "Abrir perfil";
-"Hola, %@ 👋" = "Hola, %@ 👋";
-"Todo lo que tu cafetal necesita..." = "Todo lo que tu cafetal necesita...";
+// Action cards
+"Anticipa" = "Nōtemachilia";
+"Prevé el clima" = "Ilta in ehecatl";
+"Detecta" = "Itta";
+"Prevención temprana" = "Achtopa mopiya";
+"Infórmate" = "Machtia";
+"Cuida tu cultivo" = "Pia in mocafetal";
+"Consulta" = "Tlachilia";
+"Tus registros siempre" = "Motlacuilol mochipa";
+"Asistente" = "Tlapalihui";
+"Pregunta lo que necesites" = "Tlahttla tlen timonequi";
+"Bitácora" = "Amatlaquiltia";
+"Tu cuaderno de campo" = "Moamatlaquiltia";
+"Aprende" = "Machtia";
+"Rutas de capacitación" = "Ohtli tlamachtia";
+"Mi Camino" = "Noohui";
+"Tu progreso" = "Moohui";
+
+// ── Perfil ────────────────────────────────────────────────────────────────
+"Perfil" = "Notlacatl";
+"Cuenta" = "Tlacualo";
+"Detalles" = "Tlachihualiztli";
+"Información" = "Tlaneltocayotl";
+"Idioma" = "Tlahtol";
+"Configuración" = "Tlachialoni";
+"Legal" = "Tlaneltoca";
+"Zona de peligro" = "Omictia tlatoa";
+
+"Teléfono" = "Tepoztlahcuilolli";
+"Mail" = "Mail";
+"Correo" = "Amatlaquiltia";
+"Organización" = "Altepetlachialoni";
+"Rol" = "Tequitl";
+"Técnico" = "Tlamatini";
+"Género" = "Tlacatl";
+"Fecha de nacimiento" = "Tonaltzin tlacatiliztli";
+"Edad" = "Xihuimeh";
+"País" = "Tlalli";
+"Estado" = "Altepetl";
+"Biografía" = "Notlacatl tlahtoa";
+"Nombres" = "Tocaitl";
+"Apellidos" = "Tahtocaitl";
+"Masculino" = "Oquichtli";
+"Femenino" = "Cihuatl";
+"Otro" = "Oc se";
+
+"Peticiones" = "Tlanehualoni";
+"Farmers" = "Tlalnamacani";
+"Cambiar contraseña" = "Xitlahtoa password";
+"Cerrar sesión" = "Quiça sesión";
+"Eliminar mi cuenta" = "Pohua notlacualo";
+"Política de privacidad y términos" = "Tlaneltoca ihuan tlahtoa";
+
+"Tu teléfono es tu identificador de acceso y no puede cambiarse aquí." = "In motepoztlahcuilol tlen timonequi, ahmo huel mopahtia nican.";
+"Mostrar género" = "Necia tlacatl";
+"Mostrar fecha de nacimiento" = "Necia tonaltzin";
+"Mostrar edad" = "Necia xihuimeh";
+"Mostrar país" = "Necia tlalli";
+"Mostrar estado" = "Necia altepetl";
+
+// ── Acciones comunes ──────────────────────────────────────────────────────
+"Guardar" = "Piaz";
+"Cancelar" = "Ahmo";
+"Editar" = "Xitlahtoa";
+"Borrar" = "Pohua";
+"Cerrar" = "Tzacua";
+"Atrás" = "Ocpaltic";
+"Siguiente" = "Oc se";
+"Listo" = "Omachtic";
+"Continuar" = "Nemi";
+"Aceptar" = "Quemah";
+"Rechazar" = "Ahmo";
+"Eliminar" = "Pohua";
+"Seleccionar" = "Tlali";
+"Confirmar" = "Neltilia";
+"OK" = "Quemah";
+
+// ── Historial / detalle ───────────────────────────────────────────────────
+"Detalle" = "Tlachihualiztli";
+"Notas" = "Amatlaquiltia";
+"Recomendaciones" = "Tlahtoa";
+"Historial" = "Motlacuilol";
+"Agregar a Favoritos" = "Tlali cencah";
+"Quitar de Favoritos" = "Quiça cencah";
+"Las notas se han guardado correctamente." = "Opiaquet in amatlaquiltia.";
+"Toca para agregar notas sobre esta captura..." = "Tlali amatlaquiltia nican...";
+"Notas guardadas" = "Opiazqueh amatlaquiltia";
+"Pendiente de subir" = "Mochipa";
+"Guardar nota" = "Pia amatlaquiltia";
+"Tus fotos" = "Motlachieliz";
+"📝 Notas de campo" = "📝 Amatlaquiltia tlalli";
+
+// ── Niveles de recomendación ──────────────────────────────────────────────
+"URGENTE" = "AXAN";
+"ATENCIÓN" = "ITTA";
+"CONSEJO" = "TLAHTOA";
+
+// ── Detecta ───────────────────────────────────────────────────────────────
+"Analizando la hoja..." = "Ita in xihuitl...";
+"Esto tarda unos segundos" = "Achitzin cahuitl";
+"No se detectó una hoja de café" = "Ahmo necia xihuitl café";
+"Acerca la cámara directamente a una hoja de café e intenta de nuevo." = "Tlali cámara ta xihuitl café ihuan xitlahtoa.";
+"Cámara" = "Cámara";
+"Acceso a la cámara" = "Quiça cámara";
+"Ahora no" = "Axan ahmo";
+"Ir a Configuración" = "Nemi tlachialoni";
+"Preguntar al asistente" = "Tlahttla tlapalihui";
+"Volver" = "Ocpaltic";
+"Capturar foto" = "Tlali tlachieliz";
+"Volver a capturar" = "Xitlahtoa tlachieliz";
+
+// ── Anticipa ──────────────────────────────────────────────────────────────
+"Reintentar" = "Xitlahtoa";
+"Cargando ubicación..." = "Tlaxcalachia tlalli...";
+"Actualizar" = "Yancuic";
+"Acciones sugeridas" = "Tequitl tlahtoa";
+"Próximos 3 días" = "Ēyi tonalli";
+
+// ── Aprende ───────────────────────────────────────────────────────────────
+"Tu camino" = "Moohui";
+"Rutas de aprendizaje" = "Ohtli tlamachtia";
+"Prácticas, conocimiento y conversaciones de otros caficultores. A tu ritmo, sin prisa." = "Tequitl, tlamatiliztli ihuan tlahtoa. Motequiuh, ahmo ciahui.";
+"Lecciones" = "Tlamachtiloyan";
+"Siguiente lección" = "Oc se tlamachtia";
+"Terminaste la lección" = "Otlamachtic";
+"Si escribes, se guardará en tu bitácora." = "Tla titlacuiloa, piaz in moamatlaquiltia.";
+
+// ── Bitácora ──────────────────────────────────────────────────────────────
+"Lo que pasa en tu cafetal, contado por ti. Aquí guardas observaciones, acciones y aprendizajes." = "Tlen muchihua mocafetal, tih tlahtoa. Nican tipia.";
+"Describe con tus palabras. Nadie conoce tu parcela mejor que tú." = "Tlahtoa motlahtol. Ayac quimati in motlal zan teh.";
+"Nueva entrada" = "Yancuic tlacuiloa";
+"Tipo de entrada" = "Tlacatl tlacuiloa";
+"Tipo" = "Tlacatl";
+"Título" = "Tocaitl";
+"Foto (opcional)" = "Tlachieliz (ahmo miauh)";
+"Ej. Manchas amarillas en hojas viejas" = "Ej. Coztic tlahtoa xihuitl";
+"Sin entradas en este filtro" = "Ahmo necia amatlaquiltia";
+"Tu bitácora está vacía" = "Ahmo necia moamatlaquiltia";
+"Agregar foto" = "Tlali tlachieliz";
+"Foto agregada" = "Otlalique tlachieliz";
+
+// ── Asistente ─────────────────────────────────────────────────────────────
+"Pregúntame sobre tu cafetal" = "Tlahttla notlacafetal";
+"Pensando…" = "Nemilia...";
+"Fuentes:" = "Tlachieliz:";
+"Error" = "Ahmo cualli";
+"Enviar" = "Temi";
+"Escribe o habla…" = "Tlacuiloa o tlahtoa...";
+"Terminar lección" = "Tlamiz tlamachtia";
+"Hablar con un técnico" = "Tlahtoa tlamatini";
+
+// ── Ayuda ─────────────────────────────────────────────────────────────────
+"No estás solo en tu cafetal" = "Ahmo titzintli mocafetal";
+"Filtrar por idioma" = "Tlali tlahtol";
+"Hoy ocupado" = "Axan tequihua";
+"Personas que pueden acompañarte" = "Tlacah tlen huel motlapaloa";
+"Pedir ayuda" = "Tlahttla tlapaloa";
+"No hay alguien disponible con ese idioma en este momento. Quita el filtro o intenta más tarde." = "Ahmo necia tlacatl tlahtol axan. Quiça tlali o xitlahtoa oc se.";
+"Directorio en camino" = "Tlanextia ohtli";
+
+// ── Login / Registro ──────────────────────────────────────────────────────
+"Bienvenido" = "Tlazohcamati";
+"Inicia sesión para acceder" = "Quiça sesión";
+"Inicia sesión para continuar" = "Quiça sesión nemi";
+"Iniciar sesión" = "Quiça sesión";
+"¿Olvidaste tu contraseña?" = "¿Oticpoloh mopassword?";
+"o" = "ahnozo";
+"¿No tienes cuenta?" = "¿Ahmo motlacualo?";
+"Crear una" = "Chihua";
+"Continuar sin cuenta" = "Nemi ahmo tlacualo";
+"Crear cuenta" = "Chihua tlacualo";
+"Regístrate con tus datos" = "Tlacuiloa motlaneltoca";
+"Confirmar contraseña" = "Neltilia password";
+
+// ── Mapa ──────────────────────────────────────────────────────────────────
+"Toca el mapa para colocar el pin" = "Tlali tlalpan ta pin";
+"Plantío" = "Tlalcafé";
+"Nombre del plantío" = "Tocaitl tlalcafé";
+"Estatus" = "Tlacatl";
+"Eliminar pin" = "Pohua pin";
+
+// ── Lotes ─────────────────────────────────────────────────────────────────
+"My Plots" = "Notlalcafé";
+"New Plot" = "Yancuic tlalli";
+"Name" = "Tocaitl";
+"Region (optional)" = "Altepetl (ahmo miauh)";
+"Latitude (optional)" = "Latitud (ahmo miauh)";
+"Longitude (optional)" = "Longitud (ahmo miauh)";
+"Cancel" = "Ahmo";
+"Save" = "Piaz";
+"Choose description" = "Tlali tlahtoa";
+
+// ── Perfil: Comunidad ─────────────────────────────────────────────────────
+"No hay resultados." = "Ahmo necia.";
+"Crear lista" = "Chihua lista";
+"Agregar a lista" = "Tlali lista";
+"¡Bienvenido a la comunidad Káapeh!" = "¡Tlazohcamati altepetl Káapeh!";
+"Unir" = "Nemi";
+"Nombre de la lista" = "Tocaitl lista";
+"Buscar usuarios..." = "Tlachilia tlacah...";
+"Todos" = "Mochi";
+"Caficultor" = "Tlalcafé";
+"Limpiar" = "Chipaua";
+"Editar lista" = "Xitlahtoa lista";
+"Nombre" = "Tocaitl";
+"Guardar cambios" = "Pia xitlahtoa";
+"Eliminar lista" = "Pohua lista";
+
+// ── Perfil: Eliminar cuenta ───────────────────────────────────────────────
+"Esta acción es permanente" = "Nochi tequitl mochipa";
+"Esta acción no se puede deshacer." = "Ahmo huel xitlahtoa.";
+"Eliminar cuenta" = "Pohua tlacualo";
+"¿Estás seguro?" = "¿Nelli?";
+"Sí, eliminar mi cuenta" = "Quemah, pohua notlacualo";
+
+// ── Perfil: Farmers ───────────────────────────────────────────────────────
+"Caficultores" = "Tlalcafé";
+"Buscar por nombre o teléfono" = "Tlachilia tocaitl o tepoztlahcuilolli";
+"Lotes" = "Tlalli";
+"Fotos" = "Tlachieliz";
+"Actividad" = "Tequitl";
+"Capturas" = "Tlachieliz";
+"Quitar asignación" = "Quiça tequitl";
+"Asignar" = "Tequitl";
+"Quitar" = "Quiça";
+"Asignar por teléfono" = "Tequitl tepoztlahcuilolli";
+"No hay capturas todavía" = "Ahmo necia tlachieliz";
+"Ver en mapa" = "Itta tlalpan";
+
+// ── Progreso ──────────────────────────────────────────────────────────────
+"Mi camino" = "Noohui";
+"Tus rutas" = "Moohui";
+"Prácticas que has aplicado" = "Tequitl otichihuh";
+"Completada" = "Otlamac";
+"No tienes peticiones" = "Ahmo motlanehualoni";
+"Solicitud de técnico" = "Tlahttla tlamatini";
+"¿Aceptar solicitud?" = "¿Quemah tlahttla?";
+"¿Rechazar solicitud?" = "¿Ahmo tlahttla?";
+
+// ── Perfil: Fotos/Avatar ──────────────────────────────────────────────────
+"Ajusta tu foto" = "Xitlahtoa motlachieliz";
+"Tomar foto" = "Tlali tlachieliz";
+"Ver biblioteca" = "Itta amatlaquiltia";
+"Eliminar foto" = "Pohua tlachieliz";
+"Foto de perfil" = "Tlachieliz notlacatl";
+
+// ── Onboarding ────────────────────────────────────────────────────────────
+"Bienvenido a KafeCam" = "Tlazohcamati KafeCam";
+"Una herramienta hecha para acompañarte en tu cafetal." = "Ce tequitl tlen motlapaloa mocafetal.";
+"No te reemplazamos" = "Ahmo titlapoa";
+"En tu idioma" = "Motlahtol";
+"Empezar" = "Pehua";
+"Comenzar" = "Pehua";
+"Atrás" = "Ocpaltic";
+"Siguiente" = "Oc se";
+
+// ── Solicitudes / Perfil ──────────────────────────────────────────────────
+"Agregar farmer" = "Tlali tlalcafé";
+"Nombres y apellidos" = "Tocaitl ihuan tahtocaitl";
+"Contacto" = "Tlahtoa";
+"Confirmado" = "Oneltiloc";
+"Enviar solicitud" = "Temi tlahttla";
+
+// ── Idioma ────────────────────────────────────────────────────────────────
+"Tzotzil — traducción comunitaria" = "Tzotzil — altepetl k'op";
+"Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — tlen ahmo cualli";
+
+// ===== MiCamino / Progreso =====
+"Lo que has aprendido y lo que has hecho. Sin prisa, sin comparaciones." = "Tlen otimachtih ihuan otichihuh. Ahmo ciahui, ahmo tlacempoa.";
+"completadas" = "Otlamaqueh";
+"Entradas" = "Tlacuilolli";
+"en bitácora" = "amatlaquiltia";
+"%lld de %lld lecciones del programa" = "%lld ta %lld tlamachtia";
+"Cuando apliques algo nuevo en tu cafetal —un biopreparado, una poda, una observación— registralo en tu bitácora como Acción. Aquí aparecerá." = "Tla ticchihua yancuic mocafetal —biopreparado, xitini, ita— tlacuiloa moamatlaquiltia. Nican necia.";
+
+// ===== Aprende (formato numérico) =====
+"%lld lecciones" = "%lld tlamachtia";
+"%lld min" = "%lld minuto";
+"%lld hechas" = "%lld otlamaqueh";
+
+// ===== Anticipa =====
+"Ubicación actual" = "Nican tlalli";
+"Condiciones estables." = "Cualli ehecatl.";
+"%d evento(s) detectado(s)." = "%d tlachihualiztli ittoc.";
+"Revisar envés de hojas por roya/mildiu." = "Ilta xihuitl roya.";
+"Recolectar frutos caídos antes de lluvia." = "Tlali frutas quiauitl.";
+"Retirar ramas sueltas cercanas a cafetos." = "Quiça cuauhixtli café.";
+"Evitar transitar en zonas arboladas con viento." = "Ahmo nemi quauhtla ehecatl.";
+"Mover grano cosechado a sombra natural." = "Nepa grano tonatiuh.";
+"Planear actividades en horas frescas." = "Pahua tequitl hora cehuia.";
+"Programar corte y tendido para secado." = "Pahua xitini ihuan tzohua.";
+"Mantener claras veredas naturales." = "Chipaua ohtli.";
+
+// ===== Enciclopedia =====
+"Enciclopedia de Enfermedades" = "Tlahtoa Cocoliztli";

@@ -64,7 +64,7 @@ final class AnticipaViewModel: ObservableObject {
             self.actions = out.actions
             self.summary = out.summary
         } catch {
-            self.error = "No se pudo cargar el clima."
+            self.error = "No pudimos cargar el clima. Verifica tu conexión."
         }
         isLoading = false
     }

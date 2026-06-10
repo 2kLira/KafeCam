@@ -20,17 +20,15 @@ struct SearchBar: View {
                 .disableAutocorrection(true)
                 .submitLabel(.search)
             if !text.isEmpty {
-                Button { text = "" } label: {
+                Button {
+                    text = ""
+                    focused = true
+                } label: {
                     Image(systemName: "xmark.circle.fill")
                         .font(.body)
                         .foregroundStyle(.secondary)
                 }
-            } else {
-                Button { } label: {
-                    Image(systemName: "mic.fill")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                }
+                .accessibilityLabel("Borrar búsqueda")
             }
         }
         .padding(.horizontal, 14)
