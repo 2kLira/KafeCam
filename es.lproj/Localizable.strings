@@ -89,3 +89,18 @@
 // Idioma
 "Tzotzil — traducción comunitaria" = "Tzotzil — traducción comunitaria";
 "Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — puede contener errores";
+
+
+// ===== Added 2026-06-07: coverage fix =====
+// MARK: - Plots screen (code literals are English; give Spanish so ES users don't see English)
+"My Plots" = "Mis Plantíos";
+"New Plot" = "Nuevo Plantío";
+"Name" = "Nombre";
+"Region (optional)" = "Región (opcional)";
+"Latitude (optional)" = "Latitud (opcional)";
+"Longitude (optional)" = "Longitud (opcional)";
+"Cancel" = "Cancelar";
+"Save" = "Guardar";
+
+// MARK: - Disease detail picker (English literal)
+"Choose description" = "Elegir descripción";

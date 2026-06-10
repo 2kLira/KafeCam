@@ -89,3 +89,227 @@
 // Language
 "Tzotzil — traducción comunitaria" = "Tzotzil — community translation";
 "Tzotzil (beta) — puede contener errores" = "Tzotzil (beta) — may contain errors";
+
+
+// ===== Added 2026-06-07: coverage fix =====
+// MARK: - Tabs / Home
+
+// MARK: - Anticipa (Weather)
+"Reintentar" = "Retry";
+"Cargando ubicación..." = "Loading location...";
+"Actualizar" = "Update";
+"Acciones sugeridas" = "Suggested actions";
+"Próximos 3 días" = "Next 3 days";
+
+// MARK: - Aprende (Learn)
+"Tu camino" = "Your path";
+"Rutas de aprendizaje" = "Learning paths";
+"Prácticas, conocimiento y conversaciones de otros caficultores. A tu ritmo, sin prisa." = "Practices, knowledge and conversations from other coffee growers. At your own pace, no rush.";
+"Lecciones" = "Lessons";
+"Siguiente lección" = "Next lesson";
+"Terminaste la lección" = "You finished the lesson";
+"Si escribes, se guardará en tu bitácora." = "If you write, it will be saved to your journal.";
+
+// MARK: - Bitácora (Journal)
+"Lo que pasa en tu cafetal, contado por ti. Aquí guardas observaciones, acciones y aprendizajes." = "What happens in your coffee field, told by you. Here you keep observations, actions and lessons learned.";
+"Describe con tus palabras. Nadie conoce tu parcela mejor que tú." = "Describe it in your own words. No one knows your plot better than you.";
+"Nueva entrada" = "New entry";
+"Borrar" = "Delete";
+"Tipo de entrada" = "Entry type";
+"Tipo" = "Type";
+"Título" = "Title";
+"Foto (opcional)" = "Photo (optional)";
+"Ej. Manchas amarillas en hojas viejas" = "E.g. Yellow spots on old leaves";
+"Sin entradas en este filtro" = "No entries in this filter";
+"Tu bitácora está vacía" = "Your journal is empty";
+"Agregar foto" = "Add photo";
+"Foto agregada" = "Photo added";
+
+// MARK: - Acompañante / Audio
+"Hablar con un técnico" = "Talk to a technician";
+
+// MARK: - Detecta (Detect)
+"Para usar Detecta, permite el acceso a la cámara en Configuración." = "To use Detect, allow camera access in Settings.";
+"Analizando la hoja..." = "Analyzing the leaf...";
+"Esto tarda unos segundos" = "This takes a few seconds";
+"No se detectó una hoja de café" = "No coffee leaf detected";
+"Acerca la cámara directamente a una hoja de café e intenta de nuevo." = "Point the camera directly at a coffee leaf and try again.";
+"Cámara" = "Camera";
+"Acceso a la cámara" = "Camera access";
+"OK" = "OK";
+"Ahora no" = "Not now";
+"Ir a Configuración" = "Go to Settings";
+"Rechazar" = "Reject";
+"Aceptar" = "Accept";
+"Preguntar al asistente" = "Ask the assistant";
+"Volver" = "Back";
+"Capturar foto" = "Take photo";
+"Volver a capturar" = "Capture again";
+
+// MARK: - Disease Encyclopedia
+"Enciclopedia de Enfermedades" = "Disease Encyclopedia";
+"Choose description" = "Choose description";
+
+// MARK: - Help (Pedir ayuda)
+"No hay alguien disponible con ese idioma en este momento. Quita el filtro o intenta más tarde." = "There is no one available in that language right now. Remove the filter or try later.";
+"No estás solo en tu cafetal" = "You are not alone in your coffee field";
+"Filtrar por idioma" = "Filter by language";
+"Hoy ocupado" = "Busy today";
+"Personas que pueden acompañarte" = "People who can support you";
+"Pedir ayuda" = "Ask for help";
+"Directorio en camino" = "Directory on the way";
+
+// MARK: - History / Consulta detail
+"📝 Notas de campo" = "📝 Field notes";
+"Guardar nota" = "Save note";
+"Tus fotos" = "Your photos";
+"Historial" = "History";
+"Cerrar" = "Close";
+"Notas guardadas" = "Notes saved";
+"Pendiente de subir" = "Pending upload";
+
+// MARK: - Assistant (Asistente)
+"Pregúntame sobre tu cafetal" = "Ask me about your coffee field";
+"Pensando…" = "Thinking…";
+"Fuentes:" = "Sources:";
+"Error" = "Error";
+"Enviar" = "Send";
+"Escribe o habla…" = "Type or speak…";
+"Listo" = "Done";
+"Continuar" = "Continue";
+"Terminar lección" = "Finish lesson";
+
+// MARK: - Forgot / Change Password
+"Recuperar contraseña" = "Recover password";
+"Verificación de identidad" = "Identity verification";
+"Teléfono (10 dígitos)" = "Phone (10 digits)";
+"Contraseña actual" = "Current password";
+"Nueva contraseña" = "New password";
+"Confirmar nueva contraseña" = "Confirm new password";
+"Guardar contraseña" = "Save password";
+"Contraseña actualizada" = "Password updated";
+"Iniciar sesión" = "Log in";
+"Confirmar contraseña" = "Confirm password";
+
+// MARK: - Guest / Login / Register
+"Inicia sesión para acceder" = "Log in to access";
+"¿Olvidaste tu contraseña?" = "Forgot your password?";
+"Bienvenido" = "Welcome";
+"Inicia sesión para continuar" = "Log in to continue";
+"o" = "or";
+"¿No tienes cuenta?" = "Don't have an account?";
+"Crear una" = "Create one";
+"Continuar sin cuenta" = "Continue without an account";
+"Crear cuenta" = "Create account";
+"Regístrate con tus datos" = "Sign up with your details";
+
+// MARK: - Map
+"Toca el mapa para colocar el pin" = "Tap the map to place the pin";
+"Plantío" = "Plot";
+"Nombre del plantío" = "Plot name";
+"Estatus" = "Status";
+"Eliminar pin" = "Delete pin";
+
+// MARK: - Plots (English screen — needs keys so ES can override)
+"My Plots" = "My Plots";
+"New Plot" = "New Plot";
+"Name" = "Name";
+"Region (optional)" = "Region (optional)";
+"Latitude (optional)" = "Latitude (optional)";
+"Longitude (optional)" = "Longitude (optional)";
+"Cancel" = "Cancel";
+"Save" = "Save";
+
+// MARK: - Profile: Add farmer
+"Enviar solicitud" = "Send request";
+"Agregar farmer" = "Add farmer";
+"Nombres y apellidos" = "First and last name";
+"Contacto" = "Contact";
+"Confirmado" = "Confirmed";
+
+// MARK: - Profile: Avatar editor
+"Ajusta tu foto" = "Adjust your photo";
+"Tomar foto" = "Take photo";
+"Ver biblioteca" = "View library";
+"Eliminar foto" = "Delete photo";
+"Foto de perfil" = "Profile photo";
+
+// MARK: - Profile: Community list / onboarding
+"No hay resultados." = "No results.";
+"Crear lista" = "Create list";
+"Agregar a lista" = "Add to list";
+"Eliminar" = "Delete";
+"¡Bienvenido a la comunidad Káapeh!" = "Welcome to the Káapeh community!";
+"Seleccionar" = "Select";
+"Atrás" = "Back";
+"Siguiente" = "Next";
+"Unir" = "Join";
+
+// MARK: - Profile: Create / Edit list
+"Nombre de la lista" = "List name";
+"Buscar usuarios..." = "Search users...";
+"Todos" = "All";
+"Caficultor" = "Coffee grower";
+"Limpiar" = "Clear";
+"Editar lista" = "Edit list";
+"Nombre" = "Name";
+"Agregar más usuarios" = "Add more users";
+"Guardar cambios" = "Save changes";
+"Eliminar lista" = "Delete list";
+
+// MARK: - Profile: Delete account
+"Esta acción es permanente" = "This action is permanent";
+"Esta acción no se puede deshacer." = "This action cannot be undone.";
+"Eliminar cuenta" = "Delete account";
+"¿Estás seguro?" = "Are you sure?";
+"Sí, eliminar mi cuenta" = "Yes, delete my account";
+
+// MARK: - Profile: Farmers list / detail
+"Caficultores" = "Coffee growers";
+"Detalle del farmer" = "Farmer detail";
+"Asignar por teléfono…" = "Assign by phone…";
+"Quitar asignación" = "Remove assignment";
+"Asignar" = "Assign";
+"Quitar" = "Remove";
+"Asignar por teléfono" = "Assign by phone";
+"Buscar por nombre o teléfono" = "Search by name or phone";
+"Lotes" = "Plots";
+"Fotos" = "Photos";
+
+// MARK: - Profile: Tab / fields
+"Tu teléfono es tu identificador de acceso y no puede cambiarse aquí." = "Your phone is your login identifier and cannot be changed here.";
+"Mostrar género" = "Show gender";
+"Mostrar fecha de nacimiento" = "Show date of birth";
+"Mostrar edad" = "Show age";
+"Mostrar país" = "Show country";
+"Mostrar estado" = "Show state";
+
+// MARK: - Profile: Requests inbox
+"No tienes peticiones" = "You have no requests";
+"Solicitud de técnico" = "Technician request";
+"¿Aceptar solicitud?" = "Accept request?";
+"¿Rechazar solicitud?" = "Reject request?";
+"Confirmar" = "Confirm";
+
+// MARK: - Profile: User activity / detail
+"No hay capturas todavía" = "No captures yet";
+"Actividad" = "Activity";
+"Capturas" = "Captures";
+"Ver en mapa" = "View on map";
+"Detalle de Captura" = "Capture Detail";
+"Agregar a firma" = "Add to roster";
+"Quitar de firma" = "Remove from roster";
+
+// MARK: - Progress (Mi Camino)
+"Tus rutas" = "Your paths";
+"Prácticas que has aplicado" = "Practices you have applied";
+"Mi camino" = "My path";
+"Completada" = "Completed";
+
+// MARK: - Welcome onboarding
+"Bienvenido a KafeCam" = "Welcome to KafeCam";
+"Una herramienta hecha para acompañarte en tu cafetal." = "A tool made to support you in your coffee field.";
+"No te reemplazamos" = "We don't replace you";
+"En tu idioma" = "In your language";
+"Empezar" = "Start";
+"Comenzar" = "Start";

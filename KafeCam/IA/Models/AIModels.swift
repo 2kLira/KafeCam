@@ -20,6 +20,7 @@ enum CaficultorLanguage: String, Codable, Sendable {
     case spanish     = "es"
     case english     = "en"
     case tzotzil     = "tzo"
+    case nahuatl     = "nah"
     case zapoteco    = "zap"
     case nasaYuwe    = "nasa"
     case emberaChami = "emp"
@@ -29,6 +30,7 @@ enum CaficultorLanguage: String, Codable, Sendable {
         case .spanish:      return "español"
         case .english:      return "inglés"
         case .tzotzil:      return "Tzotzil"
+        case .nahuatl:      return "Náhuatl"
         case .zapoteco:     return "Zapoteco"
         case .nasaYuwe:     return "Nasa Yuwe"
         case .emberaChami:  return "Embera Chamí"
@@ -46,10 +48,10 @@ enum CaficultorLanguage: String, Codable, Sendable {
     /// indígenas hacen fallback a es-MX (no hay STT/TTS nativo para ellas).
     var speechLocale: Locale {
         switch self {
-        case .english:                return Locale(identifier: "en-US")
-        case .spanish:                return Locale(identifier: "es-MX")
-        case .tzotzil, .zapoteco:     return Locale(identifier: "es-MX")
-        case .nasaYuwe, .emberaChami: return Locale(identifier: "es-CO")
+        case .english:                    return Locale(identifier: "en-US")
+        case .spanish:                    return Locale(identifier: "es-MX")
+        case .tzotzil, .nahuatl, .zapoteco: return Locale(identifier: "es-MX")
+        case .nasaYuwe, .emberaChami:     return Locale(identifier: "es-CO")
         }
     }
 }
